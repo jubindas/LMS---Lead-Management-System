@@ -1,4 +1,4 @@
-import type { TrashData } from "./trash-bin-types";
+import type { TrashData } from "../table-types/trash-bin-types";
 
 import type { ColumnDef } from "@tanstack/react-table";
 

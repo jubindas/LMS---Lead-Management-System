@@ -1,4 +1,4 @@
-import type {TrashData} from "./trash-bin-types"
+import type { TrashData } from "../../table-types/trash-bin-types";
 
 export const data: TrashData[] = [
   {

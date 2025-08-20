@@ -1,4 +1,4 @@
-import type { Enquiry } from "./enquiry-types";
+import type { Enquiry } from "../table-types/enquiry-types";
 
 export const enquiryData: Enquiry[] = [
   {

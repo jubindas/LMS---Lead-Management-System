@@ -4,59 +4,62 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
 import RootLayout from "./components/RootLayout";
 
-const EnquiryFollowUp = lazy(() => import("./components/pages/EnquiryFollowUp.tsx")); ;
-
-const Enquiry = lazy(() => import("./components/features/enquiry/Enquiry.tsx"));
-
-const BusinessTypeTable = lazy(() =>
-  import("./components/features/masters/bussiness/BusinessType.tsx")
+const EnquiryFollowUp = lazy(
+  () => import("./components/pages/EnquiryFollowUp.tsx")
 );
 
-const StatusTypeTable = lazy(() =>
-  import("./components/features/masters/status/StatusType.tsx")
+const Enquiry = lazy(() => import("./components/pages/Enquiry.tsx"));
+
+const BusinessTypeTable = lazy(
+  () => import("./components/features/masters/bussiness/BusinessType.tsx")
 );
 
-const MainRequirements = lazy(() =>
-  import("./components/features/masters/mainRequirements/MainRequirements.tsx")
+const StatusTypeTable = lazy(
+  () => import("./components/features/masters/status/StatusType.tsx")
 );
 
-const SubRequirement = lazy(() =>
-  import("./components/features/masters/subRequirements/SubRequirement.tsx")
+const MainRequirements = lazy(
+  () =>
+    import(
+      "./components/features/masters/mainRequirements/MainRequirements.tsx"
+    )
 );
 
-const TodoList = lazy(() =>
-  import("./components/features/todolist/TodoList.tsx")
+const SubRequirement = lazy(
+  () =>
+    import("./components/features/masters/subRequirements/SubRequirement.tsx")
 );
 
-const DashBoard = lazy(() =>
-  import("./components/features/dashboard/DashBoard.tsx")
+const TodoList = lazy(
+  () => import("./components/features/todolist/TodoList.tsx")
 );
 
-const Payments = lazy(() =>
-  import("./components/features/payments/Payments.tsx")
+const DashBoard = lazy(
+  () => import("./components/features/dashboard/DashBoard.tsx")
 );
 
-const PaymentFollowUpDashboard = lazy(() =>
-  import("./components/features/paymentDashboard/PaymentFollowUpDashboard.tsx")
+const Payments = lazy(
+  () => import("./components/features/payments/Payments.tsx")
 );
 
-const Source = lazy(() =>
-  import("./components/features/masters/source/Source.tsx")
+const PaymentFollowUpDashboard = lazy(
+  () =>
+    import(
+      "./components/features/paymentDashboard/PaymentFollowUpDashboard.tsx"
+    )
 );
 
-const Location = lazy(() =>
-  import("./components/features/masters/location/Location.tsx")
+const Source = lazy(
+  () => import("./components/features/masters/source/Source.tsx")
 );
 
-
-const TrashBin = lazy(() =>
-  import("./components/features/trashBin/TrashBin.tsx")
+const Location = lazy(
+  () => import("./components/features/masters/location/Location.tsx")
 );
 
-const LogIn = lazy(() =>
-  import("./components/pages/LogIn.tsx")
-);
+const TrashBin = lazy(() => import("./components/pages/TrashBin.tsx"));
 
+const LogIn = lazy(() => import("./components/pages/LogIn.tsx"));
 
 const router = createBrowserRouter([
   {
@@ -103,7 +106,7 @@ const router = createBrowserRouter([
           </Suspense>
         ),
       },
-       {
+      {
         path: "location",
         element: (
           <Suspense fallback={<div>Loading Source...</div>}>
@@ -163,11 +166,11 @@ const router = createBrowserRouter([
           </Suspense>
         ),
       },
-       {
+      {
         path: "follow-up",
         element: (
           <Suspense fallback={<div>Loading Payment Follow-Up...</div>}>
-          <EnquiryFollowUp />
+            <EnquiryFollowUp />
           </Suspense>
         ),
       },
@@ -176,7 +179,7 @@ const router = createBrowserRouter([
   {
     path: "/login",
     element: <LogIn />,
-  }
+  },
 ]);
 
 function App() {

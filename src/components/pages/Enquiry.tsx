@@ -1,8 +1,8 @@
-import { DataTable } from "../../data-table";
+import { DataTable } from "../data-table.tsx";
 
-import { enquiryColumns } from "./enquiry-columns";
+import { enquiryColumns } from "../table-columns/enquiry-columns.tsx";
 
-import AddEnquiryDialog from "../../EnquiryDialog.tsx";
+import AddEnquiryDialog from "../EnquiryDialog.tsx";
 
 import EnquiryBussines from "@/components/EnquiryBussines.tsx";
 
@@ -10,17 +10,17 @@ import EnquiryStatus from "@/components/EnquieyStatus";
 
 import MainRequirementsForm from "@/components/MainRequirementsForm";
 
-import { enquiryData } from "./enquiry-data.ts";
+import { enquiryData } from "../table-datas/enquiry-data.ts";
 
 import EnquirySource from "@/components/EnquirySource.tsx";
 
-import SubRequirementForm from "../../SubRequirementForm.tsx";
+import SubRequirementForm from "../SubRequirementForm.tsx";
 
 import EnquiryLocation from "@/components/EnquiryLocation.tsx";
 export default function Enquiries() {
   return (
     <div className="p-8 min-h-screen w-full ">
-    <div className="max-w-7xl mx-auto mt-10 p-8 shadow-md rounded-2xl bg-zinc-50">
+      <div className="max-w-7xl mx-auto mt-10 p-8 shadow-md rounded-2xl bg-zinc-50">
         {/* Title + Buttons */}
         <div className="flex justify-between items-center  mb-6 border-b border-zinc-700/60 pb-4">
           <h2 className="text-3xl font-bold tracking-wide text-black">
@@ -37,7 +37,7 @@ export default function Enquiries() {
           </div>
         </div>
 
-         <div className="flex flex-wrap justify-between items-center mb-3 gap-3 text-sm">
+        <div className="flex flex-wrap justify-between items-center mb-3 gap-3 text-sm">
           <div className="flex items-center gap-2 text-black text-xs">
             <span>Show</span>
             <select className="rounded-lg px-2 py-1 bg-zinc-400 text-zinc-100 border border-zinc-400">
@@ -76,4 +76,3 @@ export default function Enquiries() {
     </div>
   );
 }
-
