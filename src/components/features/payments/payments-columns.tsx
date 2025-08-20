@@ -4,8 +4,6 @@ import type { Payment } from "./payment-types";
 
 import { Button } from "@/components/ui/button";
 
-
-
 import { MoreHorizontal } from "lucide-react";
 
 import {
@@ -69,13 +67,6 @@ export const columns: ColumnDef<Payment>[] = [
             className="w-full justify-start bg-zinc-700 text-white text-sm hover:bg-zinc-600 gap-2"
           >
             View
-          </Button>
-          <Button
-            variant="ghost"
-            size="sm"
-            className="w-full justify-start bg-zinc-700 text-white text-sm hover:bg-zinc-600 gap-2"
-          >
-            Receipt
           </Button>
           <Button
             variant="destructive"

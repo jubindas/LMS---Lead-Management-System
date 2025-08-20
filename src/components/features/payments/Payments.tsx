@@ -1,4 +1,3 @@
-
 import { DataTable } from "@/components/data-table";
 
 import { samplePayments } from "./payments-data";
@@ -8,20 +7,17 @@ import { columns } from "./payments-columns";
 import PaymentsEnquiry from "@/components/PaymentsEnquiry";
 
 export default function PaymentsTable() {
-
-
   return (
-     <div className="p-8 min-h-screen w-full  ">
+    <div className="p-8 min-h-screen w-full  ">
       <div className="max-w-7xl mx-auto mt-10 p-8 shadow-md rounded-2xl bg-zinc-50">
         <div className="flex flex-wrap justify-between items-center mb-4 border-b border-zinc-700/60 pb-2">
           <h2 className="text-xl font-bold tracking-wide bg-gradient-to-r text-black">
-               Payments
-             </h2>
-            <PaymentsEnquiry />
-           </div>
-   
-           
-  <div className="flex flex-wrap justify-between items-center mb-3 gap-3 text-sm">
+            Payments
+          </h2>
+          <PaymentsEnquiry />
+        </div>
+
+        <div className="flex flex-wrap justify-between items-center mb-3 gap-3 text-sm">
           <div className="flex items-center gap-2 text-black text-xs">
             <span>Show</span>
             <select className="rounded-lg px-2 py-1 bg-zinc-400 text-zinc-100 border border-zinc-400">
@@ -47,9 +43,13 @@ export default function PaymentsTable() {
             />
           </div>
         </div>
-   
-           <DataTable columns={columns} data={samplePayments} enablePagination={true} />
-         </div>
-       </div>
+
+        <DataTable
+          columns={columns}
+          data={samplePayments}
+          enablePagination={true}
+        />
+      </div>
+    </div>
   );
 }

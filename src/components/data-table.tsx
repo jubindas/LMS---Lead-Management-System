@@ -79,7 +79,7 @@ export function DataTable<TData, TValue>({
           {table.getHeaderGroups().map((headerGroup) => (
             <TableRow
               key={headerGroup.id}
-              className="bg-zinc-300 border border-zinc-300 "
+              className="bg-zinc-300 border border-zinc-300 rounded-t-md"
             >
               {headerGroup.headers.map((header, index) => (
                 <TableHead
