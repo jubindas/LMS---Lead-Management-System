@@ -1,0 +1,71 @@
+import type { Enquiry } from "./enquiry-types";
+
+
+import type { ColumnDef } from "@tanstack/react-table";
+
+
+export const enquiryColumns: ColumnDef<Enquiry>[] = [
+  {
+    accessorKey: "sl",
+    header: "Sl",
+    cell: ({ row }) => (
+      <span className="text-text text-sm w-3 font-medium">{row.getValue("sl")}</span>
+    ),
+  },
+  {
+    accessorKey: "Name",
+    header: "Name",
+    cell: ({ row }) => (
+      <span className="truncate block w-20 text-sm">{row.getValue("Name")}</span>
+    ),
+  },
+  {
+    accessorKey: "phone",
+    header: "Phone",
+    cell: ({ row }) => (
+      <span className="truncate block w-25 text-sm">{row.getValue("phone")}</span>
+    ),
+  },
+  {
+    accessorKey: "user",
+    header: "User",
+    cell: ({ row }) => (
+      <span className="truncate block w-20 text-sm">{row.getValue("user")}</span>
+    ),
+  },
+  {
+    accessorKey: "status",
+    header: "Status",
+    cell: ({ row }) => (
+      <span className="truncate block w-15 text-sm">{row.getValue("status")}</span>
+    ),
+  },
+  {
+    accessorKey: "budget",
+    header: "Budget",
+    cell: ({ row }) => (
+      <span className="truncate block w-10 text-sm">{row.getValue("budget")}</span>
+    ),
+  },
+  {
+    accessorKey: "remainingDays",
+    header: "Remaining Days",
+    cell: ({ row }) => (
+      <span className="truncate block w-20 text-sm">{row.getValue("remainingDays")}</span>
+    ),
+  },
+  {
+    accessorKey: "businessType",
+    header: "Business Type",
+    cell: ({ row }) => (
+      <span className="truncate block w-20 text-sm">{row.getValue("businessType")}</span>
+    ),
+  },
+  {
+    accessorKey: "source",
+    header: "Source",
+    cell: ({ row }) => (
+      <span className="truncate block w-25 text-sm">{row.getValue("source")}</span>
+    ),
+  },
+];
