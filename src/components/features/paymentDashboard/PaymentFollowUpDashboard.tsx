@@ -1,9 +1,6 @@
 import { DataTable } from "@/components/data-table";
-
 import type { ColumnDef } from "@tanstack/react-table";
-
 import { Calendar } from "@/components/ui/calendar";
-
 import { useState, useRef, useEffect } from "react";
 
 type Payment = {
@@ -40,7 +37,6 @@ export default function PaymentFollowUpDashboard() {
   const [showCalendar, setShowCalendar] = useState(false);
   const calendarRef = useRef<HTMLDivElement>(null);
 
-
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       if (calendarRef.current && !calendarRef.current.contains(event.target as Node)) {
@@ -70,19 +66,19 @@ export default function PaymentFollowUpDashboard() {
     {
       id: "remaining",
       header: "Remaining",
-      cell: ({ row }) => <span className="text-black">{(row.original.totalAmount || 0) - (row.original.paidAmount || 0)}</span>,
+      cell: ({ row }) => <span className="text-zinc-800">{(row.original.totalAmount || 0) - (row.original.paidAmount || 0)}</span>,
     },
     {
       accessorKey: "reason",
       header: "Remark",
-      cell: ({ row }) => <span className="text-black">{row.getValue("reason") || "-"}</span>,
+      cell: ({ row }) => <span className="text-zinc-800">{row.getValue("reason") || "-"}</span>,
     },
     {
       accessorKey: "nextPaymentDate",
       header: "Next Payment Date",
       cell: ({ row }) => {
         const date = row.getValue("nextPaymentDate") as string;
-        return <span className="text-black">{date ? new Date(date).toLocaleDateString() : "-"}</span>;
+        return <span className="text-zinc-800">{date ? new Date(date).toLocaleDateString() : "-"}</span>;
       },
     },
     {
@@ -92,7 +88,7 @@ export default function PaymentFollowUpDashboard() {
         const payment = row.original;
         const completed = payment.paidAmount === payment.totalAmount;
         return (
-          <span className={`px-2 py-1 rounded text-xs ${completed ? "bg-green-400 text-black" : "bg-red-400 text-black"}`}>
+          <span className={`px-2 py-1 rounded text-xs ${completed ? "bg-green-200 text-green-800" : "bg-red-200 text-red-800"}`}>
             {completed ? "Completed" : "Pending"}
           </span>
         );
@@ -101,31 +97,31 @@ export default function PaymentFollowUpDashboard() {
   ];
 
   return (
-    <div className="space-y-8 w-full p-6 flex flex-col items-center min-h-screen">
-      <div className="w-full max-w-2xl p-8 rounded-2xl shadow-xl ">
-        <h2 className="text-3xl font-extrabold mb-8 text-white text-center tracking-wide">
+    <div className="space-y-8 w-full p-6 flex flex-col items-center min-h-screen bg-zinc-50">
+      <div className="w-full max-w-2xl p-8 rounded-2xl shadow-xl bg-white border border-zinc-200">
+        <h2 className="text-3xl font-extrabold mb-8 text-zinc-800 text-center tracking-wide">
           Add Follow-Up Payment
         </h2>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
           <div className="flex flex-col sm:col-span-2">
-            <label className="text-gray-300 mb-2 font-medium">Remark</label>
+            <label className="text-zinc-600 mb-2 font-medium">Remark</label>
             <input
               type="text"
               name="reason"
               value={form.reason || ""}
               onChange={handleInputChange}
               placeholder="Add your remark"
-              className="w-full px-5 py-3 rounded-xl bg-zinc-800 text-white placeholder-gray-400 shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-500 transition"
+              className="w-full px-5 py-3 rounded-xl bg-zinc-100 text-zinc-800 placeholder-zinc-400 shadow-sm focus:outline-none focus:ring-2 focus:ring-zinc-500 transition"
             />
           </div>
 
           <div className="flex flex-col sm:col-span-1 relative">
-            <label className="text-gray-300 mb-2 font-medium">Reminder (Optional)</label>
+            <label className="text-zinc-600 mb-2 font-medium">Reminder (Optional)</label>
             <button
               type="button"
               onClick={() => setShowCalendar(prev => !prev)}
-              className="w-full px-5 py-3 rounded-xl bg-zinc-800 text-white shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-500 transition hover:bg-zinc-700"
+              className="w-full px-5 py-3 rounded-xl bg-zinc-100 text-zinc-800 shadow-sm focus:outline-none focus:ring-2 focus:ring-zinc-500 transition hover:bg-zinc-200"
             >
               {showCalendar ? "Hide Calendar" : "Set Reminder"}
             </button>
@@ -135,7 +131,7 @@ export default function PaymentFollowUpDashboard() {
                 <Calendar
                   mode="single"
                   selected={form.reminder ? new Date(form.reminder) : undefined}
-                  className="w-full rounded-xl border border-zinc-700 shadow-xl bg-zinc-800 text-white"
+                  className="w-full rounded-xl border border-zinc-300 shadow-xl bg-white text-zinc-800"
                   required={false}
                 />
               </div>
@@ -144,7 +140,7 @@ export default function PaymentFollowUpDashboard() {
 
           <button
             onClick={handleAddPayment}
-            className="mt-8 w-full py-3 bg-gradient-to-r from-purple-600 to-purple-400 text-white font-semibold rounded-xl shadow-lg hover:from-purple-700 hover:to-purple-500 transition transform hover:-translate-y-0.5"
+            className="mt-8 w-full py-3 bg-zinc-500 text-white font-semibold rounded-xl shadow-lg hover:bg-zinc-600 transition transform hover:-translate-y-0.5"
           >
             Add Payment
           </button>
