@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 
 import { Button } from "@/components/ui/button";
@@ -19,7 +18,6 @@ import {
 } from "@/components/ui/popover";
 
 import { Calendar } from "@/components/ui/calendar";
-
 import { CalendarIcon } from "lucide-react";
 
 export default function PaymentsEnquiry() {
@@ -48,25 +46,25 @@ export default function PaymentsEnquiry() {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button className="bg-gradient-to-r from-purple-600 to-purple-400 hover:from-purple-700 hover:to-purple-500 text-white font-medium px-5 py-2 rounded-md shadow-lg transition-transform transform hover:-translate-y-1 hover:shadow-2xl">
+        <Button className="bg-zinc-500 hover:bg-zinc-600 text-white font-medium px-4 py-2 rounded-md shadow-md transition-transform transform hover:-translate-y-0.5 hover:shadow-lg">
           Add Payment Enquiry
         </Button>
       </DialogTrigger>
 
-      <DialogContent className="min-w-[40rem] max-h-[40rem] overflow-y-auto bg-zinc-900 rounded-lg shadow-2xl border border-zinc-700">
-        <DialogHeader className="pb-4 border-b border-zinc-700">
-          <DialogTitle className="text-2xl font-bold bg-gradient-to-r from-purple-400 to-purple-600 bg-clip-text text-transparent">
+      <DialogContent className="min-w-[40rem] max-h-[40rem] overflow-y-auto bg-zinc-100 rounded-lg shadow-2xl border border-zinc-300">
+        <DialogHeader className="pb-4 border-b border-zinc-300">
+          <DialogTitle className="text-2xl font-bold text-zinc-800">
             ADD PAYMENT ENQUIRY
           </DialogTitle>
-          <DialogDescription className="text-gray-400">
+          <DialogDescription className="text-zinc-600">
             Fill in the details for the payment enquiry.
           </DialogDescription>
         </DialogHeader>
 
         <form onSubmit={handleSubmit} className="mt-6 space-y-6">
-        
+          {/* Name */}
           <div>
-            <label className="block text-sm font-semibold text-gray-300 mb-2">
+            <label className="block text-sm font-semibold text-zinc-700 mb-2">
               Name
             </label>
             <input
@@ -76,13 +74,13 @@ export default function PaymentsEnquiry() {
               value={formData.name}
               onChange={handleChange}
               required
-              className="w-full border border-zinc-700 rounded-md px-3 py-2 bg-zinc-800 text-white shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition"
+              className="w-full border border-zinc-300 rounded-md px-3 py-2 bg-white text-zinc-800 shadow-sm focus:outline-none focus:ring-2 focus:ring-zinc-500 focus:border-zinc-500 transition"
             />
           </div>
 
-         
+          {/* Amount */}
           <div>
-            <label className="block text-sm font-semibold text-gray-300 mb-2">
+            <label className="block text-sm font-semibold text-zinc-700 mb-2">
               Amount
             </label>
             <input
@@ -92,41 +90,41 @@ export default function PaymentsEnquiry() {
               value={formData.amount}
               onChange={handleChange}
               required
-              className="w-full border border-zinc-700 rounded-md px-3 py-2 bg-zinc-800 text-white shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition"
+              className="w-full border border-zinc-300 rounded-md px-3 py-2 bg-white text-zinc-800 shadow-sm focus:outline-none focus:ring-2 focus:ring-zinc-500 focus:border-zinc-500 transition"
             />
           </div>
 
-         
+          {/* Date */}
           <div>
-            <label className="block text-sm font-semibold text-gray-300 mb-2">
+            <label className="block text-sm font-semibold text-zinc-700 mb-2">
               Date
             </label>
             <Popover>
               <PopoverTrigger asChild>
                 <Button
                   type="button"
-                  className="flex items-center justify-start h-12 gap-2 px-3 py-3 w-full rounded-md border border-zinc-600 text-zinc-100 hover:bg-zinc-800"
+                  className="flex items-center justify-start h-12 gap-2 px-3 py-3 w-full rounded-md border border-zinc-300 text-zinc-700 bg-white hover:bg-zinc-200"
                 >
                   <CalendarIcon size={18} />
                   {dueDate ? dueDate.toLocaleDateString() : "Select Date"}
                 </Button>
               </PopoverTrigger>
-              <PopoverContent className="w-auto p-0 bg-zinc-800 border border-zinc-600">
+              <PopoverContent className="w-auto p-0 bg-zinc-100 border border-zinc-300">
                 <Calendar
                   mode="single"
                   selected={dueDate}
                   onSelect={setDueDate}
-                  className="rounded-md bg-zinc-900 text-white"
+                  className="rounded-md bg-white text-zinc-800"
                 />
               </PopoverContent>
             </Popover>
           </div>
 
-        
-          <div className="flex justify-end gap-4 pt-4 border-t border-zinc-700">
+          {/* Save Button */}
+          <div className="flex justify-end gap-4 pt-4 border-t border-zinc-300">
             <Button
               type="submit"
-              className="bg-gradient-to-r from-purple-600 to-purple-400 hover:from-purple-700 hover:to-purple-500 text-white font-medium px-6 py-2 rounded-md shadow-lg hover:shadow-purple-500/60 transition-transform transform hover:-translate-y-1"
+              className="bg-zinc-500 hover:bg-zinc-600 text-white font-medium px-6 py-2 rounded-md shadow-md transition-transform transform hover:-translate-y-0.5 hover:shadow-lg"
             >
               Save
             </Button>

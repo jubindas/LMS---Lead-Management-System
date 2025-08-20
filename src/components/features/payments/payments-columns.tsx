@@ -6,11 +6,16 @@ import { Button } from "@/components/ui/button";
 
 import { MoreHorizontal } from "lucide-react";
 
+import { Link } from "react-router-dom";
+
 import {
-  Popover,
-  PopoverTrigger,
-  PopoverContent,
-} from "@/components/ui/popover";
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 export const columns: ColumnDef<Payment>[] = [
   {
@@ -46,37 +51,36 @@ export const columns: ColumnDef<Payment>[] = [
       <span className="text-black text-sm">{row.getValue("date")}</span>
     ),
   },
-  {
-    id: "actions",
-    header: () => <span className="capitalize">Actions</span>,
-    cell: () => (
-      <Popover>
-        <PopoverTrigger asChild>
-          <Button
-            size="icon"
-            variant="ghost"
-            className="h-7 w-7 p-0 text-white"
-          >
-            <MoreHorizontal className="h-4 w-4 text-black" />
-          </Button>
-        </PopoverTrigger>
-        <PopoverContent className="w-40 p-2 space-y-2 bg-zinc-800 text-white rounded-lg shadow-lg text-sm">
+ {
+  id: "actions",
+  header: "Actions",
+  cell: () => {
+    return (
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
           <Button
             variant="ghost"
-            size="sm"
-            className="w-full justify-start bg-zinc-700 text-white text-sm hover:bg-zinc-600 gap-2"
+            className="h-8 w-8 p-0"
           >
-            View
+        
+            <MoreHorizontal className="h-4 w-4 text-zinc-900" />
           </Button>
-          <Button
-            variant="destructive"
-            size="sm"
-            className="w-full justify-start text-white bg-red-600 hover:bg-red-500 gap-2"
-          >
-            Refund
-          </Button>
-        </PopoverContent>
-      </Popover>
-    ),
+        </DropdownMenuTrigger>
+        <DropdownMenuContent
+          align="end"
+          className="w-40 rounded-xl bg-zinc-900 border border-zinc-700 shadow-lg"
+        >
+          <DropdownMenuLabel className="text-xs text-zinc-400">
+            Actions
+          </DropdownMenuLabel>
+          <DropdownMenuSeparator className="bg-zinc-700" />
+
+          <DropdownMenuItem asChild className="flex items-center gap-2 text-sm text-zinc-100 rounded-lg px-2 py-1.5 hover:bg-zinc-800 hover:text-zinc-100 focus:bg-zinc-800">
+            <Link to="/follow-up">Follow Up</Link>
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+    );
   },
+}
 ];

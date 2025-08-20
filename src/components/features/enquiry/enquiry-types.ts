@@ -5,7 +5,6 @@ export type Enquiry = {
   user: string;
   status: string;
   budget: string;
-  remainingDays: number;
   businessType: string;
   source: string;
 
