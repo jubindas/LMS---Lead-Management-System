@@ -10,6 +10,8 @@ import {
 
 import { MoreHorizontal } from "lucide-react";
 
+import ReminderPayment from "../ReminderPayment.tsx"
+
 
 
 import type { Payment } from "../table-types/payment-follow-up-types";
@@ -81,7 +83,7 @@ export const columns: ColumnDef<Payment>[] = [
               className="w-full justify-start bg-white/10 text-white hover:bg-white/20 gap-2"
              
             >
-              Reminder
+              <ReminderPayment />
             </Button>
           </PopoverContent>
         </Popover>

@@ -1,0 +1,129 @@
+import { useState, useRef, useEffect } from "react";
+import { Calendar } from "@/components/ui/calendar";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import TimePicker from "react-time-picker";
+import "react-time-picker/dist/TimePicker.css";
+import "react-clock/dist/Clock.css";
+
+export default function ReminderPayment() {
+  const [open, setOpen] = useState(false);
+  const [showCalendar, setShowCalendar] = useState(false);
+  const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined);
+  const [selectedTime] = useState("10:00");
+
+  const calendarRef = useRef<HTMLDivElement>(null);
+
+  // Close calendar when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        calendarRef.current &&
+        !calendarRef.current.contains(event.target as Node)
+      ) {
+        setShowCalendar(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
+  const handleSaveDateTime = () => {
+    if (selectedDate && selectedTime) {
+      console.log(
+        `Reminder Set: ${selectedDate.toDateString()} at ${selectedTime}`
+      );
+      setOpen(false);
+    }
+  };
+
+  return (
+    <Dialog open={open} onOpenChange={setOpen}>
+      {/* Trigger Button */}
+      <DialogTrigger asChild>
+        <button >
+          Set Reminder
+        </button>
+      </DialogTrigger>
+
+      {/* Modal Content */}
+      <DialogContent className="w-full max-w-md p-6 rounded-2xl shadow-xl bg-white border border-zinc-200">
+        <DialogHeader>
+          <DialogTitle className="text-2xl font-bold text-center text-zinc-800">
+            Set Reminder
+          </DialogTitle>
+          <DialogDescription className="text-center text-zinc-600 mt-2">
+            Select a date and time for your reminder
+          </DialogDescription>
+        </DialogHeader>
+
+        {/* Date and Time Side by Side */}
+        <div className="flex items-start justify-between gap-4 mt-6 relative">
+          {/* Date Selector */}
+          <div className="relative flex-1">
+            <button
+              type="button"
+              onClick={() => setShowCalendar((prev) => !prev)}
+              className="w-full px-5 py-3 rounded-xl bg-zinc-50 text-zinc-800 border border-zinc-300 shadow-sm focus:outline-none focus:ring-2 focus:ring-zinc-400 transition hover:bg-zinc-200"
+            >
+              {selectedDate
+                ? `Date: ${selectedDate.toDateString()}`
+                : "Select Date"}
+            </button>
+
+            {/* Calendar Pop-up */}
+            {showCalendar && (
+              <div
+                ref={calendarRef}
+                className="absolute top-16 z-50 w-full rounded-xl border border-zinc-300 bg-white shadow-lg"
+              >
+                <Calendar
+                  mode="single"
+                  selected={selectedDate}
+                  onSelect={(date) => {
+                    setSelectedDate(date);
+                    setShowCalendar(false);
+                  }}
+                  className="rounded-xl text-zinc-800"
+                />
+              </div>
+            )}
+          </div>
+
+          {/* Time Picker */}
+          <div className="flex-1 flex items-center">
+            <TimePicker
+             
+              value={selectedTime}
+              disableClock={true}
+              className="w-full rounded-xl border border-zinc-300 bg-zinc-50 text-zinc-800 px-3 py-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-zinc-400"
+            />
+          </div>
+        </div>
+
+        {/* Save Button */}
+        <button
+          onClick={handleSaveDateTime}
+          disabled={!selectedDate || !selectedTime}
+          className={`mt-8 w-full py-3 font-semibold rounded-xl shadow-lg transition transform hover:-translate-y-0.5 ${
+            selectedDate && selectedTime
+              ? "bg-zinc-500 text-white hover:bg-zinc-600"
+              : "bg-zinc-300 text-zinc-500 cursor-not-allowed"
+          }`}
+        >
+          {selectedDate && selectedTime
+            ? "Save Reminder"
+            : "Select Date & Time"}
+        </button>
+      </DialogContent>
+    </Dialog>
+  );
+}
