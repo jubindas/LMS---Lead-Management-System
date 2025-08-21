@@ -12,7 +12,9 @@ const EnquiryFollowUp = lazy(
   () => import("./components/pages/EnquiryFollowUp.tsx")
 );
 
-const Enquiry = lazy(() => import("./components/pages/Enquiry.tsx"));
+const Enquiry = lazy(
+  () => import("./components/pages/Enquiry.tsx")
+);
 
 const BusinessTypeTable = lazy(
   () => import("./components/features/masters/bussiness/BusinessType.tsx")
@@ -41,7 +43,9 @@ const SubRequirement = lazy(
     import("./components/features/masters/subRequirements/SubRequirement.tsx")
 );
 
-const TodoList = lazy(() => import("./components/pages/TodoList.tsx"));
+const TodoList = lazy(
+  () => import("./components/pages/TodoList.tsx")
+);
 
 const DashBoard = lazy(
   () => import("./components/features/dashboard/DashBoard.tsx")
@@ -66,11 +70,21 @@ const Location = lazy(
   () => import("./components/features/masters/location/Location.tsx")
 );
 
-const TrashBin = lazy(() => import("./components/pages/TrashBin.tsx"));
+const TrashBin = lazy(
+  () => import("./components/pages/TrashBin.tsx")
+);
 
-const PendingEnquiries = lazy(() => import("./components/pages/PendingEnquiries.tsx"));
+const PaymentFollowUp = lazy(
+  () => import("./components/pages/PaymentFollowUp.tsx")
+);
 
-const LogIn = lazy(() => import("./components/pages/LogIn.tsx"));
+const PendingEnquiries = lazy(
+  () => import("./components/pages/PendingEnquiries.tsx")
+);
+
+const LogIn = lazy(
+  () => import("./components/pages/LogIn.tsx")
+);
 
 const router = createBrowserRouter([
   {
@@ -206,6 +220,14 @@ const router = createBrowserRouter([
         element: (
           <Suspense fallback={<div>Loading Enquiry Details...</div>}>
            <PendingEnquiries />
+          </Suspense>
+        ),
+      },
+       {
+        path: "/payment-follow-up",
+        element: (
+          <Suspense fallback={<div>Loading Enquiry Details...</div>}>
+          <PaymentFollowUp />
           </Suspense>
         ),
       },
