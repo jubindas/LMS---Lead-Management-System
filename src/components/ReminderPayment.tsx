@@ -92,7 +92,7 @@ export default function ReminderPayment() {
                     setSelectedDate(date);
                     setShowCalendar(false);
                   }}
-                  className="rounded-xl text-zinc-800"
+                  className="w-72 rounded-xl border border-zinc-300 shadow-lg bg-zinc-400 text-zinc-900"
                 />
               </div>
             )}

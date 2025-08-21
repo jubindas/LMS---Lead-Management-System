@@ -117,7 +117,7 @@ export default function EnquiryFollowUpForm() {
                     });
                     setShowCalendar(false);
                   }}
-                  className="w-72 rounded-xl border border-zinc-300 shadow-lg bg-zinc-50 text-zinc-800"
+                  className="w-72 rounded-xl border border-zinc-300 shadow-lg bg-zinc-400 text-zinc-900"
                 />
               </div>
             )}
