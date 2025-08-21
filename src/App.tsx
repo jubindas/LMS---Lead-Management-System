@@ -68,6 +68,8 @@ const Location = lazy(
 
 const TrashBin = lazy(() => import("./components/pages/TrashBin.tsx"));
 
+const PendingEnquiries = lazy(() => import("./components/pages/PendingEnquiries.tsx"));
+
 const LogIn = lazy(() => import("./components/pages/LogIn.tsx"));
 
 const router = createBrowserRouter([
@@ -196,6 +198,14 @@ const router = createBrowserRouter([
         element: (
           <Suspense fallback={<div>Loading Enquiry Details...</div>}>
             <EnquiryViewDetails />
+          </Suspense>
+        ),
+      },
+      {
+        path: "/pending-enquiry",
+        element: (
+          <Suspense fallback={<div>Loading Enquiry Details...</div>}>
+           <PendingEnquiries />
           </Suspense>
         ),
       },
