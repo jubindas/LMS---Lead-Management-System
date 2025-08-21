@@ -8,6 +8,10 @@ const EnquiryViewDetails = lazy(
   () => import("./components/pages/EnquiryViewDetails.tsx")
 );
 
+const EnquiryDialog = lazy(
+  () => import("./components/EnquiryDialog.tsx")
+);
+
 const EnquiryFollowUp = lazy(
   () => import("./components/pages/EnquiryFollowUp.tsx")
 );
@@ -84,6 +88,14 @@ const PendingEnquiries = lazy(
 
 const LogIn = lazy(
   () => import("./components/pages/LogIn.tsx")
+);
+
+const ReportEnquiry = lazy(
+  () => import("./components/pages/ReportEnquiry.tsx")
+);
+
+const DownloadEnquiry = lazy(
+  () => import("./components/pages/DownloadEnquiry.tsx")
 );
 
 const router = createBrowserRouter([
@@ -228,6 +240,30 @@ const router = createBrowserRouter([
         element: (
           <Suspense fallback={<div>Loading Enquiry Details...</div>}>
           <PaymentFollowUp />
+          </Suspense>
+        ),
+      },
+        {
+        path: "/your-target-route",
+        element: (
+          <Suspense fallback={<div>Loading Enquiry Details...</div>}>
+         <EnquiryDialog />
+          </Suspense>
+        ),
+      },
+       {
+        path: "/report-enquiry",
+        element: (
+          <Suspense fallback={<div>Loading Enquiry Details...</div>}>
+       <ReportEnquiry />
+          </Suspense>
+        ),
+      },
+       {
+        path: "/download",
+        element: (
+          <Suspense fallback={<div>Loading Enquiry Details...</div>}>
+        <DownloadEnquiry />
           </Suspense>
         ),
       },

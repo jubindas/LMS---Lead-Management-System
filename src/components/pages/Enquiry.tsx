@@ -2,21 +2,13 @@ import { DataTable } from "../data-table.tsx";
 
 import { enquiryColumns } from "../table-columns/enquiry-columns.tsx";
 
-import AddEnquiryDialog from "../EnquiryDialog.tsx";
+import { Button } from "../ui/button.tsx";
 
-import EnquiryBussines from "@/components/EnquiryBussines.tsx";
-
-import EnquiryStatus from "@/components/EnquieyStatus";
-
-import MainRequirementsForm from "@/components/MainRequirementsForm";
+import { Link } from "react-router-dom";
 
 import { enquiryData } from "../table-datas/enquiry-data.ts";
 
-import EnquirySource from "@/components/EnquirySource.tsx";
 
-import SubRequirementForm from "../SubRequirementForm.tsx";
-
-import EnquiryLocation from "@/components/EnquiryLocation.tsx";
 export default function Enquiries() {
   return (
     <div className="p-8 min-h-screen w-full ">
@@ -26,15 +18,11 @@ export default function Enquiries() {
           <h2 className="text-3xl font-bold tracking-wide text-black">
             Enquiries
           </h2>
-          <div className="flex items-center gap-3 flex-wrap overflow-x-auto">
-            <AddEnquiryDialog />
-            <EnquiryBussines />
-            <EnquiryStatus />
-            <MainRequirementsForm />
-            <SubRequirementForm />
-            <EnquirySource />
-            <EnquiryLocation />
-          </div>
+          <Link to="/your-target-route">
+     <Button className="bg-zinc-500 hover:bg-zinc-600 text-white font-medium px-3 py-1.5 text-sm rounded-md shadow-md transition-transform transform hover:-translate-y-0.5 hover:shadow-lg">
+          Add Enquiry
+        </Button>
+    </Link>
         </div>
 
         <div className="flex flex-wrap justify-between items-center mb-3 gap-3 text-sm">
