@@ -8,9 +8,9 @@ import { Button } from "@/components/ui/button";
 
 import { DataTable } from "@/components/data-table";
 
-import { data } from "./todo-data";
+import { data } from "../table-datas/todo-data";
 
-import { columns } from "./todo-columns";
+import { columns } from "../table-columns/todo-columns";
 
 import {
   Popover,

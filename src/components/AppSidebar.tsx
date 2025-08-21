@@ -4,7 +4,11 @@ import {
   ListTodo,
   LayoutDashboard,
   IndianRupee,
-  Trash2
+  Trash2,
+  Clock,
+  CheckCircle,
+  FileText,
+  Download,
 } from "lucide-react";
 
 
@@ -49,7 +53,12 @@ const items = [
   },
   { title: "Payment", url: "/payment", icon: IndianRupee },
   { title: "Todo List", url: "/todo-list", icon: ListTodo },
+  { title: "Completed Enquiries", url: "/completed-enquiry", icon: CheckCircle  },
+  { title: "Pending Enquiries", url: "/pending-enquiry", icon: Clock },
   { title: "Trash Enquiries", url: "/trash-bin", icon: Trash2 },
+  { title: "Report Enquiries", url: "/report-enquiry", icon: FileText },
+  { title: "Download Enquiries", url: "/download", icon: Download },
+
 ];
 
 export function AppSidebar() {

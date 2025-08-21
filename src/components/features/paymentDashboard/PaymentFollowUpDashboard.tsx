@@ -1,6 +1,9 @@
 import { DataTable } from "@/components/data-table";
+
 import type { ColumnDef } from "@tanstack/react-table";
+
 import { Calendar } from "@/components/ui/calendar";
+
 import { useState, useRef, useEffect } from "react";
 
 type Payment = {

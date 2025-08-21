@@ -4,7 +4,9 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
 import RootLayout from "./components/RootLayout";
 
-const EnquiryViewDetails = lazy(()=>import("./components/pages/EnquiryViewDetails.tsx"));
+const EnquiryViewDetails = lazy(
+  () => import("./components/pages/EnquiryViewDetails.tsx")
+);
 
 const EnquiryFollowUp = lazy(
   () => import("./components/pages/EnquiryFollowUp.tsx")
@@ -27,14 +29,19 @@ const MainRequirements = lazy(
     )
 );
 
+const CompletedEnquiries = lazy(
+  () =>
+    import(
+      "./components/pages/CompletedEnquiries.tsx"
+    )
+);
+
 const SubRequirement = lazy(
   () =>
     import("./components/features/masters/subRequirements/SubRequirement.tsx")
 );
 
-const TodoList = lazy(
-  () => import("./components/features/todolist/TodoList.tsx")
-);
+const TodoList = lazy(() => import("./components/pages/TodoList.tsx"));
 
 const DashBoard = lazy(
   () => import("./components/features/dashboard/DashBoard.tsx")
@@ -169,6 +176,14 @@ const router = createBrowserRouter([
         ),
       },
       {
+        path: "completed-enquiry",
+        element: (
+          <Suspense fallback={<div>Loading Payment Follow-Up...</div>}>
+            <CompletedEnquiries />
+          </Suspense>
+        ),
+      },
+      {
         path: "follow-up",
         element: (
           <Suspense fallback={<div>Loading Payment Follow-Up...</div>}>
@@ -176,15 +191,14 @@ const router = createBrowserRouter([
           </Suspense>
         ),
       },
-    {
-  path: "/enquiry-view-details",
-  element: (
-    <Suspense fallback={<div>Loading Enquiry Details...</div>}>
-      <EnquiryViewDetails />
-    </Suspense>
-  ),
-},
-
+      {
+        path: "/enquiry-view-details",
+        element: (
+          <Suspense fallback={<div>Loading Enquiry Details...</div>}>
+            <EnquiryViewDetails />
+          </Suspense>
+        ),
+      },
     ],
   },
   {

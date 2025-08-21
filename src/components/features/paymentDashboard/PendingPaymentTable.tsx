@@ -78,7 +78,7 @@ const columns: ColumnDef<Payment>[] = [
           <DropdownMenuLabel className="text-xs text-zinc-400">Actions</DropdownMenuLabel>
           <DropdownMenuSeparator className="bg-zinc-800" />
 
-          {/* Add Follow Up (red) */}
+         
           <DropdownMenuItem asChild>
             <Link to="/payment-follow-up-dashboard" className="flex items-center w-full gap-2 text-red-400">
               <PlusCircle className="h-4 w-4" />
@@ -86,7 +86,6 @@ const columns: ColumnDef<Payment>[] = [
             </Link>
           </DropdownMenuItem>
 
-          {/* Mark as Done (green) */}
           <DropdownMenuItem
             onClick={() => {
               payment.paid_amount = payment.total_amount;

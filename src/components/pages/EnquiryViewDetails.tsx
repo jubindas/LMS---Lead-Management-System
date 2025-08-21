@@ -1,6 +1,5 @@
 import type{  ReactNode } from "react";
 import { useState } from "react";
-import { Button } from "@/components/ui/button";
 import {
   FaWhatsapp,
   FaPhone,
@@ -184,16 +183,6 @@ export default function EnquiryViewDetails() {
               }
             />
           </div>
-        </div>
-
-        {/* Action Buttons */}
-        <div className="mt-6 flex justify-end gap-2">
-          <Button className="bg-zinc-300 text-zinc-900 hover:bg-zinc-400">
-            Edit
-          </Button>
-          <Button className="bg-zinc-300 text-zinc-900 hover:bg-zinc-400">
-            Export
-          </Button>
         </div>
       </div>
     </div>
