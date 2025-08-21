@@ -80,7 +80,7 @@ const columns: ColumnDef<Payment>[] = [
 
           {/* Add Follow Up (red) */}
           <DropdownMenuItem asChild>
-            <Link to="/payment-follow-up" className="flex items-center w-full gap-2 text-red-400">
+            <Link to="/payment-follow-up-dashboard" className="flex items-center w-full gap-2 text-red-400">
               <PlusCircle className="h-4 w-4" />
               Add Follow Up
             </Link>

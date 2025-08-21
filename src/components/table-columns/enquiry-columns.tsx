@@ -128,7 +128,7 @@ export const enquiryColumns: ColumnDef<Enquiry>[] = [
               asChild
               className="flex items-center gap-2 text-sm text-zinc-100 rounded-lg px-2 py-1.5 hover:bg-zinc-800 hover:text-zinc-100 focus:bg-zinc-800"
             >
-              <Link to="/view-details" className="flex items-center gap-2">
+              <Link to="/enquiry-view-details" className="flex items-center gap-2">
                 <Eye className="h-4 w-4 text-zinc-100" />
                 View Details
               </Link>

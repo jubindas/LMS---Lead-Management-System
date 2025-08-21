@@ -4,6 +4,8 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
 import RootLayout from "./components/RootLayout";
 
+const EnquiryViewDetails = lazy(()=>import("./components/pages/EnquiryViewDetails.tsx"));
+
 const EnquiryFollowUp = lazy(
   () => import("./components/pages/EnquiryFollowUp.tsx")
 );
@@ -151,7 +153,7 @@ const router = createBrowserRouter([
         ),
       },
       {
-        path: "payment-follow-up",
+        path: "payment-follow-up-dashboard",
         element: (
           <Suspense fallback={<div>Loading Payment Follow-Up...</div>}>
             <PaymentFollowUpDashboard />
@@ -174,6 +176,15 @@ const router = createBrowserRouter([
           </Suspense>
         ),
       },
+    {
+  path: "/enquiry-view-details",
+  element: (
+    <Suspense fallback={<div>Loading Enquiry Details...</div>}>
+      <EnquiryViewDetails />
+    </Suspense>
+  ),
+},
+
     ],
   },
   {
