@@ -18,7 +18,7 @@ export default function Enquiries() {
           <h2 className="text-3xl font-bold tracking-wide text-black">
             Enquiries
           </h2>
-          <Link to="/your-target-route">
+          <Link to="/add-enquiry">
      <Button className="bg-zinc-500 hover:bg-zinc-600 text-white font-medium px-3 py-1.5 text-sm rounded-md shadow-md transition-transform transform hover:-translate-y-0.5 hover:shadow-lg">
           Add Enquiry
         </Button>

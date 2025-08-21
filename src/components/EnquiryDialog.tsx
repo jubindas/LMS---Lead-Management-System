@@ -50,15 +50,14 @@ export default function EnquiryForm() {
   return (
     <div className="p-6 max-w-6xl mt-7 mx-auto bg-zinc-50 rounded-2xl shadow-md space-y-6">
       {/* Top section with extra components */}
-     <div className="flex flex-wrap gap-3 mb-6 justify-end">
-  <EnquiryBussines />
-  <EnquiryLocation />
-  <MainRequirementsForm />
-  <EnquirySource />
-  <EnquiryStatus />
-  <SubRequirementForm />
-</div>
-
+      <div className="flex flex-wrap gap-3 mb-6 justify-end">
+        <EnquiryBussines />
+        <EnquiryLocation />
+        <MainRequirementsForm />
+        <EnquirySource />
+        <EnquiryStatus />
+        <SubRequirementForm />
+      </div>
 
       <h2 className="text-2xl font-bold text-zinc-900 mb-6">Add New Entry</h2>
 
@@ -167,14 +166,19 @@ export default function EnquiryForm() {
             </label>
             <div className="flex items-center border border-zinc-300 rounded-lg px-3 bg-zinc-100">
               <MdBusiness className="text-zinc-500 mr-2" />
-              <input
-                type="text"
+              <select
                 name="businessType"
-                placeholder="Enter or choose Business Type"
                 value={formData.businessType}
                 onChange={handleChange}
-                className="w-full py-2 text-zinc-800 placeholder-zinc-400 bg-transparent focus:outline-none"
-              />
+                className="w-full py-2 text-zinc-800 bg-transparent focus:outline-none"
+              >
+                <option value="" disabled>
+                  Select Business Type
+                </option>
+                <option value="Manufacturer">Manufacturer</option>
+                <option value="Service">Service</option>
+                <option value="Other">Other</option>
+              </select>
             </div>
           </div>
 
@@ -185,14 +189,20 @@ export default function EnquiryForm() {
             </label>
             <div className="flex items-center border border-zinc-300 rounded-lg px-3 bg-zinc-100">
               <BsFillFileEarmarkTextFill className="text-zinc-500 mr-2" />
-              <input
-                type="text"
+              <select
                 name="requirement"
-                placeholder="Enter Requirement"
                 value={formData.requirement}
                 onChange={handleChange}
-                className="w-full py-2 text-zinc-800 placeholder-zinc-400 bg-transparent focus:outline-none"
-              />
+                className="w-full py-2 text-zinc-800 bg-transparent focus:outline-none"
+              >
+                <option value="" disabled>
+                  Select Requirement
+                </option>
+                <option value="Product">Product</option>
+                <option value="Consulting">Consulting</option>
+                <option value="Service">Service</option>
+                <option value="Other">Other</option>
+              </select>
             </div>
           </div>
 
@@ -203,14 +213,20 @@ export default function EnquiryForm() {
             </label>
             <div className="flex items-center border border-zinc-300 rounded-lg px-3 bg-zinc-100">
               <RiUserVoiceFill className="text-zinc-500 mr-2" />
-              <input
-                type="text"
+              <select
                 name="source"
-                placeholder="Enter Source"
                 value={formData.source}
                 onChange={handleChange}
-                className="w-full py-2 text-zinc-800 placeholder-zinc-400 bg-transparent focus:outline-none"
-              />
+                className="w-full py-2 text-zinc-800 bg-transparent focus:outline-none"
+              >
+                <option value="" disabled>
+                  Select Source
+                </option>
+                <option value="Cold Calling">Cold Calling</option>
+                <option value="Social Media">Social Media</option>
+                <option value="Referral">Referral</option>
+                <option value="Other">Other</option>
+              </select>
             </div>
           </div>
 

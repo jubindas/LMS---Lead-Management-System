@@ -244,7 +244,7 @@ const router = createBrowserRouter([
         ),
       },
         {
-        path: "/your-target-route",
+        path: "/add-enquiry",
         element: (
           <Suspense fallback={<div>Loading Enquiry Details...</div>}>
          <EnquiryDialog />

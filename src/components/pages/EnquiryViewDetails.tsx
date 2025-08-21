@@ -1,5 +1,7 @@
 import type{  ReactNode } from "react";
+
 import { useState } from "react";
+
 import {
   FaWhatsapp,
   FaPhone,
@@ -39,7 +41,7 @@ const sampleEnquiry: Enquiry = {
   requirements: "Web development, Mobile app",
   source: "Referral",
   location: "New Delhi",
-  budget: "$5000-$10000",
+  budget: "5000-10000",
   remarks: "High priority client",
   status: "Pending",
   mainCategory: "Software",

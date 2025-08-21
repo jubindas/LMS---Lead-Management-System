@@ -27,6 +27,8 @@ export default function TrashBin() {
                   {size}
                 </option>
               ))}
+
+             
             </select>
             <span>entries</span>
           </div>

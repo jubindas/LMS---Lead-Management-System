@@ -5,13 +5,11 @@ import {
   LayoutDashboard,
   IndianRupee,
   Trash2,
-  Clock,
+  CalendarClock,
   CheckCircle,
   FileText,
   Download,
 } from "lucide-react";
-
-
 
 import { Link, useLocation } from "react-router-dom";
 
@@ -22,7 +20,6 @@ import {
   SidebarContent,
   SidebarGroup,
   SidebarGroupContent,
-  SidebarGroupLabel,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
@@ -54,7 +51,7 @@ const items = [
   { title: "Payment", url: "/payment", icon: IndianRupee },
   { title: "Todo List", url: "/todo-list", icon: ListTodo },
   { title: "Completed Enquiries", url: "/completed-enquiry", icon: CheckCircle  },
-  { title: "Pending Enquiries", url: "/pending-enquiry", icon: Clock },
+  { title: "Pending Enquiries", url: "/pending-enquiry", icon: CalendarClock},
   { title: "Trash Enquiries", url: "/trash-bin", icon: Trash2 },
   { title: "Report Enquiries", url: "/report-enquiry", icon: FileText },
   { title: "Download Enquiries", url: "/download", icon: Download },
@@ -92,10 +89,6 @@ export function AppSidebar() {
 
       <SidebarContent>
         <SidebarGroup>
-          <SidebarGroupLabel className="text-gray-300 uppercase tracking-wider text-xs px-4 mt-4">
-            Application
-          </SidebarGroupLabel>
-
           <SidebarGroupContent>
             <SidebarMenu className="space-y-1">
               {items.map((item) => {
