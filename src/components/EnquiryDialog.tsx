@@ -1,16 +1,25 @@
 import { useState } from "react";
+
 import { Button } from "@/components/ui/button";
+
 import { FaBuilding, FaPhone, FaEnvelope, FaMoneyBill } from "react-icons/fa";
+
 import { MdLocationOn, MdBusiness } from "react-icons/md";
+
 import { BsFillFileEarmarkTextFill } from "react-icons/bs";
+
 import { RiUserVoiceFill } from "react-icons/ri";
 
-// Import your components
 import EnquiryBussines from "@/components/EnquiryBussines";
+
 import EnquiryLocation from "@/components/EnquiryLocation";
+
 import MainRequirementsForm from "@/components/MainRequirementsForm";
+
 import EnquirySource from "@/components/EnquirySource";
+
 import EnquiryStatus from "@/components/EnquieyStatus.tsx";
+
 import SubRequirementForm from "@/components/SubRequirementForm.tsx";
 
 export default function EnquiryForm() {
@@ -21,6 +30,8 @@ export default function EnquiryForm() {
     altNumber: "",
     whatsappAlt: false,
     businessType: "",
+    mainCategory: "",
+    subCategory: "",
     source: "",
     requirement: "",
     location: "",
@@ -177,6 +188,55 @@ export default function EnquiryForm() {
                 </option>
                 <option value="Manufacturer">Manufacturer</option>
                 <option value="Service">Service</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+          </div>
+
+          {/* Main Category */}
+          <div>
+            <label className="block text-sm font-medium text-zinc-700 mb-1.5">
+              Main Category
+            </label>
+            <div className="flex items-center border border-zinc-300 rounded-lg px-3 bg-zinc-100">
+              <BsFillFileEarmarkTextFill className="text-zinc-500 mr-2" />
+              <select
+                name="mainCategory"
+                value={formData.mainCategory || ""}
+                onChange={handleChange}
+                className="w-full py-2 text-zinc-800 bg-transparent focus:outline-none"
+              >
+                <option value="" disabled>
+                  Select Main Category
+                </option>
+                <option value="Electronics">Electronics</option>
+                <option value="Furniture">Furniture</option>
+                <option value="Apparel">Apparel</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+          </div>
+
+          {/* Sub Category */}
+          <div>
+            <label className="block text-sm font-medium text-zinc-700 mb-1.5">
+              Sub Category
+            </label>
+            <div className="flex items-center border border-zinc-300 rounded-lg px-3 bg-zinc-100">
+              <BsFillFileEarmarkTextFill className="text-zinc-500 mr-2" />
+              <select
+                name="subCategory"
+                value={formData.subCategory || ""}
+                onChange={handleChange}
+                className="w-full py-2 text-zinc-800 bg-transparent focus:outline-none"
+              >
+                <option value="" disabled>
+                  Select Sub Category
+                </option>
+                <option value="Mobile">Mobile</option>
+                <option value="Laptop">Laptop</option>
+                <option value="Chair">Chair</option>
+                <option value="Clothing">Clothing</option>
                 <option value="Other">Other</option>
               </select>
             </div>

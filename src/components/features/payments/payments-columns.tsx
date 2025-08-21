@@ -78,7 +78,7 @@ export const columns: ColumnDef<Payment>[] = [
 
           <DropdownMenuItem asChild className="flex items-center gap-2 text-sm text-zinc-100 rounded-lg px-2 py-1.5 hover:bg-zinc-800 hover:text-zinc-100 focus:bg-zinc-800">
             <Link to="/payment-follow-up">
-             <Repeat className="h-4 w-4 text-green-500" />Follow Up</Link>
+             <Repeat className="h-4 w-4 text-zinc-50" />Follow Up</Link>
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
