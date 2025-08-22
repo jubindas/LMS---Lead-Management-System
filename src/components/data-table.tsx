@@ -63,7 +63,11 @@ export function DataTable<TData, TValue>({
   });
 
   return (
-    <div className={`${hideTableInPrint ? "print:hidden" : ""}  backdrop-blur`}>
+    <div
+      className={`${
+        hideTableInPrint ? "print:hidden" : ""
+      }  backdrop-blur border rounded-lg border-zinc-300 overflow-hidden`}
+    >
       {filterOptions?.enableFilter && (
         <div className="flex w-full px-4 py-3 bg-inherit border-b border-zinc-700/60">
           <DataTableFilter
@@ -74,23 +78,16 @@ export function DataTable<TData, TValue>({
         </div>
       )}
 
-      <Table>
-        <TableHeader>
+      <Table className="">
+        <TableHeader className="">
           {table.getHeaderGroups().map((headerGroup) => (
-            <TableRow
-              key={headerGroup.id}
-              className="bg-zinc-300  border border-zinc-300 !rounded-md"
-            >
+            <TableRow key={headerGroup.id} className="bg-zinc-300 rounded-2xl">
               {headerGroup.headers.map((header, index) => (
                 <TableHead
                   key={header.id}
-                  className={`text-black text-xs font-medium uppercase tracking-wider py-4 px-6 text-left  ${
-                    index === 0 ? "rounded-tl-md" : ""
-                  } ${
-                    index === headerGroup.headers.length - 1
-                      ? "rounded-tr-md"
-                      : ""
-                  }`}
+                  className={`text-black text-xs font-medium uppercase  tracking-wider py-4 px-6 text-left
+            ${index === 0 ? "rounded-tl-lg" : ""}
+            ${index === headerGroup.headers.length - 1 ? "rounded-tr-lg" : ""}`}
                 >
                   {header.isPlaceholder
                     ? null
@@ -104,7 +101,7 @@ export function DataTable<TData, TValue>({
           ))}
         </TableHeader>
 
-        <TableBody className="border-l border-r border-zinc-300">
+        <TableBody className="">
           {table.getRowModel().rows?.length ? (
             table.getRowModel().rows.map((row, rowIndex) => (
               <TableRow
