@@ -1,11 +1,8 @@
 import type { Enquiry } from "../table-types/enquiry-types";
-
 import type { ColumnDef } from "@tanstack/react-table";
 
 import { Button } from "@/components/ui/button";
-
 import { MoreHorizontal, Repeat, Eye } from "lucide-react";
-
 import { Link } from "react-router-dom";
 
 import {
@@ -17,12 +14,14 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-export const enquiryColumns: ColumnDef<Enquiry>[] = [
+export const enquiryColumns = (
+  handleStageUpdate: (sl: number, newStage: string) => void
+): ColumnDef<Enquiry>[] => [
   {
     accessorKey: "sl",
     header: "Sl",
     cell: ({ row }) => (
-      <span className="text-text text-sm w-3 font-medium">
+      <span className="text-text text-sm w-2 font-medium">
         {row.getValue("sl")}
       </span>
     ),
@@ -31,7 +30,7 @@ export const enquiryColumns: ColumnDef<Enquiry>[] = [
     accessorKey: "Name",
     header: "Name",
     cell: ({ row }) => (
-      <span className="truncate block w-20 text-sm">
+      <span className="truncate block w-15 text-sm">
         {row.getValue("Name")}
       </span>
     ),
@@ -40,7 +39,7 @@ export const enquiryColumns: ColumnDef<Enquiry>[] = [
     accessorKey: "phone",
     header: "Phone",
     cell: ({ row }) => (
-      <span className="truncate block w-25 text-sm">
+      <span className="truncate block w-15 text-sm">
         {row.getValue("phone")}
       </span>
     ),
@@ -49,7 +48,7 @@ export const enquiryColumns: ColumnDef<Enquiry>[] = [
     accessorKey: "user",
     header: "User",
     cell: ({ row }) => (
-      <span className="truncate block w-20 text-sm">
+      <span className="truncate block w-15 text-sm">
         {row.getValue("user")}
       </span>
     ),
@@ -58,16 +57,33 @@ export const enquiryColumns: ColumnDef<Enquiry>[] = [
     accessorKey: "status",
     header: "Status",
     cell: ({ row }) => (
-      <span className="truncate block w-15 text-sm">
+      <span className="truncate block w-13 text-sm">
         {row.getValue("status")}
       </span>
+    ),
+  },
+  {
+    accessorKey: "stage",
+    header: "Stage",
+    cell: ({ row }) => (
+      <select
+        className="border rounded px-2 py-1 text-sm"
+        value={row.getValue("stage")}
+        onChange={(e) =>
+          handleStageUpdate(row.original.sl, e.target.value)
+        }
+      >
+        <option value="New">Cold</option>
+        <option value="Follow-Up">Warm</option>
+        <option value="Negotiation">Hot</option>
+      </select>
     ),
   },
   {
     accessorKey: "budget",
     header: "Budget",
     cell: ({ row }) => (
-      <span className="truncate block w-10 text-sm">
+      <span className="truncate block w-9 text-sm">
         {row.getValue("budget")}
       </span>
     ),
@@ -128,7 +144,10 @@ export const enquiryColumns: ColumnDef<Enquiry>[] = [
               asChild
               className="flex items-center gap-2 text-sm text-zinc-100 rounded-lg px-2 py-1.5 hover:bg-zinc-800 hover:text-zinc-100 focus:bg-zinc-800"
             >
-              <Link to="/enquiry-view-details" className="flex items-center gap-2">
+              <Link
+                to="/enquiry-view-details"
+                className="flex items-center gap-2"
+              >
                 <Eye className="h-4 w-4 text-zinc-100" />
                 View Details
               </Link>

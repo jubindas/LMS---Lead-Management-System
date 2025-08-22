@@ -8,8 +8,19 @@ import { Link } from "react-router-dom";
 
 import { enquiryData } from "../table-datas/enquiry-data.ts";
 
+import { useState } from "react";
 
 export default function Enquiries() {
+  const [data, setData] = useState(enquiryData);
+
+  const handleStageUpdate = (sl: number, newStage: string) => {
+    setData((prev) =>
+      prev.map((item) => (item.sl === sl ? { ...item, stage: newStage } : item))
+    );
+  };
+
+  const columns = enquiryColumns(handleStageUpdate);
+
   return (
     <div className="p-8 min-h-screen w-full ">
       <div className="max-w-7xl mx-auto mt-10 p-8 shadow-md rounded-2xl bg-zinc-50">
@@ -19,10 +30,10 @@ export default function Enquiries() {
             Enquiries
           </h2>
           <Link to="/add-enquiry">
-     <Button className="bg-zinc-500 hover:bg-zinc-600 text-white font-medium px-3 py-1.5 text-sm rounded-md shadow-md transition-transform transform hover:-translate-y-0.5 hover:shadow-lg">
-          Add Enquiry
-        </Button>
-    </Link>
+            <Button className="bg-zinc-500 hover:bg-zinc-600 text-white font-medium px-3 py-1.5 text-sm rounded-md shadow-md transition-transform transform hover:-translate-y-0.5 hover:shadow-lg">
+              Add Enquiry
+            </Button>
+          </Link>
         </div>
 
         <div className="flex flex-wrap justify-between items-center mb-3 gap-3 text-sm">
@@ -55,7 +66,7 @@ export default function Enquiries() {
         {/* Data Table */}
         <div className="w-full overflow-x-auto">
           <DataTable
-            columns={enquiryColumns}
+            columns={columns}
             data={enquiryData}
             enablePagination={true}
           />

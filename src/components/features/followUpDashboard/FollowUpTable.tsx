@@ -1,11 +1,8 @@
 import type { ColumnDef } from "@tanstack/react-table";
 
 import { Badge } from "@/components/ui/badge";
-
 import { DataTable } from "@/components/data-table";
-
 import { Button } from "@/components/ui/button";
-
 import { MoreHorizontal, Edit, Trash2, CheckCircle2 } from "lucide-react";
 
 import {
@@ -22,6 +19,7 @@ type FollowUp = {
   lead_name: string;
   contact: string;
   follow_up_date: string;
+  stage: string;
   status: "Pending" | "Completed";
 };
 
@@ -31,6 +29,7 @@ const follow_up_data: FollowUp[] = [
     lead_name: "John Doe",
     contact: "john@example.com",
     follow_up_date: "2025-08-17",
+    stage: "Cold",
     status: "Pending",
   },
   {
@@ -38,6 +37,7 @@ const follow_up_data: FollowUp[] = [
     lead_name: "Jane Smith",
     contact: "jane@example.com",
     follow_up_date: "2025-08-17",
+    stage: "Warm",
     status: "Completed",
   },
   {
@@ -45,29 +45,40 @@ const follow_up_data: FollowUp[] = [
     lead_name: "Alice Johnson",
     contact: "alice@example.com",
     follow_up_date: "2025-08-18",
+    stage: "Hot",
     status: "Pending",
   },
 ];
 
 const columns: ColumnDef<FollowUp>[] = [
+  { accessorKey: "sl", header: "Sl" },
+  { accessorKey: "lead_name", header: "Lead Name" },
+  { accessorKey: "contact", header: "Contact" },
   {
-    accessorKey: "sl",
-    header: "Sl",
-  },
-  {
-    accessorKey: "lead_name",
-    header: "Lead Name",
-  },
-  {
-    accessorKey: "contact",
-    header: "Contact",
-  },
-{
     accessorKey: "follow_up_date",
     header: () => <span className="capitalize">Date</span>,
     cell: ({ row }) => (
       <span className="text-black text-sm">{row.getValue("follow_up_date")}</span>
     ),
+  },
+  {
+    accessorKey: "stage",
+    header: "Stage",
+    cell: ({ row }) => {
+      const stage = row.getValue("stage") as string;
+      const stageColors: Record<string, string> = {
+        Cold: "bg-blue-200 text-blue-800",
+        Warm: "bg-yellow-200 text-yellow-800",
+        Hot: "bg-red-200 text-red-800",
+      };
+      const stageClass = stageColors[stage] || "bg-gray-200 text-gray-800";
+
+      return (
+        <Badge className={`text-xs px-2 py-1 rounded-md ${stageClass}`}>
+          {stage}
+        </Badge>
+      );
+    },
   },
   {
     accessorKey: "status",
