@@ -16,7 +16,7 @@ export default function EnquiryFollowUp() {
       <div className="max-w-7xl mx-auto mt-10 p-8 shadow-md rounded-2xl bg-zinc-50">
           <div className="flex flex-wrap justify-between items-center mb-4 border-b border-zinc-700/60 pb-2">
                 <h2 className="text-xl font-bold tracking-wide text-zinc-800">
-                  Payment Follow-Up
+                  Enquiry Follow-Up
                 </h2>
             <EnquiryFollowUpForm />
               </div>

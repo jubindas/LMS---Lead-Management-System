@@ -77,14 +77,14 @@ export default function EnquiryFollowUpForm() {
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
           <div className="flex flex-col sm:col-span-2">
             <label className="text-zinc-700 mb-2 font-medium">
-              Enquiry Details
+              Remarks
             </label>
             <input
               type="text"
               name="enquiryDetails"
               value={form.enquiryDetails || ""}
               onChange={handleInputChange}
-              placeholder="Enter enquiry details"
+              placeholder="Enter Remarks..."
               className="w-full px-5 py-3 rounded-xl bg-zinc-50 text-zinc-800 placeholder-zinc-400 border border-zinc-300 shadow-sm focus:outline-none focus:ring-2 focus:ring-zinc-400 transition"
             />
           </div>
