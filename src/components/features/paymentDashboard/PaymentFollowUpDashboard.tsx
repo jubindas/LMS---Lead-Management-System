@@ -1,8 +1,8 @@
 import { DataTable } from "@/components/data-table";
+
 import PaymentFollowUpForm from "@/components/PaymentFollowUpForm";
 
 import type { ColumnDef } from "@tanstack/react-table";
-
 
 type Payment = {
   id: number;
@@ -33,9 +33,6 @@ const initialPaymentData: Payment[] = [
 ];
 
 export default function PaymentFollowUpDashboard() {
-
-
-
   const columns: ColumnDef<Payment>[] = [
     { accessorKey: "leadName", header: "Lead Name" },
     { accessorKey: "totalAmount", header: "Total Amount" },
@@ -43,19 +40,29 @@ export default function PaymentFollowUpDashboard() {
     {
       id: "remaining",
       header: "Remaining",
-      cell: ({ row }) => <span className="text-zinc-800">{(row.original.totalAmount || 0) - (row.original.paidAmount || 0)}</span>,
+      cell: ({ row }) => (
+        <span className="text-zinc-800">
+          {(row.original.totalAmount || 0) - (row.original.paidAmount || 0)}
+        </span>
+      ),
     },
     {
       accessorKey: "reason",
       header: "Remark",
-      cell: ({ row }) => <span className="text-zinc-800">{row.getValue("reason") || "-"}</span>,
+      cell: ({ row }) => (
+        <span className="text-zinc-800">{row.getValue("reason") || "-"}</span>
+      ),
     },
     {
       accessorKey: "nextPaymentDate",
       header: "Next Payment Date",
       cell: ({ row }) => {
         const date = row.getValue("nextPaymentDate") as string;
-        return <span className="text-zinc-800">{date ? new Date(date).toLocaleDateString() : "-"}</span>;
+        return (
+          <span className="text-zinc-800">
+            {date ? new Date(date).toLocaleDateString() : "-"}
+          </span>
+        );
       },
     },
     {
@@ -65,7 +72,13 @@ export default function PaymentFollowUpDashboard() {
         const payment = row.original;
         const completed = payment.paidAmount === payment.totalAmount;
         return (
-          <span className={`px-2 py-1 rounded text-xs ${completed ? "bg-green-200 text-green-800" : "bg-red-200 text-red-800"}`}>
+          <span
+            className={`px-2 py-1 rounded text-xs ${
+              completed
+                ? "bg-green-200 text-green-800"
+                : "bg-red-200 text-red-800"
+            }`}
+          >
             {completed ? "Completed" : "Pending"}
           </span>
         );
@@ -74,42 +87,46 @@ export default function PaymentFollowUpDashboard() {
   ];
 
   return (
-     <div className="p-8 min-h-screen w-full">
-         <div className="max-w-7xl mx-auto mt-10 p-8 shadow-md rounded-2xl bg-zinc-50">
-           <div className="flex flex-wrap justify-between items-center mb-4 border-b border-zinc-700/60 pb-2">
-             <h2 className="text-xl font-bold tracking-wide text-zinc-800">
-               Payment Follow-Up
-             </h2>
-            <PaymentFollowUpForm />
-           </div>
-   
-           <div className="flex flex-wrap justify-between items-center mb-3 gap-3 text-sm">
-             <div className="flex items-center gap-2 text-black text-xs">
-               <span>Show</span>
-               <select className="rounded-lg px-2 py-1 bg-zinc-400 text-zinc-100 border border-zinc-400">
-                 {[10, 25, 50].map((size) => (
-                   <option
-                     key={size}
-                     value={size}
-                     className="bg-zinc-700 text-white text-sm"
-                   >
-                     {size}
-                   </option>
-                 ))}
-               </select>
-               <span>entries</span>
-             </div>
-   
-             <div className="flex items-center gap-2 text-black text-xs">
-               <span className="text-black">Search:</span>
-               <input
-                 type="text"
-                 placeholder="Type to search..."
-                 className="border border-zinc-400 rounded-lg px-2 py-1 bg-zinc-400 placeholder-zinc-900 focus:ring-2 focus:ring-purple-500 focus:outline-none text-sm transition-all"
-               />
-             </div>
-           </div>
-        <DataTable columns={columns} data={initialPaymentData} enablePagination />
+    <div className="p-8 min-h-screen w-full">
+      <div className="max-w-7xl mx-auto mt-10 p-8 shadow-md rounded-2xl bg-zinc-50">
+        <div className="flex flex-wrap justify-between items-center mb-4 border-b border-zinc-700/60 pb-2">
+          <h2 className="text-xl font-bold tracking-wide text-zinc-800">
+            Payment Follow-Up
+          </h2>
+          <PaymentFollowUpForm />
+        </div>
+
+        <div className="flex flex-wrap justify-between items-center mb-3 gap-3 text-sm">
+          <div className="flex items-center gap-2 text-black text-xs">
+            <span>Show</span>
+            <select className="rounded-lg px-2 py-1 bg-zinc-400 text-zinc-100 border border-zinc-400">
+              {[10, 25, 50].map((size) => (
+                <option
+                  key={size}
+                  value={size}
+                  className="bg-zinc-700 text-white text-sm"
+                >
+                  {size}
+                </option>
+              ))}
+            </select>
+            <span>entries</span>
+          </div>
+
+          <div className="flex items-center gap-2 text-black text-xs">
+            <span className="text-black">Search:</span>
+            <input
+              type="text"
+              placeholder="Type to search..."
+              className="border border-zinc-400 rounded-lg px-2 py-1 bg-zinc-400 placeholder-zinc-900 focus:ring-2 focus:ring-purple-500 focus:outline-none text-sm transition-all"
+            />
+          </div>
+        </div>
+        <DataTable
+          columns={columns}
+          data={initialPaymentData}
+          enablePagination
+        />
       </div>
     </div>
   );

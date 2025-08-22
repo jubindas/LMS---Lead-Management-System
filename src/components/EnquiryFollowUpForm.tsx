@@ -70,15 +70,13 @@ export default function EnquiryFollowUpForm() {
             Add Enquiry Follow-Up
           </DialogTitle>
           <DialogDescription className="text-zinc-500 text-center mb-6">
-            Add enquiry details and optionally set a follow-up date and time
+            Add enquiry details and optionally set a follow-up time
           </DialogDescription>
         </DialogHeader>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
           <div className="flex flex-col sm:col-span-2">
-            <label className="text-zinc-700 mb-2 font-medium">
-              Remarks
-            </label>
+            <label className="text-zinc-700 mb-2 font-medium">Remarks</label>
             <input
               type="text"
               name="enquiryDetails"
@@ -91,7 +89,7 @@ export default function EnquiryFollowUpForm() {
 
           <div className="flex flex-col sm:col-span-1 relative">
             <label className="text-zinc-700 mb-2 font-medium">
-              Follow-Up Date (Optional)
+              Follow-Up Date
             </label>
             <button
               type="button"
@@ -122,8 +120,6 @@ export default function EnquiryFollowUpForm() {
               </div>
             )}
           </div>
-
-          
 
           <div className="flex flex-col sm:col-span-1">
             <label className="text-zinc-700 mb-2 font-medium">

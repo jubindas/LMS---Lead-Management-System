@@ -33,7 +33,7 @@ export default function EnquiryForm() {
     mainCategory: "",
     subCategory: "",
     source: "",
-    requirement: "",
+    status: "",
     location: "",
     email: "",
     budget: "",
@@ -60,16 +60,6 @@ export default function EnquiryForm() {
 
   return (
     <div className="p-6 max-w-6xl mt-7 mx-auto bg-zinc-50 rounded-2xl shadow-md space-y-6">
-      {/* Top section with extra components */}
-      <div className="flex flex-wrap gap-3 mb-6 justify-end">
-        <EnquiryBussines />
-        <EnquiryLocation />
-        <MainRequirementsForm />
-        <EnquirySource />
-        <EnquiryStatus />
-        <SubRequirementForm />
-      </div>
-
       <h2 className="text-2xl font-bold text-zinc-900 mb-6">Add New Entry</h2>
 
       <form onSubmit={handleSubmit} className="space-y-6">
@@ -175,94 +165,72 @@ export default function EnquiryForm() {
             <label className="block text-sm font-medium text-zinc-700 mb-1.5">
               Business Type
             </label>
-            <div className="flex items-center border border-zinc-300 rounded-lg px-3 bg-zinc-100">
-              <MdBusiness className="text-zinc-500 mr-2" />
-              <select
-                name="businessType"
-                value={formData.businessType}
-                onChange={handleChange}
-                className="w-full py-2 text-zinc-800 bg-transparent focus:outline-none"
-              >
-                <option value="" disabled>
-                  Select Business Type
-                </option>
-                <option value="Manufacturer">Manufacturer</option>
-                <option value="Service">Service</option>
-                <option value="Other">Other</option>
-              </select>
+            <div className="flex items-stretch gap-2">
+              <div className="flex items-center h-12 border border-zinc-300 rounded-lg px-3 bg-zinc-100 flex-1">
+                <MdBusiness className="text-zinc-500 mr-2" />
+                <select
+                  name="businessType"
+                  value={formData.businessType}
+                  onChange={handleChange}
+                  className="w-full text-zinc-800 bg-transparent focus:outline-none"
+                >
+                  <option value="" disabled>
+                    Select Business Type
+                  </option>
+                  <option value="Manufacturer">Manufacturer</option>
+                  <option value="Service">Service</option>
+                  <option value="Other">Other</option>
+                </select>
+              </div>
+              <div className="h-12">
+                <EnquiryBussines />
+              </div>
             </div>
           </div>
 
-          {/* Main Category */}
+          {/* Location */}
           <div>
             <label className="block text-sm font-medium text-zinc-700 mb-1.5">
-              Main Category
+              Location
             </label>
-            <div className="flex items-center border border-zinc-300 rounded-lg px-3 bg-zinc-100">
-              <BsFillFileEarmarkTextFill className="text-zinc-500 mr-2" />
-              <select
-                name="mainCategory"
-                value={formData.mainCategory || ""}
-                onChange={handleChange}
-                className="w-full py-2 text-zinc-800 bg-transparent focus:outline-none"
-              >
-                <option value="" disabled>
-                  Select Main Category
-                </option>
-                <option value="Electronics">Electronics</option>
-                <option value="Furniture">Furniture</option>
-                <option value="Apparel">Apparel</option>
-                <option value="Other">Other</option>
-              </select>
+            <div className="flex items-center gap-2">
+              <div className="flex items-center border border-zinc-300 rounded-lg px-3 bg-zinc-100 flex-1">
+                <MdLocationOn className="text-zinc-500 mr-2" />
+                <input
+                  type="text"
+                  name="location"
+                  placeholder="Enter Location"
+                  value={formData.location}
+                  onChange={handleChange}
+                  className="w-full py-2 text-zinc-800 placeholder-zinc-400 bg-transparent focus:outline-none"
+                />
+              </div>
+              <EnquiryLocation />
             </div>
           </div>
 
-          {/* Sub Category */}
+          {/* Status */}
           <div>
             <label className="block text-sm font-medium text-zinc-700 mb-1.5">
-              Sub Category
+              Status
             </label>
-            <div className="flex items-center border border-zinc-300 rounded-lg px-3 bg-zinc-100">
-              <BsFillFileEarmarkTextFill className="text-zinc-500 mr-2" />
-              <select
-                name="subCategory"
-                value={formData.subCategory || ""}
-                onChange={handleChange}
-                className="w-full py-2 text-zinc-800 bg-transparent focus:outline-none"
-              >
-                <option value="" disabled>
-                  Select Sub Category
-                </option>
-                <option value="Mobile">Mobile</option>
-                <option value="Laptop">Laptop</option>
-                <option value="Chair">Chair</option>
-                <option value="Clothing">Clothing</option>
-                <option value="Other">Other</option>
-              </select>
-            </div>
-          </div>
-
-          {/* Requirement */}
-          <div>
-            <label className="block text-sm font-medium text-zinc-700 mb-1.5">
-              Requirement
-            </label>
-            <div className="flex items-center border border-zinc-300 rounded-lg px-3 bg-zinc-100">
-              <BsFillFileEarmarkTextFill className="text-zinc-500 mr-2" />
-              <select
-                name="requirement"
-                value={formData.requirement}
-                onChange={handleChange}
-                className="w-full py-2 text-zinc-800 bg-transparent focus:outline-none"
-              >
-                <option value="" disabled>
-                  Select Requirement
-                </option>
-                <option value="Product">Product</option>
-                <option value="Consulting">Consulting</option>
-                <option value="Service">Service</option>
-                <option value="Other">Other</option>
-              </select>
+            <div className="flex items-center gap-2">
+              <div className="flex items-center border border-zinc-300 rounded-lg px-3 bg-zinc-100 flex-1">
+                <select
+                  name="status"
+                  value={formData.status || ""}
+                  onChange={handleChange}
+                  className="w-full py-2 text-zinc-800 bg-transparent focus:outline-none"
+                >
+                  <option value="" disabled>
+                    Select Status
+                  </option>
+                  <option value="Pending">Pending</option>
+                  <option value="In Progress">In Progress</option>
+                  <option value="Completed">Completed</option>
+                </select>
+              </div>
+              <EnquiryStatus />
             </div>
           </div>
 
@@ -271,22 +239,80 @@ export default function EnquiryForm() {
             <label className="block text-sm font-medium text-zinc-700 mb-1.5">
               Source
             </label>
-            <div className="flex items-center border border-zinc-300 rounded-lg px-3 bg-zinc-100">
-              <RiUserVoiceFill className="text-zinc-500 mr-2" />
-              <select
-                name="source"
-                value={formData.source}
-                onChange={handleChange}
-                className="w-full py-2 text-zinc-800 bg-transparent focus:outline-none"
-              >
-                <option value="" disabled>
-                  Select Source
-                </option>
-                <option value="Cold Calling">Cold Calling</option>
-                <option value="Social Media">Social Media</option>
-                <option value="Referral">Referral</option>
-                <option value="Other">Other</option>
-              </select>
+            <div className="flex items-center gap-2">
+              <div className="flex items-center border border-zinc-300 rounded-lg px-3 bg-zinc-100 flex-1">
+                <RiUserVoiceFill className="text-zinc-500 mr-2" />
+                <select
+                  name="source"
+                  value={formData.source}
+                  onChange={handleChange}
+                  className="w-full py-2 text-zinc-800 bg-transparent focus:outline-none"
+                >
+                  <option value="" disabled>
+                    Select Source
+                  </option>
+                  <option value="Cold Calling">Cold Calling</option>
+                  <option value="Social Media">Social Media</option>
+                  <option value="Referral">Referral</option>
+                  <option value="Other">Other</option>
+                </select>
+              </div>
+              <EnquirySource />
+            </div>
+          </div>
+
+          {/* Main Category */}
+          <div>
+            <label className="block text-sm font-medium text-zinc-700 mb-1.5">
+              Main Category
+            </label>
+            <div className="flex items-center gap-2">
+              <div className="flex items-center border border-zinc-300 rounded-lg px-3 bg-zinc-100 flex-1">
+                <BsFillFileEarmarkTextFill className="text-zinc-500 mr-2" />
+                <select
+                  name="mainCategory"
+                  value={formData.mainCategory || ""}
+                  onChange={handleChange}
+                  className="w-full py-2 text-zinc-800 bg-transparent focus:outline-none"
+                >
+                  <option value="" disabled>
+                    Select Main Category
+                  </option>
+                  <option value="Electronics">Electronics</option>
+                  <option value="Furniture">Furniture</option>
+                  <option value="Apparel">Apparel</option>
+                  <option value="Other">Other</option>
+                </select>
+              </div>
+              <MainRequirementsForm />
+            </div>
+          </div>
+
+          {/* Sub Category */}
+          <div>
+            <label className="block text-sm font-medium text-zinc-700 mb-1.5">
+              Sub Category
+            </label>
+            <div className="flex items-center gap-2">
+              <div className="flex items-center border border-zinc-300 rounded-lg px-3 bg-zinc-100 flex-1">
+                <BsFillFileEarmarkTextFill className="text-zinc-500 mr-2" />
+                <select
+                  name="subCategory"
+                  value={formData.subCategory || ""}
+                  onChange={handleChange}
+                  className="w-full py-2 text-zinc-800 bg-transparent focus:outline-none"
+                >
+                  <option value="" disabled>
+                    Select Sub Category
+                  </option>
+                  <option value="Mobile">Mobile</option>
+                  <option value="Laptop">Laptop</option>
+                  <option value="Chair">Chair</option>
+                  <option value="Clothing">Clothing</option>
+                  <option value="Other">Other</option>
+                </select>
+              </div>
+              <SubRequirementForm />
             </div>
           </div>
 

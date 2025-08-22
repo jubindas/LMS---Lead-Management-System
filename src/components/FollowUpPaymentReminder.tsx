@@ -1,5 +1,7 @@
 import { useState, useRef, useEffect } from "react";
+
 import { Calendar } from "@/components/ui/calendar";
+
 import {
   Dialog,
   DialogContent,
@@ -8,8 +10,11 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+
 import TimePicker from "react-time-picker";
+
 import "react-time-picker/dist/TimePicker.css";
+
 import "react-clock/dist/Clock.css";
 
 export default function FollowUpPaymentReminder() {
@@ -62,7 +67,6 @@ export default function FollowUpPaymentReminder() {
         </DialogHeader>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-          {/* Remark Field */}
           <div className="flex flex-col sm:col-span-2">
             <label className="text-zinc-700 mb-2 font-medium">Remark</label>
             <input
@@ -75,10 +79,9 @@ export default function FollowUpPaymentReminder() {
             />
           </div>
 
-          {/* Calendar Picker */}
           <div className="flex flex-col sm:col-span-1 relative">
             <label className="text-zinc-700 mb-2 font-medium">
-              Reminder Date (Optional)
+              Reminder Date
             </label>
             <button
               type="button"
@@ -100,7 +103,6 @@ export default function FollowUpPaymentReminder() {
             )}
           </div>
 
-          {/* Time Picker */}
           <div className="flex flex-col sm:col-span-1">
             <label className="text-zinc-700 mb-2 font-medium">
               Reminder Time (Optional)
@@ -113,7 +115,6 @@ export default function FollowUpPaymentReminder() {
             />
           </div>
 
-          {/* Submit Button */}
           <button
             onClick={handleAddPayment}
             className="mt-8 w-full py-3 bg-zinc-300 text-zinc-800 font-semibold rounded-xl shadow hover:bg-zinc-400 transition transform hover:-translate-y-0.5"

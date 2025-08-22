@@ -1,4 +1,4 @@
-import type{  ReactNode } from "react";
+import type { ReactNode } from "react";
 
 import { useState } from "react";
 
@@ -10,6 +10,7 @@ import {
   FaMoneyBillWave,
   FaBuilding,
   FaInfoCircle,
+  FaEdit,
 } from "react-icons/fa";
 
 type Enquiry = {
@@ -20,7 +21,6 @@ type Enquiry = {
   altWhatsapp?: boolean;
   email: string;
   businessType: string;
-  requirements: string;
   source: string;
   location: string;
   budget: string;
@@ -38,7 +38,6 @@ const sampleEnquiry: Enquiry = {
   altWhatsapp: false,
   email: "contact@acme.com",
   businessType: "IT Services",
-  requirements: "Web development, Mobile app",
   source: "Referral",
   location: "New Delhi",
   budget: "5000-10000",
@@ -48,7 +47,6 @@ const sampleEnquiry: Enquiry = {
   subCategory: "Web & Mobile",
 };
 
-// InfoCard props using ReactNode instead of JSX.Element
 interface InfoCardProps {
   icon: ReactNode;
   label: string;
@@ -73,11 +71,14 @@ export default function EnquiryViewDetails() {
   return (
     <div className="p-6 bg-zinc-100 min-h-screen">
       <div className="max-w-5xl mx-auto bg-zinc-200 rounded-2xl shadow-md p-6 space-y-6">
-        <h1 className="text-3xl font-semibold text-zinc-900 mb-4">
-          Lead Details
-        </h1>
+        <div className="flex items-center justify-between mb-4">
+          <h1 className="text-3xl font-semibold text-zinc-900">Lead Details</h1>
+          <button className="flex items-center gap-2 px-4 py-2 bg-zinc-600 hover:bg-zinc-700 text-white rounded-lg shadow transition">
+            <FaEdit />
+            Edit
+          </button>
+        </div>
 
-        {/* Contact Info */}
         <div className="space-y-4">
           <h2 className="text-xl font-semibold text-zinc-800 border-b border-zinc-300 pb-2">
             Contact Info
@@ -107,7 +108,11 @@ export default function EnquiryViewDetails() {
                 </>
               }
             />
-            <InfoCard icon={<FaEnvelope />} label="Email" value={enquiry.email} />
+            <InfoCard
+              icon={<FaEnvelope />}
+              label="Email"
+              value={enquiry.email}
+            />
             <InfoCard
               icon={<FaMapMarkerAlt />}
               label="Location"
@@ -116,7 +121,6 @@ export default function EnquiryViewDetails() {
           </div>
         </div>
 
-        {/* Lead Info */}
         <div className="space-y-4">
           <h2 className="text-xl font-semibold text-zinc-800 border-b border-zinc-300 pb-2">
             Lead Info
@@ -134,18 +138,12 @@ export default function EnquiryViewDetails() {
             />
             <InfoCard
               icon={<FaInfoCircle />}
-              label="Requirements"
-              value={enquiry.requirements}
-            />
-            <InfoCard
-              icon={<FaInfoCircle />}
               label="Remarks"
               value={enquiry.remarks || "-"}
             />
           </div>
         </div>
 
-        {/* Category & Status */}
         <div className="space-y-4">
           <h2 className="text-xl font-semibold text-zinc-800 border-b border-zinc-300 pb-2">
             Category & Status
@@ -176,13 +174,18 @@ export default function EnquiryViewDetails() {
             />
             <InfoCard
               icon={<FaInfoCircle />}
-              label="Category"
-              value={`${enquiry.mainCategory} / ${enquiry.subCategory}`}
+              label="Main Category"
+              value={`${enquiry.mainCategory}`}
               badge={
                 <span className="px-3 py-1 rounded-full bg-zinc-300 text-zinc-900 text-sm font-medium">
                   {enquiry.subCategory}
                 </span>
               }
+            />
+            <InfoCard
+              icon={<FaInfoCircle />}
+              label="Sub Category"
+              value={`${enquiry.subCategory}`}
             />
           </div>
         </div>

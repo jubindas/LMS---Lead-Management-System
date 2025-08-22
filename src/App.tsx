@@ -77,6 +77,8 @@ const PendingEnquiries = lazy(
 
 const LogIn = lazy(() => import("./components/pages/LogIn.tsx"));
 
+const Test = lazy(()=> import("./components/Test.tsx"))
+
 const ReportEnquiry = lazy(
   () => import("./components/pages/ReportEnquiry.tsx")
 );
@@ -261,6 +263,10 @@ const router = createBrowserRouter([
   {
     path: "/login",
     element: <LogIn />,
+  },
+   {
+    path: "/test",
+    element: <Test />,
   },
 ]);
 

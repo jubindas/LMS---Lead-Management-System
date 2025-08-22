@@ -1,5 +1,7 @@
 import { useState, useRef, useEffect } from "react";
+
 import { Calendar } from "@/components/ui/calendar";
+
 import {
   Dialog,
   DialogContent,
@@ -8,8 +10,11 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+
 import TimePicker from "react-time-picker";
+
 import "react-time-picker/dist/TimePicker.css";
+
 import "react-clock/dist/Clock.css";
 
 export default function PaymentFollowUpForm() {
@@ -41,7 +46,10 @@ export default function PaymentFollowUpForm() {
   // Close calendar when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (calendarRef.current && !calendarRef.current.contains(event.target as Node)) {
+      if (
+        calendarRef.current &&
+        !calendarRef.current.contains(event.target as Node)
+      ) {
         setShowCalendar(false);
       }
     };
@@ -85,7 +93,9 @@ export default function PaymentFollowUpForm() {
 
           {/* Calendar Picker */}
           <div className="flex flex-col sm:col-span-1 relative">
-            <label className="text-zinc-600 mb-2 font-medium">Reminder Date (Optional)</label>
+            <label className="text-zinc-600 mb-2 font-medium">
+              Reminder Date
+            </label>
             <button
               type="button"
               onClick={() => setShowCalendar((prev) => !prev)}
@@ -100,7 +110,10 @@ export default function PaymentFollowUpForm() {
                   mode="single"
                   selected={form.reminder ? new Date(form.reminder) : undefined}
                   onSelect={(date) =>
-                    setForm({ ...form, reminder: date ? date.toISOString() : "" })
+                    setForm({
+                      ...form,
+                      reminder: date ? date.toISOString() : "",
+                    })
                   }
                   className="w-full rounded-xl border border-zinc-300 shadow-xl bg-white text-zinc-800"
                 />
@@ -126,7 +139,7 @@ export default function PaymentFollowUpForm() {
             onClick={handleAddPayment}
             className="mt-8 w-full py-3 bg-zinc-500 text-white font-semibold rounded-xl shadow-lg hover:bg-zinc-600 transition transform hover:-translate-y-0.5"
           >
-            Add Payment
+            Add Follow up Payment
           </button>
         </div>
       </DialogContent>
