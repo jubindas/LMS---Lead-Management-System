@@ -58,7 +58,9 @@ const columns: ColumnDef<FollowUp>[] = [
     accessorKey: "follow_up_date",
     header: () => <span className="capitalize">Date</span>,
     cell: ({ row }) => (
-      <span className="text-black text-sm">{row.getValue("follow_up_date")}</span>
+      <span className="text-black text-sm">
+        {row.getValue("follow_up_date")}
+      </span>
     ),
   },
   {
@@ -84,15 +86,8 @@ const columns: ColumnDef<FollowUp>[] = [
     accessorKey: "status",
     header: "Status",
     cell: ({ row }) => {
-      const status = row.getValue("status") as FollowUp["status"];
       return (
-        <Badge
-          className={`text-black text-xs ${
-            status === "Completed" ? "bg-green-300" : "bg-red-300"
-          }`}
-        >
-          {status}
-        </Badge>
+        <span className="text-black text-sm">{row.getValue("status")}</span>
       );
     },
   },

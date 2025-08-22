@@ -27,7 +27,6 @@ export default function Enquiries() {
   return (
     <div className="p-8 min-h-screen w-full">
       <div className="max-w-7xl mx-auto mt-10 p-8 shadow-md rounded-2xl bg-zinc-50">
-        {/* Title + Buttons */}
         <div className="flex justify-between items-center mb-6 border-b border-zinc-700/60 pb-4">
           <h2 className="text-3xl font-bold tracking-wide text-black">
             Enquiries

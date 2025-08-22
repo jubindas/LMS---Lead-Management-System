@@ -85,21 +85,20 @@ const columns: ColumnDef<TodoList>[] = [
       );
     },
   },
-  {
-    accessorKey: "status",
-    header: "Status",
-    cell: ({ row }) => {
-      const status = row.getValue("status") as TodoList["status"];
-      const bgColor = status === "Completed" ? "bg-green-500" : "bg-yellow-500";
-      return (
-        <span
-          className={`inline-block px-3 py-1 rounded-full text-xs font-semibold ${bgColor} text-black shadow-sm`}
-        >
-          {status}
-        </span>
-      );
-    },
+{
+  accessorKey: "status",
+  header: "Status",
+  cell: ({ row }) => {
+    const status = row.getValue("status") as TodoList["status"];
+
+    return (
+      <span className="inline-block px-2 py-1 rounded-full text-sm font-semibold text-black">
+        {status}
+      </span>
+    );
   },
+},
+
   {
     id: "actions",
     header: "Actions",

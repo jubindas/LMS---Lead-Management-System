@@ -34,9 +34,19 @@ export const columns: ColumnDef<BusinessType>[] = [
   },
   
   {
-    id: "actions",
-    header: () => <span className="capitalize">Actions</span>,
-    cell: () => (
+  id: "actions",
+  header: () => <span className="capitalize">Actions</span>,
+  cell: () => {
+    // define click handlers
+    const handleEditClick = () => {
+      alert("Edit button clicked!");
+    };
+
+    const handleDeleteClick = () => {
+      alert("Delete button clicked!");
+    };
+
+    return (
       <Popover>
         <PopoverTrigger asChild>
           <Button
@@ -48,22 +58,29 @@ export const columns: ColumnDef<BusinessType>[] = [
           </Button>
         </PopoverTrigger>
         <PopoverContent className="w-36 p-2 space-y-2 bg-zinc-800 text-white rounded-lg shadow-lg text-sm">
+          {/* Edit button */}
           <Button
             variant="ghost"
             size="sm"
+            onClick={handleEditClick}
             className="w-full justify-start bg-white/10 text-white text-sm hover:bg-white/20 gap-2"
           >
             <FiEdit className="mr-1.5" /> Edit
           </Button>
+
+          {/* Delete button */}
           <Button
             variant="destructive"
             size="sm"
+            onClick={handleDeleteClick}
             className="w-full justify-start text-white bg-red-600 hover:bg-red-500 gap-2"
           >
             Delete
           </Button>
         </PopoverContent>
       </Popover>
-    ),
+    );
   },
+},
+
 ];

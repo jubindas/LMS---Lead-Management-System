@@ -65,25 +65,20 @@ export default function PaymentFollowUpDashboard() {
         );
       },
     },
-    {
-      id: "status",
-      header: "Status",
-      cell: ({ row }) => {
-        const payment = row.original;
-        const completed = payment.paidAmount === payment.totalAmount;
-        return (
-          <span
-            className={`px-2 py-1 rounded text-xs ${
-              completed
-                ? "bg-green-200 text-green-800"
-                : "bg-red-200 text-red-800"
-            }`}
-          >
-            {completed ? "Completed" : "Pending"}
-          </span>
-        );
-      },
-    },
+   {
+  id: "status",
+  header: "Status",
+  cell: ({ row }) => {
+    const payment = row.original;
+    const completed = payment.paidAmount === payment.totalAmount;
+
+    return (
+      <span className="px-2 py-1 text-sm font-semibold text-black">
+        {completed ? "Completed" : "Pending"}
+      </span>
+    );
+  },
+},
   ];
 
   return (

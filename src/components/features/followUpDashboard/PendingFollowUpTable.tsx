@@ -93,15 +93,9 @@ const columns: ColumnDef<PendingFollowUp>[] = [
     accessorKey: "status",
     header: "Status",
     cell: ({ row }) => {
-      const status = row.getValue("status") as PendingFollowUp["status"];
+    
       return (
-        <Badge
-          className={`text-black text-xs ${
-            status === "Completed" ? "bg-green-300" : "bg-red-300"
-          }`}
-        >
-          {status}
-        </Badge>
+       <span className="text-black text-sm">{row.getValue("status")}</span>
       );
     },
   },

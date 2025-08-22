@@ -48,10 +48,22 @@ export const columns: ColumnDef<SubCategory>[] = [
       </span>
     ),
   },
-   {
-    id: "actions",
-    header: () => <span className="capitalize">Actions</span>,
-    cell: () => (
+ {
+  id: "actions",
+  header: () => <span className="capitalize">Actions</span>,
+  cell: ({ row }) => {
+    // Access row data if needed
+    const rowData = row.original;
+
+    const handleEdit = () => {
+      alert(`Edit clicked for: ${rowData.name || "this row"}`);
+    };
+
+    const handleDelete = () => {
+      alert(`Delete clicked for: ${rowData.name || "this row"}`);
+    };
+
+    return (
       <Popover>
         <PopoverTrigger asChild>
           <Button
@@ -64,6 +76,7 @@ export const columns: ColumnDef<SubCategory>[] = [
         </PopoverTrigger>
         <PopoverContent className="w-36 p-2 space-y-2 bg-zinc-800 text-white rounded-lg shadow-lg text-sm">
           <Button
+            onClick={handleEdit}
             variant="ghost"
             size="sm"
             className="w-full justify-start bg-white/10 text-white text-sm hover:bg-white/20 gap-2"
@@ -71,6 +84,7 @@ export const columns: ColumnDef<SubCategory>[] = [
             <FiEdit className="mr-1.5" /> Edit
           </Button>
           <Button
+            onClick={handleDelete}
             variant="destructive"
             size="sm"
             className="w-full justify-start text-white bg-red-600 hover:bg-red-500 gap-2"
@@ -79,6 +93,7 @@ export const columns: ColumnDef<SubCategory>[] = [
           </Button>
         </PopoverContent>
       </Popover>
-    ),
+    );
   },
+},
 ];

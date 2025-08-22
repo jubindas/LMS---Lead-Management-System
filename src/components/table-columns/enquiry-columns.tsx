@@ -69,10 +69,10 @@ export const enquiryColumns = (
     accessorKey: "stage",
     header: "Stage",
     cell: ({ row }) => {
-      const stage = row.getValue("stage") as string;
+      const stage = (row.getValue("stage") as string) || "New";
 
       const stageColors: Record<string, string> = {
-        New: "bg-blue-200 ",
+        Cold: "bg-blue-200",
         Warm: "bg-yellow-200",
         Hot: "bg-red-300",
       };
@@ -86,7 +86,7 @@ export const enquiryColumns = (
             value={stage}
             onChange={(e) => handleStageUpdate(row.original.sl, e.target.value)}
           >
-            <option value="New">Cold</option>
+            <option value="Cold">Cold</option>
             <option value="Warm">Warm</option>
             <option value="Hot">Hot</option>
           </select>

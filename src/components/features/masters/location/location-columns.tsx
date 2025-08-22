@@ -34,9 +34,20 @@ export const columns: ColumnDef<Location>[] = [
   },
 
   {
-    id: "actions",
-    header: () => <span className="capitalize">Actions</span>,
-    cell: () => (
+  id: "actions",
+  header: () => <span className="capitalize">Actions</span>,
+  cell: () => {
+
+    
+    const handleEdit = () => {
+      alert("Editing row");
+    };
+
+    const handleDelete = () => {
+      alert("Deleting row");
+    };
+
+    return (
       <Popover>
         <PopoverTrigger asChild>
           <Button
@@ -52,6 +63,7 @@ export const columns: ColumnDef<Location>[] = [
             variant="ghost"
             size="sm"
             className="w-full justify-start bg-white/10 text-white text-sm hover:bg-white/20 gap-2"
+            onClick={handleEdit}
           >
             <FiEdit className="mr-1.5" /> Edit
           </Button>
@@ -59,11 +71,13 @@ export const columns: ColumnDef<Location>[] = [
             variant="destructive"
             size="sm"
             className="w-full justify-start text-white bg-red-600 hover:bg-red-500 gap-2"
+            onClick={handleDelete}
           >
             Delete
           </Button>
         </PopoverContent>
       </Popover>
-    ),
+    );
   },
+},
 ];

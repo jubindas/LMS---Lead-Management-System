@@ -47,7 +47,9 @@ export function DataTable<TData, TValue>({
   enablePagination = false,
   hideTableInPrint = true,
 }: DataTableProps<TData, TValue>) {
+  
   const [sorting, setSorting] = useState<SortingState>([]);
+
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
 
   const table = useReactTable({

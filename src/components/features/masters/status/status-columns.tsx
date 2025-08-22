@@ -28,37 +28,43 @@ export const columns: ColumnDef<StatusType>[] = [
       <span className="text-black text-sm">{row.getValue("description")}</span>
     ),
   },
-  {
-    id: "actions",
-    header: () => <span className="capitalize">Actions</span>,
-    cell: () => (
-      <Popover>
-        <PopoverTrigger asChild>
-          <Button
-            size="icon"
-            variant="ghost"
-            className="h-7 w-7 p-0 text-white"
-          >
-            <MoreHorizontal className="h-4 w-4 text-zinc-900" />
-          </Button>
-        </PopoverTrigger>
-        <PopoverContent className="w-36 p-2 space-y-2 bg-zinc-800 text-white rounded-lg shadow-lg text-sm">
-          <Button
-            variant="ghost"
-            size="sm"
-            className="w-full justify-start bg-white/10 text-white text-sm hover:bg-white/20 gap-2"
-          >
-            <FiEdit className="mr-1.5" /> Edit
-          </Button>
-          <Button
-            variant="destructive"
-            size="sm"
-            className="w-full justify-start text-white bg-red-600 hover:bg-red-500 gap-2"
-          >
-            Disable
-          </Button>
-        </PopoverContent>
-      </Popover>
-    ),
-  },
+ {
+  id: "actions",
+  header: () => <span className="capitalize">Actions</span>,
+  cell: () => (
+    <Popover>
+      <PopoverTrigger asChild>
+        <Button
+          size="icon"
+          variant="ghost"
+          className="h-7 w-7 p-0 text-white"
+        >
+          <MoreHorizontal className="h-4 w-4 text-zinc-900" />
+        </Button>
+      </PopoverTrigger>
+
+      <PopoverContent className="w-36 p-2 space-y-2 bg-zinc-800 text-white rounded-lg shadow-lg text-sm">
+        {/* Edit Button */}
+        <Button
+          variant="ghost"
+          size="sm"
+          className="w-full justify-start bg-white/10 text-white text-sm hover:bg-white/20 gap-2"
+          onClick={() => alert("Edit button clicked!")}
+        >
+          <FiEdit className="mr-1.5" /> Edit
+        </Button>
+
+        {/* Disable Button */}
+        <Button
+          variant="destructive"
+          size="sm"
+          className="w-full justify-start text-white bg-red-600 hover:bg-red-500 gap-2"
+          onClick={() => alert("Disable button clicked!")}
+        >
+          Disable
+        </Button>
+      </PopoverContent>
+    </Popover>
+  ),
+},
 ];

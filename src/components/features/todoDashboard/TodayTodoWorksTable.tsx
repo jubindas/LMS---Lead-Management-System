@@ -77,23 +77,20 @@ const columns: ColumnDef<TodoList>[] = [
       <span className="text-black text-sm">{row.getValue("date")}</span>
     ),
   },
-  {
-    accessorKey: "status",
-    header: "Status",
-    cell: ({ row }) => {
-      const status = row.getValue("status") as TodoList["status"];
-      const bgColor = status === "Completed" ? "bg-green-500" : "bg-yellow-500";
-      const textColor = "text-white";
+ {
+  accessorKey: "status",
+  header: "Status",
+  cell: ({ row }) => {
+    const status = row.getValue("status") as TodoList["status"];
 
-      return (
-        <span
-          className={`inline-block px-3 py-1 rounded-full text-xs font-semibold ${bgColor} ${textColor} shadow-sm`}
-        >
-          {status}
-        </span>
-      );
-    },
+    return (
+      <span className="inline-block px-3 py-1 text-base font-semibold text-zinc-800">
+        {status}
+      </span>
+    );
   },
+},
+
   {
     id: "actions",
     header: "Actions",
