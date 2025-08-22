@@ -8,17 +8,13 @@ const EnquiryViewDetails = lazy(
   () => import("./components/pages/EnquiryViewDetails.tsx")
 );
 
-const EnquiryDialog = lazy(
-  () => import("./components/EnquiryDialog.tsx")
-);
+const EnquiryDialog = lazy(() => import("./components/EnquiryDialog.tsx"));
 
 const EnquiryFollowUp = lazy(
   () => import("./components/pages/EnquiryFollowUp.tsx")
 );
 
-const Enquiry = lazy(
-  () => import("./components/pages/Enquiry.tsx")
-);
+const Enquiry = lazy(() => import("./components/pages/Enquiry.tsx"));
 
 const BusinessTypeTable = lazy(
   () => import("./components/features/masters/bussiness/BusinessType.tsx")
@@ -36,10 +32,7 @@ const MainRequirements = lazy(
 );
 
 const CompletedEnquiries = lazy(
-  () =>
-    import(
-      "./components/pages/CompletedEnquiries.tsx"
-    )
+  () => import("./components/pages/CompletedEnquiries.tsx")
 );
 
 const SubRequirement = lazy(
@@ -47,9 +40,7 @@ const SubRequirement = lazy(
     import("./components/features/masters/subRequirements/SubRequirement.tsx")
 );
 
-const TodoList = lazy(
-  () => import("./components/pages/TodoList.tsx")
-);
+const TodoList = lazy(() => import("./components/pages/TodoList.tsx"));
 
 const DashBoard = lazy(
   () => import("./components/features/dashboard/DashBoard.tsx")
@@ -74,9 +65,7 @@ const Location = lazy(
   () => import("./components/features/masters/location/Location.tsx")
 );
 
-const TrashBin = lazy(
-  () => import("./components/pages/TrashBin.tsx")
-);
+const TrashBin = lazy(() => import("./components/pages/TrashBin.tsx"));
 
 const PaymentFollowUp = lazy(
   () => import("./components/pages/PaymentFollowUp.tsx")
@@ -86,9 +75,7 @@ const PendingEnquiries = lazy(
   () => import("./components/pages/PendingEnquiries.tsx")
 );
 
-const LogIn = lazy(
-  () => import("./components/pages/LogIn.tsx")
-);
+const LogIn = lazy(() => import("./components/pages/LogIn.tsx"));
 
 const ReportEnquiry = lazy(
   () => import("./components/pages/ReportEnquiry.tsx")
@@ -98,6 +85,8 @@ const DownloadEnquiry = lazy(
   () => import("./components/pages/DownloadEnquiry.tsx")
 );
 
+const Loading = lazy(() => import("./components/Loading.tsx"));
+
 const router = createBrowserRouter([
   {
     path: "/",
@@ -106,7 +95,7 @@ const router = createBrowserRouter([
       {
         path: "/",
         element: (
-          <Suspense fallback={<div>Loading Dashboard...</div>}>
+          <Suspense fallback={<Loading />}>
             <DashBoard />
           </Suspense>
         ),
@@ -114,7 +103,7 @@ const router = createBrowserRouter([
       {
         path: "home/bussines",
         element: (
-          <Suspense fallback={<div>Loading Business Types...</div>}>
+          <Suspense fallback={<Loading />}>
             <BusinessTypeTable />
           </Suspense>
         ),
@@ -122,7 +111,7 @@ const router = createBrowserRouter([
       {
         path: "home/status",
         element: (
-          <Suspense fallback={<div>Loading Status Types...</div>}>
+          <Suspense fallback={<Loading />}>
             <StatusTypeTable />
           </Suspense>
         ),
@@ -130,7 +119,7 @@ const router = createBrowserRouter([
       {
         path: "enquiry",
         element: (
-          <Suspense fallback={<div>Loading Enquiry...</div>}>
+          <Suspense fallback={<Loading />}>
             <Enquiry />
           </Suspense>
         ),
@@ -138,7 +127,7 @@ const router = createBrowserRouter([
       {
         path: "source",
         element: (
-          <Suspense fallback={<div>Loading Source...</div>}>
+          <Suspense fallback={<Loading />}>
             <Source />
           </Suspense>
         ),
@@ -146,7 +135,7 @@ const router = createBrowserRouter([
       {
         path: "location",
         element: (
-          <Suspense fallback={<div>Loading Source...</div>}>
+          <Suspense fallback={<Loading />}>
             <Location />
           </Suspense>
         ),
@@ -154,7 +143,7 @@ const router = createBrowserRouter([
       {
         path: "main-category",
         element: (
-          <Suspense fallback={<div>Loading Main Requirements...</div>}>
+          <Suspense fallback={<Loading />}>
             <MainRequirements />
           </Suspense>
         ),
@@ -162,7 +151,7 @@ const router = createBrowserRouter([
       {
         path: "sub-category",
         element: (
-          <Suspense fallback={<div>Loading Sub Requirements...</div>}>
+          <Suspense fallback={<Loading />}>
             <SubRequirement />
           </Suspense>
         ),
@@ -174,7 +163,7 @@ const router = createBrowserRouter([
       {
         path: "payment",
         element: (
-          <Suspense fallback={<div>Loading Payments...</div>}>
+          <Suspense fallback={<Loading />}>
             <Payments />
           </Suspense>
         ),
@@ -182,7 +171,7 @@ const router = createBrowserRouter([
       {
         path: "todo-list",
         element: (
-          <Suspense fallback={<div>Loading Todo List...</div>}>
+          <Suspense fallback={<Loading />}>
             <TodoList />
           </Suspense>
         ),
@@ -190,7 +179,7 @@ const router = createBrowserRouter([
       {
         path: "payment-follow-up-dashboard",
         element: (
-          <Suspense fallback={<div>Loading Payment Follow-Up...</div>}>
+          <Suspense fallback={<Loading />}>
             <PaymentFollowUpDashboard />
           </Suspense>
         ),
@@ -198,7 +187,7 @@ const router = createBrowserRouter([
       {
         path: "trash-bin",
         element: (
-          <Suspense fallback={<div>Loading Payment Follow-Up...</div>}>
+          <Suspense fallback={<Loading />}>
             <TrashBin />
           </Suspense>
         ),
@@ -206,7 +195,7 @@ const router = createBrowserRouter([
       {
         path: "completed-enquiry",
         element: (
-          <Suspense fallback={<div>Loading Payment Follow-Up...</div>}>
+          <Suspense fallback={<Loading />}>
             <CompletedEnquiries />
           </Suspense>
         ),
@@ -214,7 +203,7 @@ const router = createBrowserRouter([
       {
         path: "follow-up",
         element: (
-          <Suspense fallback={<div>Loading Payment Follow-Up...</div>}>
+          <Suspense fallback={<Loading />}>
             <EnquiryFollowUp />
           </Suspense>
         ),
@@ -222,7 +211,7 @@ const router = createBrowserRouter([
       {
         path: "/enquiry-view-details",
         element: (
-          <Suspense fallback={<div>Loading Enquiry Details...</div>}>
+          <Suspense fallback={<Loading />}>
             <EnquiryViewDetails />
           </Suspense>
         ),
@@ -230,40 +219,40 @@ const router = createBrowserRouter([
       {
         path: "/pending-enquiry",
         element: (
-          <Suspense fallback={<div>Loading Enquiry Details...</div>}>
-           <PendingEnquiries />
+          <Suspense fallback={<Loading />}>
+            <PendingEnquiries />
           </Suspense>
         ),
       },
-       {
+      {
         path: "/payment-follow-up",
         element: (
-          <Suspense fallback={<div>Loading Enquiry Details...</div>}>
-          <PaymentFollowUp />
+          <Suspense fallback={<Loading />}>
+            <PaymentFollowUp />
           </Suspense>
         ),
       },
-        {
+      {
         path: "/add-enquiry",
         element: (
-          <Suspense fallback={<div>Loading Enquiry Details...</div>}>
-         <EnquiryDialog />
+          <Suspense fallback={<Loading />}>
+            <EnquiryDialog />
           </Suspense>
         ),
       },
-       {
+      {
         path: "/report-enquiry",
         element: (
-          <Suspense fallback={<div>Loading Enquiry Details...</div>}>
-       <ReportEnquiry />
+          <Suspense fallback={<Loading />}>
+            <ReportEnquiry />
           </Suspense>
         ),
       },
-       {
+      {
         path: "/download",
         element: (
-          <Suspense fallback={<div>Loading Enquiry Details...</div>}>
-        <DownloadEnquiry />
+          <Suspense fallback={<Loading />}>
+            <DownloadEnquiry />
           </Suspense>
         ),
       },
