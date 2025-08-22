@@ -11,21 +11,24 @@ import { enquiryData } from "../table-datas/enquiry-data.ts";
 import { useState } from "react";
 
 export default function Enquiries() {
+  
   const [data, setData] = useState(enquiryData);
 
+  
   const handleStageUpdate = (sl: number, newStage: string) => {
     setData((prev) =>
       prev.map((item) => (item.sl === sl ? { ...item, stage: newStage } : item))
     );
   };
 
+  
   const columns = enquiryColumns(handleStageUpdate);
 
   return (
-    <div className="p-8 min-h-screen w-full ">
+    <div className="p-8 min-h-screen w-full">
       <div className="max-w-7xl mx-auto mt-10 p-8 shadow-md rounded-2xl bg-zinc-50">
         {/* Title + Buttons */}
-        <div className="flex justify-between items-center  mb-6 border-b border-zinc-700/60 pb-4">
+        <div className="flex justify-between items-center mb-6 border-b border-zinc-700/60 pb-4">
           <h2 className="text-3xl font-bold tracking-wide text-black">
             Enquiries
           </h2>
@@ -63,11 +66,10 @@ export default function Enquiries() {
           </div>
         </div>
 
-        {/* Data Table */}
         <div className="w-full overflow-x-auto">
           <DataTable
             columns={columns}
-            data={enquiryData}
+            data={data}  
             enablePagination={true}
           />
         </div>
