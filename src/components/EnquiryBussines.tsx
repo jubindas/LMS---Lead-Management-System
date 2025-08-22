@@ -9,12 +9,14 @@ import {
 
 import { Button } from "@/components/ui/button";
 
+import { FaPlus } from "react-icons/fa";
+
 export default function EnquiryBussines() {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button className="bg-zinc-500 hover:bg-zinc-600 text-white font-medium px-3 py-1.5 text-sm rounded-md shadow-md transition-transform transform hover:-translate-y-0.5 hover:shadow-lg">
-          Add Business
+       <Button className="bg-zinc-500 hover:bg-zinc-600 text-white font-medium px-3 py-1.5 text-sm rounded-md shadow-md transition-transform transform hover:-translate-y-0.5 hover:shadow-lg">
+          <FaPlus />
         </Button>
       </DialogTrigger>
 

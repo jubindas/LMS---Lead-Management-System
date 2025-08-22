@@ -11,6 +11,8 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 
+import { FaPlus } from "react-icons/fa";
+
 export default function EnquirySource() {
   const [formData, setFormData] = useState({
     sourceName: "",
@@ -35,7 +37,7 @@ export default function EnquirySource() {
     <Dialog>
       <DialogTrigger asChild>
         <Button className="bg-zinc-500 hover:bg-zinc-600 text-white font-medium px-3 py-1.5 text-sm rounded-md shadow-md transition-transform transform hover:-translate-y-0.5 hover:shadow-lg">
-          Add Source
+         <FaPlus />
         </Button>
       </DialogTrigger>
 

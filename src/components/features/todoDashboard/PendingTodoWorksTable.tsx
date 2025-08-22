@@ -14,7 +14,9 @@ import {
 
 import { Button } from "@/components/ui/button";
 
-import { MoreHorizontal } from "lucide-react";
+
+import { MoreHorizontal, Edit, Trash2, CheckCircle2 } from "lucide-react";
+
 
 type TodoList = {
   sl: number;
@@ -100,30 +102,49 @@ const columns: ColumnDef<TodoList>[] = [
   },
   {
     id: "actions",
-    header: "",
+    header: "Actions",
     cell: ({ row }) => {
       const task = row.original;
+
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0">
+            <Button
+              variant="ghost"
+              className="h-8 w-8 p-0 hover:bg-zinc-800 rounded-full"
+            >
+              <span className="sr-only">Open menu</span>
               <MoreHorizontal className="h-4 w-4 text-zinc-900" />
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="w-40">
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={() => alert(`Viewing: ${task.task}`)}>
-              View Task
-            </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => alert(`Editing: ${task.task}`)}>
-              Edit Task
+          <DropdownMenuContent
+            align="end"
+            className="w-40 rounded-xl bg-zinc-900 border border-zinc-800 shadow-lg"
+          >
+            <DropdownMenuLabel className="text-xs text-zinc-400">
+              Actions
+            </DropdownMenuLabel>
+            <DropdownMenuSeparator className="bg-zinc-800" />
+            <DropdownMenuItem
+              onClick={() => alert(`Editing ${task.task}`)}
+              className="flex items-center gap-2 text-sm text-zinc-200 hover:bg-zinc-800 rounded-lg px-2 py-1.5"
+            >
+              <Edit className="h-4 w-4 text-blue-400" />
+              Edit
             </DropdownMenuItem>
             <DropdownMenuItem
-              onClick={() => alert(`Deleting: ${task.task}`)}
-              className="text-red-500"
+              onClick={() => alert(`Deleting ${task.task}`)}
+              className="flex items-center gap-2 text-sm text-zinc-200 hover:bg-zinc-800 rounded-lg px-2 py-1.5"
             >
-              Delete Task
+              <Trash2 className="h-4 w-4 text-red-400" />
+              Delete
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={() => alert(`Marking ${task.task} as done`)}
+              className="flex items-center gap-2 text-sm text-zinc-200 hover:bg-zinc-800 rounded-lg px-2 py-1.5"
+            >
+              <CheckCircle2 className="h-4 w-4 text-green-400" />
+              Mark as Done
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

@@ -165,7 +165,7 @@ export default function EnquiryForm() {
             <label className="block text-sm font-medium text-zinc-700 mb-1.5">
               Business Type
             </label>
-            <div className="flex items-stretch gap-2">
+           <div className="flex items-center gap-2">
               <div className="flex items-center h-12 border border-zinc-300 rounded-lg px-3 bg-zinc-100 flex-1">
                 <MdBusiness className="text-zinc-500 mr-2" />
                 <select
@@ -182,9 +182,9 @@ export default function EnquiryForm() {
                   <option value="Other">Other</option>
                 </select>
               </div>
-              <div className="h-12">
+             
                 <EnquiryBussines />
-              </div>
+             
             </div>
           </div>
 

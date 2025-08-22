@@ -11,6 +11,8 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 
+import { FaPlus } from "react-icons/fa";
+
 export default function StatusForm() {
   const [formData, setFormData] = useState({
     statusName: "",
@@ -32,7 +34,7 @@ export default function StatusForm() {
     <Dialog>
       <DialogTrigger asChild>
         <Button className="bg-zinc-500 hover:bg-zinc-600 text-white font-medium px-3 py-1.5 text-sm rounded-md shadow-md transition-transform transform hover:-translate-y-0.5 hover:shadow-lg">
-          Add Status
+          <FaPlus />
         </Button>
       </DialogTrigger>
 
