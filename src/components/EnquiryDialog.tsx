@@ -316,24 +316,7 @@ export default function EnquiryForm() {
             </div>
           </div>
 
-          {/* Location */}
-          <div>
-            <label className="block text-sm font-medium text-zinc-700 mb-1.5">
-              Location
-            </label>
-            <div className="flex items-center border border-zinc-300 rounded-lg px-3 bg-zinc-100">
-              <MdLocationOn className="text-zinc-500 mr-2" />
-              <input
-                type="text"
-                name="location"
-                placeholder="Enter Location"
-                value={formData.location}
-                onChange={handleChange}
-                className="w-full py-2 text-zinc-800 placeholder-zinc-400 bg-transparent focus:outline-none"
-              />
-            </div>
-          </div>
-
+         
           {/* Budget */}
           <div>
             <label className="block text-sm font-medium text-zinc-700 mb-1.5">

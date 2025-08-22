@@ -11,6 +11,7 @@ import {
   FaBuilding,
   FaInfoCircle,
   FaEdit,
+ 
 } from "react-icons/fa";
 
 type Enquiry = {
@@ -84,6 +85,15 @@ export default function EnquiryViewDetails() {
             Contact Info
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+             <InfoCard
+              icon={<FaBuilding />}
+              label="Company Name"
+              value={
+                <>
+                  {enquiry.companyName}
+                </>
+              }
+            />
             <InfoCard
               icon={<FaPhone />}
               label="Phone Number"
