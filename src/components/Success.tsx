@@ -8,7 +8,7 @@ export default function Success({ message, show, onClose }: SuccessPopupProps) {
   if (!show) return null;
 
   return (
-    <div className="fixed top-4 right-4 z-50 rounded-lg bg-green-500 text-white px-4 py-2 shadow-lg">
+  <div className="fixed h-20 w-70 top-4 right-4 z-50 rounded-lg bg-zinc-300/40 text-green-900 px-4 py-2 shadow-lg">
       <div className="flex items-center justify-between gap-4">
         <span>{message}</span>
         <button

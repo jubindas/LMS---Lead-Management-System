@@ -1,8 +1,8 @@
 import { DataTable } from "@/components/data-table";
 
-import { samplePayments } from "./payments-data";
+import { samplePayments } from "../../table-datas/payments-data";
 
-import { columns } from "./payments-columns";
+import { columns } from "../../table-columns/payments-columns";
 
 import PaymentsEnquiry from "@/components/PaymentsEnquiry";
 

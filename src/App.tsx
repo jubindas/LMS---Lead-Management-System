@@ -153,10 +153,6 @@ const router = createBrowserRouter([
         ),
       },
       {
-        path: "settings",
-        element: <p>Setting</p>,
-      },
-      {
         path: "payment",
         element: (
           <Suspense fallback={<Loading />}>

@@ -1,7 +1,7 @@
 
 import { useState } from "react";
 
-import Error from "./Error"
+import Success from "./Success";
 
 
 export default function Test() {
@@ -17,8 +17,7 @@ export default function Test() {
         Show Error Popup
       </button>
 
-      {/* Use your popup here */}
-      <Error
+      <Success
         message="Something went wrong!"
         show={errorVisible}
         onClose={() => setErrorVisible(false)}

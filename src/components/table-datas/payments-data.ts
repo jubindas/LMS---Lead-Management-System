@@ -1,4 +1,4 @@
-import type { Payment } from "./payment-types";
+import type { Payment } from "../table-types/payment-types";
 
 export const samplePayments: Payment[] = [
   {
@@ -10,8 +10,8 @@ export const samplePayments: Payment[] = [
   {
     id: "02",
     name: "Aditi Verma",
-    amount: 2500,  
-  date: "2025-08-03 10:12",
+    amount: 2500,
+    date: "2025-08-03 10:12",
   },
   {
     id: "03",
@@ -21,7 +21,7 @@ export const samplePayments: Payment[] = [
   },
   {
     id: "04",
-  name: "Priya Singh",
+    name: "Priya Singh",
     amount: 3000,
     date: "2025-08-10 09:33",
   },
