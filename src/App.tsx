@@ -26,9 +26,7 @@ const StatusTypeTable = lazy(
 
 const MainRequirements = lazy(
   () =>
-    import(
-      "./components/features/masters/mainRequirements/MainRequirements.tsx"
-    )
+    import("./components/features/masters/mainRequirements/MainRequirements.tsx")
 );
 
 const CompletedEnquiries = lazy(
@@ -36,8 +34,7 @@ const CompletedEnquiries = lazy(
 );
 
 const SubRequirement = lazy(
-  () =>
-    import("./components/features/masters/subRequirements/SubRequirement.tsx")
+  () => import("./components/features/masters/subRequirements/SubRequirement.tsx")
 );
 
 const TodoList = lazy(() => import("./components/pages/TodoList.tsx"));
@@ -51,10 +48,7 @@ const Payments = lazy(
 );
 
 const PaymentFollowUpDashboard = lazy(
-  () =>
-    import(
-      "./components/features/paymentDashboard/PaymentFollowUpDashboard.tsx"
-    )
+  () => import("./components/features/paymentDashboard/PaymentFollowUpDashboard.tsx")
 );
 
 const Source = lazy(
@@ -77,7 +71,7 @@ const PendingEnquiries = lazy(
 
 const LogIn = lazy(() => import("./components/pages/LogIn.tsx"));
 
-const Test = lazy(()=> import("./components/Test.tsx"))
+const Test = lazy(() => import("./components/Test.tsx"));
 
 const ReportEnquiry = lazy(
   () => import("./components/pages/ReportEnquiry.tsx")
@@ -264,7 +258,7 @@ const router = createBrowserRouter([
     path: "/login",
     element: <LogIn />,
   },
-   {
+  {
     path: "/test",
     element: <Test />,
   },

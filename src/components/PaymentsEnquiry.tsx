@@ -109,12 +109,12 @@ export default function PaymentsEnquiry() {
                   {dueDate ? dueDate.toLocaleDateString() : "Select Date"}
                 </Button>
               </PopoverTrigger>
-              <PopoverContent className="w-auto p-0 bg-zinc-100 border border-zinc-300">
+              <PopoverContent className="w-auto p-0 bg-zinc-100 border border-zinc-300 ">
                 <Calendar
                   mode="single"
                   selected={dueDate}
                   onSelect={setDueDate}
-                  className="rounded-md bg-white text-zinc-800"
+                  className="rounded-md bg-white text-zinc-800 "
                 />
               </PopoverContent>
             </Popover>

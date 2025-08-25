@@ -23,6 +23,7 @@ import EnquiryStatus from "@/components/EnquieyStatus.tsx";
 import SubRequirementForm from "@/components/SubRequirementForm.tsx";
 
 export default function EnquiryForm() {
+
   const [formData, setFormData] = useState({
     companyName: "",
     phone: "",
@@ -64,7 +65,6 @@ export default function EnquiryForm() {
 
       <form onSubmit={handleSubmit} className="space-y-6">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {/* Company Name */}
           <div>
             <label className="block text-sm font-medium text-zinc-700 mb-1.5">
               Company Name
@@ -82,7 +82,6 @@ export default function EnquiryForm() {
             </div>
           </div>
 
-          {/* Phone */}
           <div>
             <label className="block text-sm font-medium text-zinc-700 mb-1.5">
               Phone No.
@@ -112,7 +111,6 @@ export default function EnquiryForm() {
             </div>
           </div>
 
-          {/* Alternative Number */}
           <div>
             <label className="block text-sm font-medium text-zinc-700 mb-1.5">
               Alternative Number
@@ -142,7 +140,6 @@ export default function EnquiryForm() {
             </div>
           </div>
 
-          {/* Email */}
           <div>
             <label className="block text-sm font-medium text-zinc-700 mb-1.5">
               Email
@@ -160,7 +157,6 @@ export default function EnquiryForm() {
             </div>
           </div>
 
-          {/* Business Type */}
           <div>
             <label className="block text-sm font-medium text-zinc-700 mb-1.5">
               Business Type
@@ -188,7 +184,6 @@ export default function EnquiryForm() {
             </div>
           </div>
 
-          {/* Location */}
           <div>
             <label className="block text-sm font-medium text-zinc-700 mb-1.5">
               Location
@@ -209,7 +204,6 @@ export default function EnquiryForm() {
             </div>
           </div>
 
-          {/* Status */}
           <div>
             <label className="block text-sm font-medium text-zinc-700 mb-1.5">
               Status
@@ -234,7 +228,6 @@ export default function EnquiryForm() {
             </div>
           </div>
 
-          {/* Source */}
           <div>
             <label className="block text-sm font-medium text-zinc-700 mb-1.5">
               Source
@@ -261,7 +254,6 @@ export default function EnquiryForm() {
             </div>
           </div>
 
-          {/* Main Category */}
           <div>
             <label className="block text-sm font-medium text-zinc-700 mb-1.5">
               Main Category
@@ -288,7 +280,6 @@ export default function EnquiryForm() {
             </div>
           </div>
 
-          {/* Sub Category */}
           <div>
             <label className="block text-sm font-medium text-zinc-700 mb-1.5">
               Sub Category
@@ -317,7 +308,6 @@ export default function EnquiryForm() {
           </div>
 
          
-          {/* Budget */}
           <div>
             <label className="block text-sm font-medium text-zinc-700 mb-1.5">
               Budget
@@ -336,7 +326,6 @@ export default function EnquiryForm() {
           </div>
         </div>
 
-        {/* Remarks */}
         <div>
           <label className="block text-sm font-medium text-zinc-700 mb-1.5">
             Remarks
@@ -351,7 +340,6 @@ export default function EnquiryForm() {
           ></textarea>
         </div>
 
-        {/* Save Button */}
         <div className="flex justify-end gap-4 pt-4">
           <Button
             type="submit"
