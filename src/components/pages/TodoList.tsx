@@ -56,17 +56,15 @@ export default function TodoList() {
     <div className="min-h-screen text-white font-['Poppins'] p-4">
       <div className="max-w-7xl mx-auto w-full">
         <div className="w-full rounded-2xl p-4 md:p-6 flex flex-col bg-white shadow-md">
-          {/* Header */}
+       
           <h2 className="text-xl md:text-3xl font-semibold text-zinc-900 mb-6 flex items-center gap-3">
             <ListTodo size={28} className="text-zinc-900" /> To-Do List
           </h2>
 
-          {/* Add Task Form */}
           <form
             onSubmit={addTask}
             className="flex flex-col md:flex-row gap-3 mb-6 items-stretch md:items-center"
           >
-            {/* Task Input */}
             <input
               type="text"
               value={newTask}
@@ -81,7 +79,6 @@ export default function TodoList() {
               "
             />
 
-            {/* Date Picker */}
             <Popover>
               <PopoverTrigger asChild>
                 <Button
@@ -111,7 +108,6 @@ export default function TodoList() {
               </PopoverContent>
             </Popover>
 
-            {/* Add Button */}
             <Button
               type="submit"
               className="
@@ -127,7 +123,6 @@ export default function TodoList() {
             </Button>
           </form>
 
-          {/* Data Table */}
           <div className="overflow-x-auto rounded-lg border border-zinc-300">
             <DataTable
               columns={columns}

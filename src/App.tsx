@@ -2,6 +2,8 @@ import { Suspense, lazy } from "react";
 
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+
 import RootLayout from "./components/RootLayout";
 
 const EnquiryViewDetails = lazy(
@@ -26,7 +28,9 @@ const StatusTypeTable = lazy(
 
 const MainRequirements = lazy(
   () =>
-    import("./components/features/masters/mainRequirements/MainRequirements.tsx")
+    import(
+      "./components/features/masters/mainRequirements/MainRequirements.tsx"
+    )
 );
 
 const CompletedEnquiries = lazy(
@@ -34,7 +38,8 @@ const CompletedEnquiries = lazy(
 );
 
 const SubRequirement = lazy(
-  () => import("./components/features/masters/subRequirements/SubRequirement.tsx")
+  () =>
+    import("./components/features/masters/subRequirements/SubRequirement.tsx")
 );
 
 const TodoList = lazy(() => import("./components/pages/TodoList.tsx"));
@@ -48,7 +53,10 @@ const Payments = lazy(
 );
 
 const PaymentFollowUpDashboard = lazy(
-  () => import("./components/features/paymentDashboard/PaymentFollowUpDashboard.tsx")
+  () =>
+    import(
+      "./components/features/paymentDashboard/PaymentFollowUpDashboard.tsx"
+    )
 );
 
 const Source = lazy(
@@ -260,8 +268,14 @@ const router = createBrowserRouter([
   },
 ]);
 
+const queryClient = new QueryClient();
+
 function App() {
-  return <RouterProvider router={router} />;
+  return (
+    <QueryClientProvider client={queryClient}>
+      <RouterProvider router={router} />
+    </QueryClientProvider>
+  );
 }
 
 export default App;
