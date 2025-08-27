@@ -4,6 +4,9 @@ import { SidebarProvider } from "./ui/sidebar";
 
 import { AppSidebar } from "./AppSidebar";
 
+import { Toaster } from "sonner";
+
+
 import NavBar from "./NavBar.tsx";
 
 export default function RootLayout() {
@@ -14,6 +17,7 @@ export default function RootLayout() {
         <NavBar />
         <Outlet />
       </main>
+       <Toaster position="top-right" />
     </SidebarProvider>
   );
 }

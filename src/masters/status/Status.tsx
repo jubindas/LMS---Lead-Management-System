@@ -1,6 +1,6 @@
 import { DataTable } from "@/components/data-table";
 
-import EnquiryStatus from "@/components/EnquieyStatus";
+import EnquiryStatus from "@/components/EnquiryStatus";
 
 import { columns } from "./status-columns";
 

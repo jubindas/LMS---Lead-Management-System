@@ -18,12 +18,11 @@ import MainRequirementsForm from "@/components/MainRequirementsForm";
 
 import EnquirySource from "@/components/EnquirySource";
 
-import EnquiryStatus from "@/components/EnquieyStatus.tsx";
+import EnquiryStatus from "@/components/EnquiryStatus";
 
 import SubRequirementForm from "@/components/SubRequirementForm.tsx";
 
 export default function EnquiryForm() {
-
   const [formData, setFormData] = useState({
     companyName: "",
     phone: "",
@@ -161,7 +160,7 @@ export default function EnquiryForm() {
             <label className="block text-sm font-medium text-zinc-700 mb-1.5">
               Business Type
             </label>
-           <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2">
               <div className="flex items-center h-12 border border-zinc-300 rounded-lg px-3 bg-zinc-100 flex-1">
                 <MdBusiness className="text-zinc-500 mr-2" />
                 <select
@@ -178,9 +177,8 @@ export default function EnquiryForm() {
                   <option value="Other">Other</option>
                 </select>
               </div>
-             
-                <EnquiryBussines />
-             
+
+              <EnquiryBussines />
             </div>
           </div>
 
@@ -307,7 +305,6 @@ export default function EnquiryForm() {
             </div>
           </div>
 
-         
           <div>
             <label className="block text-sm font-medium text-zinc-700 mb-1.5">
               Budget
