@@ -1,10 +1,10 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
-import TodoDashboard from "./pages/TodoDashboard";
+import TodoDashboard from "../pages/TodoDashboard";
 
-import PaymentsDashboard from "./pages/PaymentsDashboard.tsx";
+import PaymentsDashboard from "../pages/PaymentsDashboard.tsx";
 
-import FollowUpDashboard from "./pages/FollowUpDashboard.tsx";
+import FollowUpDashboard from "../pages/FollowUpDashboard.tsx";
 
 export default function ToggleTab() {
   return (

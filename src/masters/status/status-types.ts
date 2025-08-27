@@ -1,5 +1,6 @@
 export interface StatusType {
-  sl: number;
+  id: number;
   name: string;
   description: string;
+  created_at: string;
 }

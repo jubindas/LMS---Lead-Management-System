@@ -1,21 +1,41 @@
-import { DataTable } from "../data-table.tsx";
+import { DataTable } from "../components/data-table.tsx";
 
-import { enquiryColumns } from "../table-columns/completed-enquiries-columns.tsx";
+import { enquiryColumns } from "../table-columns/enquiry-columns.tsx";
 
-import {enquiryData} from "../table-datas/completed-enquiries-datas.ts"
+import { Button } from "../components/ui/button.tsx";
 
+import { Link } from "react-router-dom";
 
-export default function CompletedEnquiries() {
+import { enquiryData } from "../table-datas/enquiry-data.ts";
+
+import { useState } from "react";
+
+export default function Enquiries() {
+  
+  const [data, setData] = useState(enquiryData);
+
+  
+  const handleStageUpdate = (sl: number, newStage: string) => {
+    setData((prev) =>
+      prev.map((item) => (item.sl === sl ? { ...item, stage: newStage } : item))
+    );
+  };
+
+  
+  const columns = enquiryColumns(handleStageUpdate);
+
   return (
-    <div className="p-8 min-h-screen w-full ">
+    <div className="p-8 min-h-screen w-full">
       <div className="max-w-7xl mx-auto mt-10 p-8 shadow-md rounded-2xl bg-zinc-50">
-       
-        <div className="flex justify-between items-center  mb-6 border-b border-zinc-700/60 pb-4">
+        <div className="flex justify-between items-center mb-6 border-b border-zinc-700/60 pb-4">
           <h2 className="text-3xl font-bold tracking-wide text-black">
-           Completed Enquiries
+            Enquiries
           </h2>
-          <div className="flex items-center gap-3 flex-wrap overflow-x-auto">
-          </div>
+          <Link to="/add-enquiry">
+            <Button className="bg-zinc-500 hover:bg-zinc-600 text-white font-medium px-3 py-1.5 text-sm rounded-md shadow-md transition-transform transform hover:-translate-y-0.5 hover:shadow-lg">
+              Add Enquiry
+            </Button>
+          </Link>
         </div>
 
         <div className="flex flex-wrap justify-between items-center mb-3 gap-3 text-sm">
@@ -45,11 +65,10 @@ export default function CompletedEnquiries() {
           </div>
         </div>
 
-     
         <div className="w-full overflow-x-auto">
           <DataTable
-            columns={enquiryColumns}
-            data={enquiryData}
+            columns={columns}
+            data={data}  
             enablePagination={true}
           />
         </div>

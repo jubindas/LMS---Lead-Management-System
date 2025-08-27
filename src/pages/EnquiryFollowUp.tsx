@@ -6,7 +6,7 @@ import {data} from "../table-datas/enquiry-follow-up-data"
 
 import {columns} from "../table-columns/enquiry-follow-up-columns"
 
-import EnquiryFollowUpForm from "../EnquiryFollowUpForm.tsx";
+import EnquiryFollowUpForm from "../components/EnquiryFollowUpForm.tsx";
 
 export default function EnquiryFollowUp() {
 

@@ -4,7 +4,7 @@ import { data } from "../table-datas/payment-follow-up-data";
 
 import { columns } from "../table-columns/payment-follow-up-columns";
 
-import FollowUpPaymentReminder from "../FollowUpPaymentReminder";
+import FollowUpPaymentReminder from "../components/FollowUpPaymentReminder.tsx";
 
 export default function PaymentFollowUp() {
   return (

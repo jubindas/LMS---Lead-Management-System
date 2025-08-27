@@ -42,5 +42,4 @@ export const columns: ColumnDef<TrashData>[] = [
       );
     },
   },
- 
 ];

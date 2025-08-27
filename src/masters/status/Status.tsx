@@ -1,41 +1,32 @@
-import { DataTable } from "../data-table.tsx";
+import { DataTable } from "@/components/data-table";
 
-import { enquiryColumns } from "../table-columns/enquiry-columns.tsx";
+import EnquiryStatus from "@/components/EnquieyStatus";
 
-import { Button } from "../ui/button.tsx";
+import { columns } from "./status-columns";
 
-import { Link } from "react-router-dom";
+import type { StatusType } from "./status-types";
 
-import { enquiryData } from "../table-datas/enquiry-data.ts";
+import { useQuery } from "@tanstack/react-query";
 
-import { useState } from "react";
+import { getStatus } from "@/services/apiStatus";
 
-export default function Enquiries() {
+export default function Status() {
   
-  const [data, setData] = useState(enquiryData);
+  const { data, isLoading, isError } = useQuery<StatusType[]>({
+    queryKey: ["statusTypes"],
+    queryFn: getStatus,
+  });
 
-  
-  const handleStageUpdate = (sl: number, newStage: string) => {
-    setData((prev) =>
-      prev.map((item) => (item.sl === sl ? { ...item, stage: newStage } : item))
-    );
-  };
-
-  
-  const columns = enquiryColumns(handleStageUpdate);
+  console.log("Fetched statuses:", data);
 
   return (
     <div className="p-8 min-h-screen w-full">
       <div className="max-w-7xl mx-auto mt-10 p-8 shadow-md rounded-2xl bg-zinc-50">
-        <div className="flex justify-between items-center mb-6 border-b border-zinc-700/60 pb-4">
-          <h2 className="text-3xl font-bold tracking-wide text-black">
-            Enquiries
+        <div className="flex flex-wrap justify-between items-center mb-4 border-b border-zinc-700/60 pb-2">
+          <h2 className="text-xl font-bold tracking-wide text-black">
+            Status Type
           </h2>
-          <Link to="/add-enquiry">
-            <Button className="bg-zinc-500 hover:bg-zinc-600 text-white font-medium px-3 py-1.5 text-sm rounded-md shadow-md transition-transform transform hover:-translate-y-0.5 hover:shadow-lg">
-              Add Enquiry
-            </Button>
-          </Link>
+          <EnquiryStatus />
         </div>
 
         <div className="flex flex-wrap justify-between items-center mb-3 gap-3 text-sm">
@@ -64,14 +55,19 @@ export default function Enquiries() {
             />
           </div>
         </div>
-
-        <div className="w-full overflow-x-auto">
+        {isLoading ? (
+          <div className="text-center py-4">Loading data...</div>
+        ) : isError ? (
+          <div className="text-center text-red-500 py-4">
+            Failed to load data.
+          </div>
+        ) : (
           <DataTable
             columns={columns}
-            data={data}  
+            data={data || []}
             enablePagination={true}
           />
-        </div>
+        )}
       </div>
     </div>
   );
