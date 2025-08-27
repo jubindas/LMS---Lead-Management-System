@@ -23,26 +23,6 @@ export async function createStatus(status: { name: string; description?: string 
 }
 
 
-export async function editStatus(id: string) {
-  const response = await axios.put(`${API_BASE_URL}/statuses/${id}`);
-
-  if (response.status !== 200 && response.status !== 204) {
-    throw new Error("Failed to edit status");
-  }
-
-  return response.data;
-}
-
-export async function updateStatus(id: string, status: { name: string; description?: string | null }) {
-  const response = await axios.put(`${API_BASE_URL}/statuses/${id}`, status);
-
-  if (response.status !== 200 && response.status !== 204) {
-    throw new Error("Failed to update status");
-  }
-
-  return response.data;
-}
-
 export async function deleteStatus(id: string) {
   const response = await axios.delete(`${API_BASE_URL}/statuses/${id}`);
 

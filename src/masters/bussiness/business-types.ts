@@ -1,5 +1,5 @@
 export interface BusinessType {
-  sl: number;
+  id: string;
   name: string;
   description: string;
  
