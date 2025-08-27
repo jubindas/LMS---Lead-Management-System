@@ -6,15 +6,11 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 import RootLayout from "./components/RootLayout";
 
-const EnquiryViewDetails = lazy(
-  () => import("./pages/EnquiryViewDetails.tsx")
-);
+const EnquiryViewDetails = lazy(() => import("./pages/EnquiryViewDetails.tsx"));
 
 const EnquiryDialog = lazy(() => import("./components/EnquiryDialog.tsx"));
 
-const EnquiryFollowUp = lazy(
-  () => import("./pages/EnquiryFollowUp.tsx")
-);
+const EnquiryFollowUp = lazy(() => import("./pages/EnquiryFollowUp.tsx"));
 
 const Enquiry = lazy(() => import("./pages/Enquiry.tsx"));
 
@@ -22,72 +18,45 @@ const BusinessTypeTable = lazy(
   () => import("./masters/bussiness/BusinessType.tsx")
 );
 
-const StatusTypeTable = lazy(
-  () => import("./masters/status/Status.tsx")
-);
+const StatusTypeTable = lazy(() => import("./masters/status/Status.tsx"));
 
 const MainRequirements = lazy(
-  () =>
-    import(
-      "./masters/mainRequirements/MainRequirements.tsx"
-    )
+  () => import("./masters/mainRequirements/MainRequirements.tsx")
 );
 
-const CompletedEnquiries = lazy(
-  () => import("./pages/CompletedEnquiries.tsx")
-);
+const CompletedEnquiries = lazy(() => import("./pages/CompletedEnquiries.tsx"));
 
 const SubRequirement = lazy(
-  () =>
-    import("./masters/subRequirements/SubRequirement.tsx")
+  () => import("./masters/subRequirements/SubRequirement.tsx")
 );
 
 const TodoList = lazy(() => import("./pages/TodoList.tsx"));
 
-const DashBoard = lazy(
-  () => import("./features/dashboard/DashBoard.tsx")
-);
+const DashBoard = lazy(() => import("./features/dashboard/DashBoard.tsx"));
 
-const Payments = lazy(
-  () => import("./features/payments/Payments.tsx")
-);
+const Payments = lazy(() => import("./pages/Payments.tsx"));
 
 const PaymentFollowUpDashboard = lazy(
-  () =>
-    import(
-      "./features/paymentDashboard/PaymentFollowUpDashboard.tsx"
-    )
+  () => import("./features/paymentDashboard/PaymentFollowUpDashboard.tsx")
 );
 
-const Source = lazy(
-  () => import("./masters/source/Source.tsx")
-);
+const Source = lazy(() => import("./masters/source/Source.tsx"));
 
-const Location = lazy(
-  () => import("./masters/location/Location.tsx")
-);
+const Location = lazy(() => import("./masters/location/Location.tsx"));
 
 const TrashBin = lazy(() => import("./pages/TrashBin.tsx"));
 
-const PaymentFollowUp = lazy(
-  () => import("./pages/PaymentFollowUp.tsx")
-);
+const PaymentFollowUp = lazy(() => import("./pages/PaymentFollowUp.tsx"));
 
-const PendingEnquiries = lazy(
-  () => import("./pages/PendingEnquiries.tsx")
-);
+const PendingEnquiries = lazy(() => import("./pages/PendingEnquiries.tsx"));
 
 const LogIn = lazy(() => import("./pages/LogIn.tsx"));
 
 const Test = lazy(() => import("./components/Test.tsx"));
 
-const ReportEnquiry = lazy(
-  () => import("./pages/ReportEnquiry.tsx")
-);
+const ReportEnquiry = lazy(() => import("./pages/ReportEnquiry.tsx"));
 
-const DownloadEnquiry = lazy(
-  () => import("./pages/DownloadEnquiry.tsx")
-);
+const DownloadEnquiry = lazy(() => import("./pages/DownloadEnquiry.tsx"));
 
 const Loading = lazy(() => import("./components/Loading.tsx"));
 

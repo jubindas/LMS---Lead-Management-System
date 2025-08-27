@@ -157,9 +157,6 @@ export default function PendingTodoWorksTable() {
 
   return (
     <div className="space-y-4">
-     
-
-      {/* Data Table */}
       <DataTable columns={columns} data={todoData} enablePagination={true} />
     </div>
   );
