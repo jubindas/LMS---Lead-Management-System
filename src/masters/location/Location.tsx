@@ -1,13 +1,38 @@
 import { DataTable } from "@/components/data-table";
 
-import { locations } from "./location-data";
 
 import { columns } from "./location-columns";
 
 import EnquiryLocation from "@/components/EnquiryLocation";
 
+import { getLocation } from "@/services/apiLocation";
+
+import { useQuery } from "@tanstack/react-query";
 
 export default function LocationTable() {
+
+
+
+const { data: locations, isLoading, error } = useQuery({
+  queryKey: ["locations"],
+  queryFn: getLocation,
+});
+
+if (isLoading) {
+  return <div>Loading...</div>;
+}
+
+if (error) {
+  return <div>Error fetching locations</div>;
+}
+
+console.log("Fetched locations:", locations);
+
+
+
+
+
+
   return (
     <div className="p-8 min-h-screen w-full  ">
       <div className="max-w-7xl mx-auto mt-10 p-8 shadow-md rounded-2xl bg-zinc-50">
@@ -15,9 +40,9 @@ export default function LocationTable() {
           <h2 className="text-xl font-bold tracking-wide bg-gradient-to-r text-black">
             Locations
           </h2>
-         <EnquiryLocation />
+          <EnquiryLocation />
         </div>
-   <div className="flex flex-wrap justify-between items-center mb-3 gap-3 text-sm">
+        <div className="flex flex-wrap justify-between items-center mb-3 gap-3 text-sm">
           <div className="flex items-center gap-2 text-black text-xs">
             <span>Show</span>
             <select className="rounded-lg px-2 py-1 bg-zinc-400 text-zinc-100 border border-zinc-400">
@@ -43,7 +68,19 @@ export default function LocationTable() {
             />
           </div>
         </div>
-        <DataTable columns={columns} data={locations} enablePagination={true} />
+        {isLoading ? (
+                 <div className="text-center py-4">Loading data...</div>
+               ) : error ? (
+                 <div className="text-center text-red-500 py-4">
+                   Failed to load data.
+                 </div>
+               ) : (
+                 <DataTable
+                   columns={columns}
+                   data={locations || []}
+                   enablePagination={true}
+                 />
+               )}
       </div>
     </div>
   );

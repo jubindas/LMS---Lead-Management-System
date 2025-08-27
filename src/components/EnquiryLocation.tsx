@@ -9,11 +9,33 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
+import { createLocation } from "@/services/apiLocation"; // your API function
 
 export default function EnquiryLocation() {
   const [formData, setFormData] = useState({
     location: "",
     description: "",
+  });
+
+  const [open, setOpen] = useState(false);
+
+  const queryClient = useQueryClient();
+
+  const createLocationMutation = useMutation({
+    mutationFn: (newLocation: { name: string; description?: string | null }) =>
+      createLocation(newLocation),
+    onSuccess: () => {
+      toast("Location created successfully!");
+      queryClient.invalidateQueries({ queryKey: ["locations"] });
+      setFormData({ location: "", description: "" });
+      setOpen(false);
+    },
+    onError: (error) => {
+      console.error("Failed to create location:", error);
+      toast("Failed to create location");
+    },
   });
 
   const handleChange = (
@@ -24,28 +46,21 @@ export default function EnquiryLocation() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Form submitted:", formData);
-    setFormData({ location: "", description: "" });
+    createLocationMutation.mutate({
+      name: formData.location,
+      description: formData.description || null,
+    });
   };
 
   return (
-    <Dialog>
-      {/* Trigger Button */}
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button className="bg-zinc-500 hover:bg-zinc-600 text-white font-medium px-3 py-1.5 text-sm rounded-md shadow-md transition-transform transform hover:-translate-y-0.5 hover:shadow-lg">
           <FaPlus />
         </Button>
       </DialogTrigger>
 
-      {/* Dialog Content */}
-      <DialogContent
-        className="
-          w-[90%] max-w-md md:max-w-lg lg:min-w-[40rem] 
-          max-h-[80vh] overflow-y-auto 
-          bg-zinc-100 rounded-lg shadow-2xl border border-zinc-300 p-4 md:p-6
-        "
-      >
-        {/* Header */}
+      <DialogContent className="w-[90%] max-w-md md:max-w-lg lg:min-w-[40rem] max-h-[80vh] overflow-y-auto bg-zinc-100 rounded-lg shadow-2xl border border-zinc-300 p-4 md:p-6">
         <DialogHeader className="pb-4 border-b border-zinc-300">
           <DialogTitle className="text-lg md:text-2xl font-bold text-zinc-800">
             Add New Location
@@ -55,9 +70,7 @@ export default function EnquiryLocation() {
           </DialogDescription>
         </DialogHeader>
 
-        {/* Form */}
         <form onSubmit={handleSubmit} className="mt-6 space-y-6">
-          {/* Location Name */}
           <div>
             <label className="block text-sm font-semibold text-zinc-700 mb-2">
               Location Name <span className="text-zinc-500">(required)</span>
@@ -69,15 +82,10 @@ export default function EnquiryLocation() {
               value={formData.location}
               onChange={handleChange}
               required
-              className="
-                w-full border border-zinc-300 rounded-md px-3 py-2 
-                bg-white text-zinc-800 shadow-sm 
-                focus:outline-none focus:ring-2 focus:ring-zinc-500 transition
-              "
+              className="w-full border border-zinc-300 rounded-md px-3 py-2 bg-white text-zinc-800 shadow-sm focus:outline-none focus:ring-2 focus:ring-zinc-500 transition"
             />
           </div>
 
-          {/* Description */}
           <div>
             <label className="block text-sm font-semibold text-zinc-700 mb-2">
               Description{" "}
@@ -89,26 +97,17 @@ export default function EnquiryLocation() {
               value={formData.description}
               onChange={handleChange}
               rows={3}
-              className="
-                w-full border border-zinc-300 rounded-md px-3 py-2 
-                bg-white text-zinc-800 shadow-sm resize-none 
-                focus:outline-none focus:ring-2 focus:ring-zinc-500 transition
-              "
+              className="w-full border border-zinc-300 rounded-md px-3 py-2 bg-white text-zinc-800 shadow-sm resize-none focus:outline-none focus:ring-2 focus:ring-zinc-500 transition"
             />
           </div>
 
-          {/* Buttons */}
           <div className="flex flex-col md:flex-row justify-end gap-3 pt-4 border-t border-zinc-300">
             <Button
               type="submit"
-              className="
-                w-full md:w-auto 
-                bg-zinc-500 hover:bg-zinc-600 text-white font-medium px-6 py-2 
-                rounded-md shadow-lg 
-                transition-transform transform hover:-translate-y-1
-              "
+              disabled={createLocationMutation.isPending}
+              className="w-full md:w-auto bg-zinc-500 hover:bg-zinc-600 text-white font-medium px-6 py-2 rounded-md shadow-lg transition-transform transform hover:-translate-y-1"
             >
-              Save
+              {createLocationMutation.isPending ? "Saving..." : "Save"}
             </Button>
           </div>
         </form>
