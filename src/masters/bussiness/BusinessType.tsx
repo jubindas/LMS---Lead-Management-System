@@ -11,7 +11,7 @@ import { useQuery } from "@tanstack/react-query";
 import { getBusiness } from "@/services/apiBusiness";
 
 export default function BusinessTypeTable() {
-  const { data, isLoading, error } = useQuery<BusinessType[]>({
+  const { data: businessTypes, isLoading, error } = useQuery<BusinessType[]>({
     queryKey: ["businessTypes"],
     queryFn: getBusiness,
   });
@@ -19,7 +19,11 @@ export default function BusinessTypeTable() {
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>Error fetching business types</div>;
 
-  console.log("Fetched business types:", data);
+  const sortedBusinessTypes = [...(businessTypes || [])].sort(
+  (a, b) => Number(a.id) - Number(b.id)
+);
+
+  
 
   return (
     <div className="p-8 min-h-screen w-full  ">
@@ -60,7 +64,7 @@ export default function BusinessTypeTable() {
 
         <DataTable
           columns={columns}
-          data={data || []}
+          data={sortedBusinessTypes || []}
           enablePagination={true}
         />
       </div>

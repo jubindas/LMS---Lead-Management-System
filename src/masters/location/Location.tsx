@@ -26,8 +26,7 @@ if (error) {
   return <div>Error fetching locations</div>;
 }
 
-console.log("Fetched locations:", locations);
-
+const sortedLocations = [...(locations || [])].sort((a, b) => a.id - b.id);
 
 
 
@@ -77,7 +76,7 @@ console.log("Fetched locations:", locations);
                ) : (
                  <DataTable
                    columns={columns}
-                   data={locations || []}
+                   data={sortedLocations || []}
                    enablePagination={true}
                  />
                )}

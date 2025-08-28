@@ -32,6 +32,8 @@ import { getStatus } from "@/services/apiStatus";
 
 import { getLocation } from "@/services/apiLocation";
 
+import { getSource } from "@/services/apiSource";
+
 import {
   Popover,
   PopoverTrigger,
@@ -39,9 +41,9 @@ import {
 } from "@/components/ui/popover";
 
 import { Check, ChevronDown } from "lucide-react";
+import { getMainCategories } from "@/services/apiMainCategories";
 
 export default function EnquiryForm() {
-  
   const [formData, setFormData] = useState({
     companyName: "",
     phone: "",
@@ -92,8 +94,17 @@ export default function EnquiryForm() {
     queryFn: getLocation,
   });
 
+  const { data: sourcesType, isLoading: isSourcesLoading } = useQuery({
+    queryKey: ["sources"],
+    queryFn: getSource,
+  });
 
-
+  const { data: mainCategories, isLoading: isMainCategoriesLoading } = useQuery(
+    {
+      queryKey: ["mainCategories"],
+      queryFn: getMainCategories,
+    }
+  );
 
   return (
     <div className="p-6 max-w-6xl mt-7 mx-auto bg-zinc-50 rounded-2xl shadow-md space-y-6">
@@ -101,7 +112,6 @@ export default function EnquiryForm() {
 
       <form onSubmit={handleSubmit} className="space-y-6">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-
           <div>
             <label className="block text-sm font-medium text-zinc-700 mb-1.5">
               Company Name
@@ -368,23 +378,51 @@ export default function EnquiryForm() {
               Source
             </label>
             <div className="flex items-center gap-2">
-              <div className="flex items-center border border-zinc-300 rounded-lg px-3 bg-zinc-100 flex-1">
-                <RiUserVoiceFill className="text-zinc-500 mr-2" />
-                <select
-                  name="source"
-                  value={formData.source}
-                  onChange={handleChange}
-                  className="w-full py-2 text-zinc-800 bg-transparent focus:outline-none"
-                >
-                  <option value="" disabled>
-                    Select Source
-                  </option>
-                  <option value="Cold Calling">Cold Calling</option>
-                  <option value="Social Media">Social Media</option>
-                  <option value="Referral">Referral</option>
-                  <option value="Other">Other</option>
-                </select>
-              </div>
+              <Popover>
+                <PopoverTrigger asChild>
+                  <div className="flex items-center justify-between border border-zinc-300 rounded-lg px-3 bg-zinc-100 flex-1 h-12 cursor-pointer">
+                    <div className="flex items-center flex-1">
+                      <RiUserVoiceFill className="text-zinc-500 mr-2" />
+                      <span className="truncate text-zinc-800">
+                        {isSourcesLoading
+                          ? "Loading..."
+                          : formData.source || "Select Source"}
+                      </span>
+                    </div>
+                    <ChevronDown className="w-4 h-4 text-zinc-500 ml-2" />
+                  </div>
+                </PopoverTrigger>
+
+                <PopoverContent className="w-full p-0">
+                  <div className="max-h-48 overflow-y-auto">
+                    {sourcesType?.map((type: { id: number; name: string }) => (
+                      <div
+                        key={type.id}
+                        className={`flex items-center w-120 px-3 py-2 bg-zinc-100 cursor-pointer hover:bg-zinc-200 ${
+                          formData.source === type.name ? "bg-zinc-300" : ""
+                        }`}
+                        onClick={() =>
+                          handleChange({
+                            target: { name: "source", value: type.name },
+                          } as React.ChangeEvent<HTMLSelectElement>)
+                        }
+                      >
+                        <span className="flex-1">{type.name}</span>
+                        {formData.source === type.name && (
+                          <Check className="w-4 h-4 text-green-500" />
+                        )}
+                      </div>
+                    ))}
+
+                    {!isSourcesLoading && sourcesType?.length === 0 && (
+                      <div className="px-3 py-2 text-sm text-zinc-500">
+                        No sources available
+                      </div>
+                    )}
+                  </div>
+                </PopoverContent>
+              </Popover>
+
               <EnquirySource />
             </div>
           </div>
@@ -394,23 +432,54 @@ export default function EnquiryForm() {
               Main Category
             </label>
             <div className="flex items-center gap-2">
-              <div className="flex items-center border border-zinc-300 rounded-lg px-3 bg-zinc-100 flex-1">
-                <BsFillFileEarmarkTextFill className="text-zinc-500 mr-2" />
-                <select
-                  name="mainCategory"
-                  value={formData.mainCategory || ""}
-                  onChange={handleChange}
-                  className="w-full py-2 text-zinc-800 bg-transparent focus:outline-none"
-                >
-                  <option value="" disabled>
-                    Select Main Category
-                  </option>
-                  <option value="Electronics">Electronics</option>
-                  <option value="Furniture">Furniture</option>
-                  <option value="Apparel">Apparel</option>
-                  <option value="Other">Other</option>
-                </select>
-              </div>
+              <Popover>
+                <PopoverTrigger asChild>
+                  <div className="flex items-center justify-between border border-zinc-300 rounded-lg px-3 bg-zinc-100 flex-1 h-12 cursor-pointer">
+                    <div className="flex items-center flex-1">
+                      <BsFillFileEarmarkTextFill className="text-zinc-500 mr-2" />
+                      <span className="truncate text-zinc-800">
+                        {isMainCategoriesLoading
+                          ? "Loading..."
+                          : formData.mainCategory || "Select Main Category"}
+                      </span>
+                    </div>
+                    <ChevronDown className="w-4 h-4 text-zinc-500 ml-2" />
+                  </div>
+                </PopoverTrigger>
+
+                <PopoverContent className="w-full p-0">
+                  <div className="max-h-48 overflow-y-auto">
+                    {mainCategories?.map((type: { id: number; name: string }) => (
+                      <div
+                        key={type.id}
+                        className={`flex items-center w-120 px-3 py-2 bg-zinc-100 cursor-pointer hover:bg-zinc-200 ${
+                          formData.mainCategory === type.name
+                            ? "bg-zinc-300"
+                            : ""
+                        }`}
+                        onClick={() =>
+                          handleChange({
+                            target: { name: "mainCategory", value: type.name },
+                          } as React.ChangeEvent<HTMLSelectElement>)
+                        }
+                      >
+                        <span className="flex-1">{type.name}</span>
+                        {formData.mainCategory === type.name && (
+                          <Check className="w-4 h-4 text-green-500" />
+                        )}
+                      </div>
+                    ))}
+
+                    {!isMainCategoriesLoading &&
+                      mainCategories?.length === 0 && (
+                        <div className="px-3 py-2 text-sm text-zinc-500">
+                          No categories available
+                        </div>
+                      )}
+                  </div>
+                </PopoverContent>
+              </Popover>
+
               <MainRequirementsForm />
             </div>
           </div>

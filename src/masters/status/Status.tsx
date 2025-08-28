@@ -11,13 +11,18 @@ import { useQuery } from "@tanstack/react-query";
 import { getStatus } from "@/services/apiStatus";
 
 export default function Status() {
-  
-  const { data, isLoading, isError } = useQuery<StatusType[]>({
+
+  const { data: statusTypes, isLoading, isError } = useQuery<StatusType[]>({
     queryKey: ["statusTypes"],
     queryFn: getStatus,
   });
 
-  console.log("Fetched statuses:", data);
+  console.log("Fetched statuses:", statusTypes);
+
+  const sortedStatusTypes = [...(statusTypes || [])].sort(
+    (a, b) => Number(a.id) - Number(b.id)
+  );
+
 
   return (
     <div className="p-8 min-h-screen w-full">
@@ -64,7 +69,7 @@ export default function Status() {
         ) : (
           <DataTable
             columns={columns}
-            data={data || []}
+            data={ sortedStatusTypes || []}
             enablePagination={true}
           />
         )}

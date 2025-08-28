@@ -24,7 +24,7 @@ export const columns: ColumnDef<MainCategory>[] = [
     accessorKey: "description",
     header: "Description",
     cell: ({ row }) => (
-      <span className="text-black text-sm">{row.getValue("description")}</span>
+      <span className="text-black text-sm">{row.getValue("description") || "N/A"}</span>
     ),
   },
 {
