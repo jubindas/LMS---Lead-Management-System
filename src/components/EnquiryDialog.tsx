@@ -194,26 +194,57 @@ export default function EnquiryForm() {
               Business Type
             </label>
             <div className="flex items-center gap-2">
-              <div className="flex items-center h-12 border border-zinc-300 rounded-lg px-3 bg-zinc-100 flex-1">
-                <MdBusiness className="text-zinc-500 mr-2" />
-                <select
-                  name="businessType"
-                  value={formData.businessType}
-                  onChange={handleChange}
-                  className="w-full text-zinc-800 bg-transparent focus:outline-none"
-                >
-                  <option value="" disabled>
-                    {isBusinessLoading ? "Loading..." : "Select Business Type"}
-                  </option>
+              <Popover>
+                <PopoverTrigger asChild>
+                  <div className="flex items-center justify-between border border-zinc-300 rounded-lg px-3 bg-zinc-100 flex-1 h-12 cursor-pointer">
+                    <div className="flex items-center flex-1">
+                      <MdBusiness className="text-zinc-500 mr-2" />
+                      <span className="truncate text-zinc-800">
+                        {isBusinessLoading
+                          ? "Loading..."
+                          : formData.businessType || "Select Business Type"}
+                      </span>
+                    </div>
+                    <ChevronDown className="w-4 h-4 text-zinc-500 ml-2" />
+                  </div>
+                </PopoverTrigger>
 
-                  {businessTypes?.map((type: { id: number; name: string }) => (
-                    <option key={type.id} value={type.name}>
-                      {type.name}
-                    </option>
-                  ))}
-                </select>
-              </div>
+                <PopoverContent className="w-full p-0">
+                  <div className="max-h-48 overflow-y-auto">
+                    {businessTypes?.map(
+                      (type: { id: number; name: string }) => (
+                        <div
+                          key={type.id}
+                          className={`flex items-center w-120 px-3 py-2 bg-zinc-100 cursor-pointer hover:bg-zinc-200 ${
+                            formData.businessType === type.name
+                              ? "bg-zinc-300"
+                              : ""
+                          }`}
+                          onClick={() =>
+                            handleChange({
+                              target: {
+                                name: "businessType",
+                                value: type.name,
+                              },
+                            } as React.ChangeEvent<HTMLSelectElement>)
+                          }
+                        >
+                          <span className="flex-1">{type.name}</span>
+                          {formData.businessType === type.name && (
+                            <Check className="w-4 h-4 text-green-500" />
+                          )}
+                        </div>
+                      )
+                    )}
 
+                    {!isBusinessLoading && businessTypes?.length === 0 && (
+                      <div className="px-3 py-2 text-sm text-zinc-500">
+                        No business types available
+                      </div>
+                    )}
+                  </div>
+                </PopoverContent>
+              </Popover>
               <EnquiryBussines />
             </div>
           </div>
@@ -278,24 +309,51 @@ export default function EnquiryForm() {
               Status
             </label>
             <div className="flex items-center gap-2">
-              <div className="flex items-center border border-zinc-300 rounded-lg px-3 bg-zinc-100 flex-1">
-                <AiOutlineCheckCircle className="text-zinc-500 mr-2" />
-                <select
-                  name="status"
-                  value={formData.status || ""}
-                  onChange={handleChange}
-                  className="w-full py-2 text-zinc-800 bg-transparent focus:outline-none"
-                >
-                  <option value="" disabled>
-                    {isStatusLoading ? "Loading..." : "Select Status"}
-                  </option>
-                  {statusTypes?.map((type: { id: number; name: string }) => (
-                    <option key={type.id} value={type.name}>
-                      {type.name}
-                    </option>
-                  ))}
-                </select>
-              </div>
+              <Popover>
+                <PopoverTrigger asChild>
+                  <div className="flex items-center justify-between border border-zinc-300 rounded-lg px-3 bg-zinc-100 flex-1 h-12 cursor-pointer">
+                    <div className="flex items-center flex-1">
+                      <AiOutlineCheckCircle className="text-zinc-500 mr-2" />
+                      <span className="truncate text-zinc-800">
+                        {isStatusLoading
+                          ? "Loading..."
+                          : formData.status || "Select Status"}
+                      </span>
+                    </div>
+                    <ChevronDown className="w-4 h-4 text-zinc-500 ml-2" />
+                  </div>
+                </PopoverTrigger>
+
+                <PopoverContent className="w-full p-0">
+                  <div className="max-h-48 overflow-y-auto">
+                    {statusTypes?.map((type: { id: number; name: string }) => (
+                      <div
+                        key={type.id}
+                        className={`flex items-center w-120 px-3 py-2 bg-zinc-100 cursor-pointer hover:bg-zinc-200 ${
+                          formData.status === type.name ? "bg-zinc-300" : ""
+                        }`}
+                        onClick={() =>
+                          handleChange({
+                            target: { name: "status", value: type.name },
+                          } as React.ChangeEvent<HTMLSelectElement>)
+                        }
+                      >
+                        <span className="flex-1">{type.name}</span>
+                        {formData.status === type.name && (
+                          <Check className="w-4 h-4 text-green-500" />
+                        )}
+                      </div>
+                    ))}
+
+                    {!isStatusLoading && statusTypes?.length === 0 && (
+                      <div className="px-3 py-2 text-sm text-zinc-500">
+                        No statuses available
+                      </div>
+                    )}
+                  </div>
+                </PopoverContent>
+              </Popover>
+
               <EnquiryStatus />
             </div>
           </div>
