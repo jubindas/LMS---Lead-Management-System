@@ -41,6 +41,7 @@ import {
 import { Check, ChevronDown } from "lucide-react";
 
 export default function EnquiryForm() {
+  
   const [formData, setFormData] = useState({
     companyName: "",
     phone: "",
@@ -91,12 +92,16 @@ export default function EnquiryForm() {
     queryFn: getLocation,
   });
 
+
+
+
   return (
     <div className="p-6 max-w-6xl mt-7 mx-auto bg-zinc-50 rounded-2xl shadow-md space-y-6">
-      <h2 className="text-2xl font-bold text-zinc-900 mb-6">Add New Entry</h2>
+      <h2 className="text-2xl font-bold text-zinc-900 mb-6"> Add New Entry</h2>
 
       <form onSubmit={handleSubmit} className="space-y-6">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+
           <div>
             <label className="block text-sm font-medium text-zinc-700 mb-1.5">
               Company Name
@@ -472,7 +477,6 @@ export default function EnquiryForm() {
         <div className="flex justify-end gap-4 pt-4">
           <Button
             type="submit"
-            onClick={handleSubmit}
             className="bg-zinc-500 hover:bg-zinc-600 text-white px-6 py-2 rounded-lg shadow-md transition-all"
           >
             Save & Exit

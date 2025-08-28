@@ -1,12 +1,32 @@
 import { DataTable } from "@/components/data-table";
 
-import { data } from "./source-data";
 
 import { columns } from "./source-columns";
+
+import { getSource } from "@/services/apiSource";
+
+import { useQuery } from "@tanstack/react-query";
+
 
 import EnquirySource from "@/components/EnquirySource";
 
 export default function Source() {
+
+
+  const { data } = useQuery({
+    queryKey: ["sources"],
+    queryFn: getSource,
+  });
+
+
+console.log("Fetched sources:", data);
+
+  if (!data) {
+    return <div>Loading...</div>;
+  }
+
+  
+
     return (
      <div className="p-8 min-h-screen w-full  ">
       <div className="max-w-7xl mx-auto mt-10 p-8 shadow-md rounded-2xl bg-zinc-50">

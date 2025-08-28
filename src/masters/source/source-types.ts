@@ -1,5 +1,5 @@
 export interface Source {
-  sl: number;
+  id: string;
   name: string;
   description: string;
 }

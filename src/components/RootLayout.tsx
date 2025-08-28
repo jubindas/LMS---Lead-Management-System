@@ -11,8 +11,8 @@ import NavBar from "./NavBar.tsx";
 
 export default function RootLayout() {
   return (
-    <SidebarProvider>
-      <AppSidebar />
+    <SidebarProvider >
+      <AppSidebar  />
       <main className="w-full bg-zinc-100">
         <NavBar />
         <Outlet />

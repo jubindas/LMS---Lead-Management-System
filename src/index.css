@@ -1,18 +1,16 @@
-
 @import "tailwindcss";
 @import "tw-animate-css";
 
-
 * {
-  font-family: "Inter", sans-serif;
+ font-family: "Work Sans", sans-serif;
   font-optical-sizing: auto;
   font-weight: 400;
   font-style: normal;
 }
 
+ 
 
 @custom-variant dark (&:is(.dark *));
-
 
 @theme inline {
   --radius-sm: calc(var(--radius) - 4px);
@@ -40,14 +38,12 @@
   --color-input: var(--input);
   --color-ring: var(--ring);
 
-  /* Charts */
   --color-chart-1: var(--chart-1);
   --color-chart-2: var(--chart-2);
   --color-chart-3: var(--chart-3);
   --color-chart-4: var(--chart-4);
   --color-chart-5: var(--chart-5);
 
-  /* Sidebar */
   --color-sidebar: var(--sidebar);
   --color-sidebar-foreground: var(--sidebar-foreground);
   --color-sidebar-primary: var(--sidebar-primary);
@@ -57,7 +53,6 @@
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
 }
-
 
 :root {
   --radius: 0.625rem;
@@ -91,7 +86,7 @@
   --ring: oklch(0.709 0.01 56.259);
 
   /* Button Glow Effect */
---button-gradient: linear-gradient(to right, #9333ea, #a855f7, #c084fc);
+  --button-gradient: linear-gradient(to right, #9333ea, #a855f7, #c084fc);
   --button-shadow: 0 4px 12px rgba(168, 85, 247, 0.5);
 
   /* Charts */
@@ -116,7 +111,6 @@
   --logo-color: #ffffff;
 }
 
-
 .dark {
   --background: oklch(27.9% 0.041 260.031);
   --foreground: oklch(0.985 0.001 106.423);
@@ -136,7 +130,7 @@
   --button-shadow: 0 0 15px 2px rgba(155, 81, 224, 0.6);
 
   /* Sidebar (Dark mode) */
-  --sidebar: oklch(30.557% 0.0018 286.012 / 0.4); /* same as bg-zinc-900/40 */
+  --sidebar: oklch(30.557% 0.0018 286.012 / 0.4); 
   --sidebar-foreground: #664242;
   --sidebar-primary: var(--button-gradient);
   --sidebar-primary-foreground: #ffffff;
@@ -149,7 +143,6 @@
   --logo-background: var(--primary);
   --logo-color: #ff0000;
 }
-
 
 @layer base {
   * {
