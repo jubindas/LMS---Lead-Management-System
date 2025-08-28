@@ -1,14 +1,28 @@
 import { DataTable } from "@/components/data-table";
 
-import { data } from "./main-requirements-data";
-
 import { columns } from "./main-requirements-coloumns";
 
 import MainRequirementsForm from "@/components/MainRequirementsForm";
 
+import { useQuery } from "@tanstack/react-query";
+
+import { getMainCategories } from "@/services/apiMainCategories";
+
 export default function MainRequirements() {
+  
+  const { data, isLoading } = useQuery({
+    queryKey: ["mainCategories"],
+    queryFn: getMainCategories,
+  });
+
+  console.log("fetched data", data);
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
   return (
-        <div className="p-8 min-h-screen w-full  ">
+    <div className="p-8 min-h-screen w-full  ">
       <div className="max-w-7xl mx-auto mt-10 p-8 shadow-md rounded-2xl bg-zinc-50">
         <div className="flex flex-wrap justify-between items-center mb-4 border-b border-zinc-700/60 pb-2">
           <h2 className="text-xl font-bold tracking-wide bg-gradient-to-r text-black">
@@ -17,8 +31,7 @@ export default function MainRequirements() {
           <MainRequirementsForm />
         </div>
 
-        
-    <div className="flex flex-wrap justify-between items-center mb-3 gap-3 text-sm">
+        <div className="flex flex-wrap justify-between items-center mb-3 gap-3 text-sm">
           <div className="flex items-center gap-2 text-black text-xs">
             <span>Show</span>
             <select className="rounded-lg px-2 py-1 bg-zinc-400 text-zinc-100 border border-zinc-400">
@@ -45,7 +58,7 @@ export default function MainRequirements() {
           </div>
         </div>
 
-        <DataTable columns={columns} data={data} enablePagination={true} />
+        {data && <DataTable columns={columns} data={data} enablePagination={true} />}
       </div>
     </div>
   );

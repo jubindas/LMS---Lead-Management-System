@@ -13,7 +13,7 @@ import EnquirySource from "@/components/EnquirySource";
 export default function Source() {
 
 
-  const { data } = useQuery({
+  const { data, isLoading } = useQuery({
     queryKey: ["sources"],
     queryFn: getSource,
   });
@@ -21,7 +21,7 @@ export default function Source() {
 
 console.log("Fetched sources:", data);
 
-  if (!data) {
+  if (isLoading) {
     return <div>Loading...</div>;
   }
 

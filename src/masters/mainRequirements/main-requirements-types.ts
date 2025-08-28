@@ -1,5 +1,5 @@
 export type MainCategory = {
-  sl: number;
+  id: string;
   name: string;
-    description: string;
+  description: string;
 };
