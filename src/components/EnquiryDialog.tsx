@@ -22,6 +22,10 @@ import EnquiryStatus from "@/components/EnquiryStatus";
 
 import SubRequirementForm from "@/components/SubRequirementForm.tsx";
 
+import { useQuery } from "@tanstack/react-query";
+
+import { getBusiness } from "@/services/apiBusiness";
+
 export default function EnquiryForm() {
   const [formData, setFormData] = useState({
     companyName: "",
@@ -57,6 +61,13 @@ export default function EnquiryForm() {
     e.preventDefault();
     console.log("Form Data Submitted:", formData);
   };
+
+  const { data: businessTypes, isLoading} = useQuery({
+    queryKey: ["businessTypes"],
+    queryFn: getBusiness,
+  });
+
+
 
   return (
     <div className="p-6 max-w-6xl mt-7 mx-auto bg-zinc-50 rounded-2xl shadow-md space-y-6">
@@ -169,12 +180,15 @@ export default function EnquiryForm() {
                   onChange={handleChange}
                   className="w-full text-zinc-800 bg-transparent focus:outline-none"
                 >
-                  <option value="" disabled>
-                    Select Business Type
-                  </option>
-                  <option value="Manufacturer">Manufacturer</option>
-                  <option value="Service">Service</option>
-                  <option value="Other">Other</option>
+                 <option value="" disabled>
+              {isLoading ? "Loading..." : "Select Business Type"}
+            </option>
+
+            {businessTypes?.map((type: { id: number; name: string }) => (
+              <option key={type.id} value={type.name}>
+                {type.name}
+              </option>
+            ))}
                 </select>
               </div>
 
