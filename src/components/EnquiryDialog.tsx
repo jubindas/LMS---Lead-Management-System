@@ -8,6 +8,8 @@ import { MdLocationOn, MdBusiness } from "react-icons/md";
 
 import { BsFillFileEarmarkTextFill } from "react-icons/bs";
 
+import { AiOutlineCheckCircle } from "react-icons/ai";
+
 import { RiUserVoiceFill } from "react-icons/ri";
 
 import EnquiryBussines from "@/components/EnquiryBussines";
@@ -25,6 +27,18 @@ import SubRequirementForm from "@/components/SubRequirementForm.tsx";
 import { useQuery } from "@tanstack/react-query";
 
 import { getBusiness } from "@/services/apiBusiness";
+
+import { getStatus } from "@/services/apiStatus";
+
+import { getLocation } from "@/services/apiLocation";
+
+import {
+  Popover,
+  PopoverTrigger,
+  PopoverContent,
+} from "@/components/ui/popover";
+
+import { Check, ChevronDown } from "lucide-react";
 
 export default function EnquiryForm() {
   const [formData, setFormData] = useState({
@@ -62,12 +76,20 @@ export default function EnquiryForm() {
     console.log("Form Data Submitted:", formData);
   };
 
-  const { data: businessTypes, isLoading} = useQuery({
+  const { data: businessTypes, isLoading: isBusinessLoading } = useQuery({
     queryKey: ["businessTypes"],
     queryFn: getBusiness,
   });
 
+  const { data: statusTypes, isLoading: isStatusLoading } = useQuery({
+    queryKey: ["statusTypes"],
+    queryFn: getStatus,
+  });
 
+  const { data: locationTypes, isLoading: isLocationLoading } = useQuery({
+    queryKey: ["locations"],
+    queryFn: getLocation,
+  });
 
   return (
     <div className="p-6 max-w-6xl mt-7 mx-auto bg-zinc-50 rounded-2xl shadow-md space-y-6">
@@ -180,15 +202,15 @@ export default function EnquiryForm() {
                   onChange={handleChange}
                   className="w-full text-zinc-800 bg-transparent focus:outline-none"
                 >
-                 <option value="" disabled>
-              {isLoading ? "Loading..." : "Select Business Type"}
-            </option>
+                  <option value="" disabled>
+                    {isBusinessLoading ? "Loading..." : "Select Business Type"}
+                  </option>
 
-            {businessTypes?.map((type: { id: number; name: string }) => (
-              <option key={type.id} value={type.name}>
-                {type.name}
-              </option>
-            ))}
+                  {businessTypes?.map((type: { id: number; name: string }) => (
+                    <option key={type.id} value={type.name}>
+                      {type.name}
+                    </option>
+                  ))}
                 </select>
               </div>
 
@@ -201,17 +223,52 @@ export default function EnquiryForm() {
               Location
             </label>
             <div className="flex items-center gap-2">
-              <div className="flex items-center border border-zinc-300 rounded-lg px-3 bg-zinc-100 flex-1">
-                <MdLocationOn className="text-zinc-500 mr-2" />
-                <input
-                  type="text"
-                  name="location"
-                  placeholder="Enter Location"
-                  value={formData.location}
-                  onChange={handleChange}
-                  className="w-full py-2 text-zinc-800 placeholder-zinc-400 bg-transparent focus:outline-none"
-                />
-              </div>
+              <Popover>
+                <PopoverTrigger asChild>
+                  <div className="flex items-center justify-between border border-zinc-300 rounded-lg px-3 bg-zinc-100 flex-1 h-12 cursor-pointer">
+                    <div className="flex items-center flex-1">
+                      <MdLocationOn className="text-zinc-500 mr-2" />
+                      <span className="truncate text-zinc-800">
+                        {isLocationLoading
+                          ? "Loading..."
+                          : formData.location || "Select Location"}
+                      </span>
+                    </div>
+                    <ChevronDown className="w-4 h-4 text-zinc-500 ml-2" />
+                  </div>
+                </PopoverTrigger>
+
+                <PopoverContent className="w-full p-0">
+                  <div className="max-h-48 overflow-y-auto">
+                    {locationTypes?.map(
+                      (type: { id: number; name: string }) => (
+                        <div
+                          key={type.id}
+                          className={`flex items-center w-120 px-3 py-2 bg-zinc-100 cursor-pointer hover:bg-zinc-200 ${
+                            formData.location === type.name ? "bg-zinc-300" : ""
+                          }`}
+                          onClick={() =>
+                            handleChange({
+                              target: { name: "location", value: type.name },
+                            } as React.ChangeEvent<HTMLSelectElement>)
+                          }
+                        >
+                          <span className="flex-1">{type.name}</span>
+                          {formData.location === type.name && (
+                            <Check className="w-4 h-4 text-green-500" />
+                          )}
+                        </div>
+                      )
+                    )}
+
+                    {!isLocationLoading && locationTypes?.length === 0 && (
+                      <div className="px-3 py-2 text-sm text-zinc-500">
+                        No locations available
+                      </div>
+                    )}
+                  </div>
+                </PopoverContent>
+              </Popover>
               <EnquiryLocation />
             </div>
           </div>
@@ -222,6 +279,7 @@ export default function EnquiryForm() {
             </label>
             <div className="flex items-center gap-2">
               <div className="flex items-center border border-zinc-300 rounded-lg px-3 bg-zinc-100 flex-1">
+                <AiOutlineCheckCircle className="text-zinc-500 mr-2" />
                 <select
                   name="status"
                   value={formData.status || ""}
@@ -229,11 +287,13 @@ export default function EnquiryForm() {
                   className="w-full py-2 text-zinc-800 bg-transparent focus:outline-none"
                 >
                   <option value="" disabled>
-                    Select Status
+                    {isStatusLoading ? "Loading..." : "Select Status"}
                   </option>
-                  <option value="Pending">Pending</option>
-                  <option value="In Progress">In Progress</option>
-                  <option value="Completed">Completed</option>
+                  {statusTypes?.map((type: { id: number; name: string }) => (
+                    <option key={type.id} value={type.name}>
+                      {type.name}
+                    </option>
+                  ))}
                 </select>
               </div>
               <EnquiryStatus />
