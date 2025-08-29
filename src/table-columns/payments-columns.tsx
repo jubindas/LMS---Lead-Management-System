@@ -1,6 +1,6 @@
 import type { ColumnDef } from "@tanstack/react-table";
 
-import type { Payment } from "./payment-types";
+import type { Payment } from "../table-types/payment-types";
 
 import { Button } from "@/components/ui/button";
 

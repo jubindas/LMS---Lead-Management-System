@@ -15,7 +15,7 @@ import ReminderPayment from "../components/ReminderPayment.tsx";
 import type { Payment } from "../table-types/payment-follow-up-types.ts";
 
 export const columns: ColumnDef<Payment>[] = [
-  { accessorKey: "leadName", header: "Lead Name" },
+  { accessorKey: "id", header: "ID" },
   { accessorKey: "totalAmount", header: "Total Amount" },
   { accessorKey: "paidAmount", header: "Paid Amount" },
   {
@@ -36,25 +36,6 @@ export const columns: ColumnDef<Payment>[] = [
       return (
         <span className="text-zinc-800">
           {date ? new Date(date).toLocaleDateString() : "-"}
-        </span>
-      );
-    },
-  },
-  {
-    id: "status",
-    header: "Status",
-    cell: ({ row }) => {
-      const payment = row.original;
-      const completed = payment.paidAmount === payment.totalAmount;
-      return (
-        <span
-          className={`px-2 py-1 rounded text-xs ${
-            completed
-              ? "bg-green-200 text-green-800"
-              : "bg-red-200 text-red-800"
-          }`}
-        >
-          {completed ? "Completed" : "Pending"}
         </span>
       );
     },

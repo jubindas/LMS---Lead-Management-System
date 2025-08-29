@@ -19,10 +19,10 @@ import type {SubCategory } from "./sub-requirements-types"
 
 export const columns: ColumnDef<SubCategory>[] = [
   {
-    accessorKey: "sl",
-    header: () => <span className="capitalize">Sl</span>,
+    accessorKey: "id",
+    header: () => <span className="capitalize">ID</span>,
     cell: ({ row }) => (
-      <span className="text-black text-sm">{row.getValue("sl")}</span>
+      <span className="text-black text-sm">{row.getValue("id")}</span>
     ),
   },
   {

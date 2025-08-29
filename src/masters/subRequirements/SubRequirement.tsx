@@ -6,17 +6,37 @@ import SubRequirementForm from "../../components/SubRequirementForm.tsx";
 
 import { getSubCategories } from "@/services/apiSubCategories.ts";
 
+import { getMainCategories } from "@/services/apiMainCategories.ts";
+
 import { useQuery } from "@tanstack/react-query";
 
 export default function SubRequirement() {
-
-  
-  const { data } = useQuery({
+  const { data: subCategoriesData } = useQuery({
     queryKey: ["sub-categories"],
     queryFn: getSubCategories,
   });
 
-  console.log("Sub Categories Data:", data);
+  const { data: mainCategoriesData } = useQuery({
+    queryKey: ["mainCategories"],
+    queryFn: getMainCategories,
+  });
+
+  console.log("Sub Categories Data:", subCategoriesData);
+  console.log("Main Categories Data:", mainCategoriesData);
+
+  const mappedData =
+    subCategoriesData?.map(
+      (sub: { id: number; name: string; main_category_id: number }) => ({
+        ...sub,
+        mainCategory:
+          mainCategoriesData?.find(
+            (main: { id: number; name: string }) =>
+              main.id === sub.main_category_id
+          )?.name || "N/A",
+      })
+    ) || [];
+
+  console.log("Mapped Data:", mappedData);
 
   return (
     <div className="p-8 min-h-screen w-full  ">
@@ -55,7 +75,13 @@ export default function SubRequirement() {
           </div>
         </div>
 
-       {data && <DataTable columns={columns} data={data} enablePagination={true} />}
+        {mappedData && (
+          <DataTable
+            columns={columns}
+            data={mappedData}
+            enablePagination={true}
+          />
+        )}
       </div>
     </div>
   );

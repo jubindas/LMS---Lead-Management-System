@@ -11,3 +11,18 @@ export async function getSubCategories() {
 
   return response.data;
 }
+
+export async function createSubCategory(subCategoryData: {
+  main_category_id: string;
+  name: string;
+  description?: string | null;
+}) {
+  const response = await axios.post(`${API_BASE_URL}/sub-categories`, subCategoryData);
+
+  if (response.status !== 201) {
+    throw new Error("Failed to create sub category");
+  }
+
+  return response.data;
+}
+

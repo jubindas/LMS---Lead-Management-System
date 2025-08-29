@@ -1,5 +1,5 @@
 export type SubCategory = {
-  sl: number;
+  id: string;
   name: string;
   mainCategory: string;
   description: string;

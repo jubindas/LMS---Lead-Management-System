@@ -1,8 +1,7 @@
 export type Payment = {
-  id: number;
-  leadName?: string;
+  id: string;
   totalAmount?: number;
   paidAmount?: number;
-  reason?: string;
+  remarks?: string;
   nextPaymentDate?: string;
 };
