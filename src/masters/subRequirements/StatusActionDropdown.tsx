@@ -1,8 +1,8 @@
 import { useState } from "react";
 
-import { MoreHorizontal, Trash2 } from "lucide-react";
-
 import { Button } from "@/components/ui/button";
+
+import { MoreHorizontal, Trash2} from "lucide-react";
 
 import {
   DropdownMenu,
@@ -20,38 +20,37 @@ import {
   DialogTitle,
   DialogFooter,
 } from "@/components/ui/dialog";
+
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import { toast } from "sonner";
 
-import { deleteBusiness } from "@/services/apiBusiness";
+import { deleteSubCategory } from "@/services/apiSubCategories";
 
-interface BusinessActionDropdownProps {
+interface StatusActionDropdownProps {
   id: string;
-  onEdit?: () => void; // optional callback for edit
 }
 
-export default function BusinessActionDropdown({
-  id,
-}: BusinessActionDropdownProps) {
+export default function StatusActionDropdown({ id }: StatusActionDropdownProps) {
   const queryClient = useQueryClient();
   const [openDialog, setOpenDialog] = useState(false);
 
-  const deleteMutation = useMutation({
-    mutationFn: (businessId: string) => deleteBusiness(businessId),
+
+  const deleteSubCategoryMutation = useMutation({
+    mutationFn: (subCategoryId: string) => deleteSubCategory(subCategoryId),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["businessTypes"] });
-      toast("Business deleted successfully!");
-      setOpenDialog(false); // close dialog
+      queryClient.invalidateQueries({ queryKey: ["sub-categories"] });
+      toast.success("Sub category deleted successfully!");
+      setOpenDialog(false);
     },
     onError: (error) => {
-      console.error("Failed to delete business:", error);
-      toast("Failed to delete business");
+      console.error("Failed to delete sub category:", error);
+      toast.error("Failed to delete sub category. Try again.");
     },
   });
 
   return (
-    <DropdownMenu>
+   <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant="ghost" className="">
           <span className="sr-only">Open menu</span>
@@ -59,15 +58,11 @@ export default function BusinessActionDropdown({
         </Button>
       </DropdownMenuTrigger>
 
-      <DropdownMenuContent
-        align="end"
-        className="w-40 rounded-xl bg-zinc-900 border border-zinc-800 shadow-lg"
-      >
-        <DropdownMenuLabel className="text-xs text-zinc-400">
-          Actions
-        </DropdownMenuLabel>
+      <DropdownMenuContent align="end" className="w-40 rounded-xl bg-zinc-900 border border-zinc-800 shadow-lg">
+        <DropdownMenuLabel className="text-xs text-zinc-400">Actions</DropdownMenuLabel>
         <DropdownMenuSeparator className="bg-zinc-800" />
 
+        {/* Delete button triggers dialog */}
         <Dialog open={openDialog} onOpenChange={setOpenDialog}>
           <DialogTrigger asChild>
             <Button
@@ -79,26 +74,30 @@ export default function BusinessActionDropdown({
             </Button>
           </DialogTrigger>
 
-          <DialogContent className="sm:max-w-[400px] bg-zinc-100">
+          <DialogContent className="sm:max-w-[400px] bg-white">
             <DialogHeader>
-              <DialogTitle>Delete Business</DialogTitle>
+              <DialogTitle className="text-lg font-semibold">
+                Delete Sub Category
+              </DialogTitle>
             </DialogHeader>
-            <p className="text-sm text-black my-2">
-              Are you sure you want to delete this business?
+            <p className="text-sm text-zinc-700 my-3">
+              Are you sure you want to delete this sub category? This action cannot be
+              undone.
             </p>
             <DialogFooter className="flex justify-end gap-2">
               <Button
                 variant="outline"
-                className="bg-zinc-500 hover:bg-zinc-600"
                 onClick={() => setOpenDialog(false)}
+                className="bg-zinc-100 hover:bg-zinc-200"
               >
                 Cancel
               </Button>
               <Button
                 variant="destructive"
-                onClick={() => deleteMutation.mutate(id)}
+                onClick={() => deleteSubCategoryMutation.mutate(id)}
+                disabled={deleteSubCategoryMutation.isPending}
               >
-                Yes, Delete
+                {deleteSubCategoryMutation.isPending ? "Deleting..." : "Yes, Delete"}
               </Button>
             </DialogFooter>
           </DialogContent>

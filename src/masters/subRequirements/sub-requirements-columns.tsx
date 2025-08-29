@@ -1,19 +1,11 @@
 
 import type { ColumnDef } from "@tanstack/react-table";
 
-import { FiEdit } from "react-icons/fi";
 
-import { MoreHorizontal } from "lucide-react";
-
-import { Button } from "@/components/ui/button";
-
-import {
-  Popover,
-  PopoverTrigger,
-  PopoverContent,
-} from "@/components/ui/popover";
 
 import type {SubCategory } from "./sub-requirements-types"
+
+import StatusActionDropdown from "./StatusActionDropdown";
 
 
 
@@ -51,49 +43,6 @@ export const columns: ColumnDef<SubCategory>[] = [
  {
   id: "actions",
   header: () => <span className="capitalize">Actions</span>,
-  cell: ({ row }) => {
-    // Access row data if needed
-    const rowData = row.original;
-
-    const handleEdit = () => {
-      alert(`Edit clicked for: ${rowData.name || "this row"}`);
-    };
-
-    const handleDelete = () => {
-      alert(`Delete clicked for: ${rowData.name || "this row"}`);
-    };
-
-    return (
-      <Popover>
-        <PopoverTrigger asChild>
-          <Button
-            size="icon"
-            variant="ghost"
-            className="h-7 w-7 p-0 text-white"
-          >
-            <MoreHorizontal className="h-4 w-4 text-zinc-900" />
-          </Button>
-        </PopoverTrigger>
-        <PopoverContent className="w-36 p-2 space-y-2 bg-zinc-800 text-white rounded-lg shadow-lg text-sm">
-          <Button
-            onClick={handleEdit}
-            variant="ghost"
-            size="sm"
-            className="w-full justify-start bg-white/10 text-white text-sm hover:bg-white/20 gap-2"
-          >
-            <FiEdit className="mr-1.5" /> Edit
-          </Button>
-          <Button
-            onClick={handleDelete}
-            variant="destructive"
-            size="sm"
-            className="w-full justify-start text-white bg-red-600 hover:bg-red-500 gap-2"
-          >
-            Delete
-          </Button>
-        </PopoverContent>
-      </Popover>
-    );
-  },
+  cell: ({ row }) => <StatusActionDropdown id={row.original.id} />
 },
 ];

@@ -26,3 +26,12 @@ export async function createSubCategory(subCategoryData: {
   return response.data;
 }
 
+export async function deleteSubCategory(id: string) {
+  const response = await axios.delete(`${API_BASE_URL}/sub-categories/${id}`);
+
+  if (response.status !== 200 && response.status !== 204) {
+    throw new Error("Failed to delete sub category");
+  }
+
+  return response.data;
+}

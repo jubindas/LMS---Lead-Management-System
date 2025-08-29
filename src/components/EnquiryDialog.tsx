@@ -41,7 +41,10 @@ import {
 } from "@/components/ui/popover";
 
 import { Check, ChevronDown } from "lucide-react";
+
 import { getMainCategories } from "@/services/apiMainCategories";
+
+import { getSubCategories } from "@/services/apiSubCategories";
 
 export default function EnquiryForm() {
   const [formData, setFormData] = useState({
@@ -105,6 +108,14 @@ export default function EnquiryForm() {
       queryFn: getMainCategories,
     }
   );
+
+
+    const { data: subCategories, isLoading: isSubCategoriesLoading } = useQuery({
+    queryKey: ["sub-categories"],
+    queryFn: getSubCategories,
+  });
+
+
 
   return (
     <div className="p-6 max-w-6xl mt-7 mx-auto bg-zinc-50 rounded-2xl shadow-md space-y-6">
@@ -484,32 +495,61 @@ export default function EnquiryForm() {
             </div>
           </div>
 
-          <div>
-            <label className="block text-sm font-medium text-zinc-700 mb-1.5">
-              Sub Category
-            </label>
-            <div className="flex items-center gap-2">
-              <div className="flex items-center border border-zinc-300 rounded-lg px-3 bg-zinc-100 flex-1">
+            <div>
+      <label className="block text-sm font-medium text-zinc-700 mb-1.5">
+        Sub Category
+      </label>
+      <div className="flex items-center gap-2">
+        {/* Popover Dropdown */}
+        <Popover>
+          <PopoverTrigger asChild>
+            <div className="flex items-center justify-between border border-zinc-300 rounded-lg px-3 bg-zinc-100 flex-1 h-12 cursor-pointer">
+              <div className="flex items-center flex-1">
                 <BsFillFileEarmarkTextFill className="text-zinc-500 mr-2" />
-                <select
-                  name="subCategory"
-                  value={formData.subCategory || ""}
-                  onChange={handleChange}
-                  className="w-full py-2 text-zinc-800 bg-transparent focus:outline-none"
-                >
-                  <option value="" disabled>
-                    Select Sub Category
-                  </option>
-                  <option value="Mobile">Mobile</option>
-                  <option value="Laptop">Laptop</option>
-                  <option value="Chair">Chair</option>
-                  <option value="Clothing">Clothing</option>
-                  <option value="Other">Other</option>
-                </select>
+                <span className="truncate text-zinc-800">
+                  {isSubCategoriesLoading
+                    ? "Loading..."
+                    : formData.subCategory || "Select Sub Category"}
+                </span>
               </div>
-              <SubRequirementForm />
+              <ChevronDown className="w-4 h-4 text-zinc-500 ml-2" />
             </div>
-          </div>
+          </PopoverTrigger>
+
+          <PopoverContent className="w-full p-0">
+            <div className="max-h-48 overflow-y-auto">
+              {subCategories?.map((sub: { id: number; name: string }) => (
+                <div
+                  key={sub.id}
+                  className={`flex items-center w-120 px-3 py-2 bg-zinc-100 cursor-pointer hover:bg-zinc-200 ${
+                    formData.subCategory === sub.name ? "bg-zinc-300" : ""
+                  }`}
+                  onClick={() =>
+                    handleChange({
+                      target: { name: "subCategory", value: sub.name },
+                    } as React.ChangeEvent<HTMLSelectElement>)
+                  }
+                >
+                  <span className="flex-1">{sub.name}</span>
+                  {formData.subCategory === sub.name && (
+                    <Check className="w-4 h-4 text-green-500" />
+                  )}
+                </div>
+              ))}
+
+              {!isSubCategoriesLoading && subCategories?.length === 0 && (
+                <div className="px-3 py-2 text-sm text-zinc-500">
+                  No sub categories available
+                </div>
+              )}
+            </div>
+          </PopoverContent>
+        </Popover>
+
+        {/* Button to Add New Sub Category */}
+        <SubRequirementForm />
+      </div>
+    </div>
 
           <div>
             <label className="block text-sm font-medium text-zinc-700 mb-1.5">
@@ -527,6 +567,7 @@ export default function EnquiryForm() {
               />
             </div>
           </div>
+          
         </div>
 
         <div>
