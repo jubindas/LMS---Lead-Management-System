@@ -1,50 +1,28 @@
 import { useState } from "react";
-
 import { Button } from "@/components/ui/button";
-
 import { FaBuilding, FaPhone, FaEnvelope, FaMoneyBill } from "react-icons/fa";
-
 import { MdLocationOn, MdBusiness } from "react-icons/md";
-
 import { BsFillFileEarmarkTextFill } from "react-icons/bs";
-
 import { AiOutlineCheckCircle } from "react-icons/ai";
-
 import { RiUserVoiceFill } from "react-icons/ri";
-
 import EnquiryBussines from "@/components/EnquiryBussines";
-
 import EnquiryLocation from "@/components/EnquiryLocation";
-
 import MainRequirementsForm from "@/components/MainRequirementsForm";
-
 import EnquirySource from "@/components/EnquirySource";
-
 import EnquiryStatus from "@/components/EnquiryStatus";
-
 import SubRequirementForm from "@/components/SubRequirementForm.tsx";
-
 import { useQuery } from "@tanstack/react-query";
-
 import { getBusiness } from "@/services/apiBusiness";
-
 import { getStatus } from "@/services/apiStatus";
-
 import { getLocation } from "@/services/apiLocation";
-
 import { getSource } from "@/services/apiSource";
-
+import { getMainCategories } from "@/services/apiMainCategories";
 import {
   Popover,
   PopoverTrigger,
   PopoverContent,
 } from "@/components/ui/popover";
-
 import { Check, ChevronDown } from "lucide-react";
-
-import { getMainCategories } from "@/services/apiMainCategories";
-
-import { getSubCategories } from "@/services/apiSubCategories";
 
 export default function EnquiryForm() {
   const [formData, setFormData] = useState({
@@ -53,27 +31,31 @@ export default function EnquiryForm() {
     whatsappPrimary: false,
     altNumber: "",
     whatsappAlt: false,
+    email: "",
     businessType: "",
+    status: "",
     mainCategory: "",
     subCategory: "",
-    source: "",
-    status: "",
     location: "",
-    email: "",
+    source: "",
     budget: "",
     remarks: "",
   });
 
   const handleChange = (
-    e: React.ChangeEvent<
-      HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
-    >
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
-    const { name, value, type } = e.target;
+    const target = e.target;
+    const value =
+      target instanceof HTMLInputElement && target.type === "checkbox"
+        ? target.checked
+        : target.value;
+
+    const name = target.name;
+
     setFormData((prev) => ({
       ...prev,
-      [name]:
-        type === "checkbox" ? (e.target as HTMLInputElement).checked : value,
+      [name]: value,
     }));
   };
 
@@ -109,13 +91,9 @@ export default function EnquiryForm() {
     }
   );
 
-
-    const { data: subCategories, isLoading: isSubCategoriesLoading } = useQuery({
-    queryKey: ["sub-categories"],
-    queryFn: getSubCategories,
-  });
-
-
+  const allSubCategories =
+    mainCategories &&
+    mainCategories.flatMap((mainCat) => mainCat.sub_categories);
 
   return (
     <div className="p-6 max-w-6xl mt-7 mx-auto bg-zinc-50 rounded-2xl shadow-md space-y-6">
@@ -247,12 +225,10 @@ export default function EnquiryForm() {
                               : ""
                           }`}
                           onClick={() =>
-                            handleChange({
-                              target: {
-                                name: "businessType",
-                                value: type.name,
-                              },
-                            } as React.ChangeEvent<HTMLSelectElement>)
+                            setFormData((prev) => ({
+                              ...prev,
+                              businessType: type.name,
+                            }))
                           }
                         >
                           <span className="flex-1">{type.name}</span>
@@ -305,9 +281,10 @@ export default function EnquiryForm() {
                             formData.location === type.name ? "bg-zinc-300" : ""
                           }`}
                           onClick={() =>
-                            handleChange({
-                              target: { name: "location", value: type.name },
-                            } as React.ChangeEvent<HTMLSelectElement>)
+                            setFormData((prev) => ({
+                              ...prev,
+                              location: type.name,
+                            }))
                           }
                         >
                           <span className="flex-1">{type.name}</span>
@@ -359,9 +336,10 @@ export default function EnquiryForm() {
                           formData.status === type.name ? "bg-zinc-300" : ""
                         }`}
                         onClick={() =>
-                          handleChange({
-                            target: { name: "status", value: type.name },
-                          } as React.ChangeEvent<HTMLSelectElement>)
+                          setFormData((prev) => ({
+                            ...prev,
+                            status: type.name,
+                          }))
                         }
                       >
                         <span className="flex-1">{type.name}</span>
@@ -413,9 +391,10 @@ export default function EnquiryForm() {
                           formData.source === type.name ? "bg-zinc-300" : ""
                         }`}
                         onClick={() =>
-                          handleChange({
-                            target: { name: "source", value: type.name },
-                          } as React.ChangeEvent<HTMLSelectElement>)
+                          setFormData((prev) => ({
+                            ...prev,
+                            source: type.name,
+                          }))
                         }
                       >
                         <span className="flex-1">{type.name}</span>
@@ -460,26 +439,29 @@ export default function EnquiryForm() {
 
                 <PopoverContent className="w-full p-0">
                   <div className="max-h-48 overflow-y-auto">
-                    {mainCategories?.map((type: { id: number; name: string }) => (
-                      <div
-                        key={type.id}
-                        className={`flex items-center w-120 px-3 py-2 bg-zinc-100 cursor-pointer hover:bg-zinc-200 ${
-                          formData.mainCategory === type.name
-                            ? "bg-zinc-300"
-                            : ""
-                        }`}
-                        onClick={() =>
-                          handleChange({
-                            target: { name: "mainCategory", value: type.name },
-                          } as React.ChangeEvent<HTMLSelectElement>)
-                        }
-                      >
-                        <span className="flex-1">{type.name}</span>
-                        {formData.mainCategory === type.name && (
-                          <Check className="w-4 h-4 text-green-500" />
-                        )}
-                      </div>
-                    ))}
+                    {mainCategories?.map(
+                      (type: { id: number; name: string }) => (
+                        <div
+                          key={type.id}
+                          className={`flex items-center w-120 px-3 py-2 bg-zinc-100 cursor-pointer hover:bg-zinc-200 ${
+                            formData.mainCategory === type.name
+                              ? "bg-zinc-300"
+                              : ""
+                          }`}
+                          onClick={() =>
+                            setFormData((prev) => ({
+                              ...prev,
+                              mainCategory: type.name,
+                            }))
+                          }
+                        >
+                          <span className="flex-1">{type.name}</span>
+                          {formData.mainCategory === type.name && (
+                            <Check className="w-4 h-4 text-green-500" />
+                          )}
+                        </div>
+                      )
+                    )}
 
                     {!isMainCategoriesLoading &&
                       mainCategories?.length === 0 && (
@@ -495,61 +477,66 @@ export default function EnquiryForm() {
             </div>
           </div>
 
-            <div>
-      <label className="block text-sm font-medium text-zinc-700 mb-1.5">
-        Sub Category
-      </label>
-      <div className="flex items-center gap-2">
-        {/* Popover Dropdown */}
-        <Popover>
-          <PopoverTrigger asChild>
-            <div className="flex items-center justify-between border border-zinc-300 rounded-lg px-3 bg-zinc-100 flex-1 h-12 cursor-pointer">
-              <div className="flex items-center flex-1">
-                <BsFillFileEarmarkTextFill className="text-zinc-500 mr-2" />
-                <span className="truncate text-zinc-800">
-                  {isSubCategoriesLoading
-                    ? "Loading..."
-                    : formData.subCategory || "Select Sub Category"}
-                </span>
-              </div>
-              <ChevronDown className="w-4 h-4 text-zinc-500 ml-2" />
+          <div>
+            <label className="block text-sm font-medium text-zinc-700 mb-1.5">
+              Sub Category
+            </label>
+            <div className="flex items-center gap-2">
+              <Popover>
+                <PopoverTrigger asChild>
+                  <div className="flex items-center justify-between border border-zinc-300 rounded-lg px-3 bg-zinc-100 flex-1 h-12 cursor-pointer">
+                    <div className="flex items-center flex-1">
+                      <BsFillFileEarmarkTextFill className="text-zinc-500 mr-2" />
+                      <span className="truncate text-zinc-800">
+                        {isMainCategoriesLoading
+                          ? "Loading..."
+                          : formData.subCategory || "Select Sub Category"}
+                      </span>
+                    </div>
+                    <ChevronDown className="w-4 h-4 text-zinc-500 ml-2" />
+                  </div>
+                </PopoverTrigger>
+
+                <PopoverContent className="w-full p-0">
+                  <div className="max-h-48 overflow-y-auto">
+                    {allSubCategories && allSubCategories.length > 0 ? (
+                      allSubCategories.map(
+                        (sub: { id: number; name: string }) => (
+                          <div
+                            key={sub.id}
+                            className={`flex items-center w-120 px-3 py-2 bg-zinc-100 cursor-pointer hover:bg-zinc-200 ${
+                              formData.subCategory === sub.name
+                                ? "bg-zinc-300"
+                                : ""
+                            }`}
+                            onClick={() =>
+                              setFormData((prev) => ({
+                                ...prev,
+                                subCategory: sub.name,
+                              }))
+                            }
+                          >
+                            <span className="flex-1">{sub.name}</span>
+                            {formData.subCategory === sub.name && (
+                              <Check className="w-4 h-4 text-green-500" />
+                            )}
+                          </div>
+                        )
+                      )
+                    ) : (
+                      <div className="px-3 py-2 text-sm text-zinc-500">
+                        {isMainCategoriesLoading
+                          ? "Loading..."
+                          : "No sub categories available"}
+                      </div>
+                    )}
+                  </div>
+                </PopoverContent>
+              </Popover>
+
+              <SubRequirementForm />
             </div>
-          </PopoverTrigger>
-
-          <PopoverContent className="w-full p-0">
-            <div className="max-h-48 overflow-y-auto">
-              {subCategories?.map((sub: { id: number; name: string }) => (
-                <div
-                  key={sub.id}
-                  className={`flex items-center w-120 px-3 py-2 bg-zinc-100 cursor-pointer hover:bg-zinc-200 ${
-                    formData.subCategory === sub.name ? "bg-zinc-300" : ""
-                  }`}
-                  onClick={() =>
-                    handleChange({
-                      target: { name: "subCategory", value: sub.name },
-                    } as React.ChangeEvent<HTMLSelectElement>)
-                  }
-                >
-                  <span className="flex-1">{sub.name}</span>
-                  {formData.subCategory === sub.name && (
-                    <Check className="w-4 h-4 text-green-500" />
-                  )}
-                </div>
-              ))}
-
-              {!isSubCategoriesLoading && subCategories?.length === 0 && (
-                <div className="px-3 py-2 text-sm text-zinc-500">
-                  No sub categories available
-                </div>
-              )}
-            </div>
-          </PopoverContent>
-        </Popover>
-
-        {/* Button to Add New Sub Category */}
-        <SubRequirementForm />
-      </div>
-    </div>
+          </div>
 
           <div>
             <label className="block text-sm font-medium text-zinc-700 mb-1.5">
@@ -567,7 +554,6 @@ export default function EnquiryForm() {
               />
             </div>
           </div>
-          
         </div>
 
         <div>

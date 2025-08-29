@@ -10,8 +10,34 @@ import { enquiryData } from "../table-datas/enquiry-data.ts";
 
 import { useState } from "react";
 
+import { useQuery } from "@tanstack/react-query";
+
+import { getEnquiries } from "@/services/apiEnquiries.ts";
+
 export default function Enquiries() {
-  const [data, setData] = useState(enquiryData);
+
+  const [setData] = useState(enquiryData);
+
+   const {data: enquiries}= useQuery({
+    queryKey:["enquiries"],
+    queryFn: getEnquiries
+  })
+
+
+
+
+console.log("the enquiries", enquiries);
+
+
+
+
+
+
+
+
+
+
+
 
   const handleStageUpdate = (sl: number, newStage: string) => {
     setData((prev) =>
@@ -63,7 +89,7 @@ export default function Enquiries() {
         </div>
 
         <div className="w-full overflow-x-auto">
-          <DataTable columns={columns} data={data} enablePagination={true} />
+        {enquiries &&  <DataTable columns={columns} data={enquiries} enablePagination={true} />}
         </div>
       </div>
     </div>

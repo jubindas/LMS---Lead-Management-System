@@ -7,7 +7,7 @@ import { AppSidebar } from "./AppSidebar";
 import { Toaster } from "sonner";
 
 
-import NavBar from "./NavBar.tsx";
+import NavBar from "./Navbar.tsx";
 
 export default function RootLayout() {
   return (

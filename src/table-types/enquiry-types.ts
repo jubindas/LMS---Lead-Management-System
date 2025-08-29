@@ -1,11 +1,18 @@
 export type Enquiry = {
-  sl: number;
-  Name: string;
+  id: string;
+  name: string;
   phone: string;
-  user: string;
-  status: string;
-  stage: string; // <-- Make stage editable
-  budget: string;
-  businessType: string;
-  source: string;
+  whatsappPrimary: boolean;
+  altNumber: string;
+  whatsappAlt: boolean;
+  email?: string;
+  businessType?: string;
+  status?: string;
+  stage: string;
+  mainCategory?: string;
+  subCategory?: string;
+  location?: string;
+  source?: string;
+  budget?: string;
+  remarks?: string;
 };

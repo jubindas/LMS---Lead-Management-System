@@ -51,7 +51,7 @@ export default function SubRequirementForm() {
     }) => createSubCategory(newSubCategory),
     onSuccess: () => {
       toast.success("Sub category created successfully!");
-      queryClient.invalidateQueries({ queryKey: ["sub-categories"] });
+      queryClient.invalidateQueries({ queryKey: ["mainCategories"] });
 
       setSelectedMainId(null);
       setSelectedMainName("");
