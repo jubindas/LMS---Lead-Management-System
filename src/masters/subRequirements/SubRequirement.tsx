@@ -1,16 +1,25 @@
 import { DataTable } from "@/components/data-table";
 
-import {data} from "./sub-requirements-data.ts"
-
-import {columns} from "./sub-requirements-columns.tsx"
+import { columns } from "./sub-requirements-columns.tsx";
 
 import SubRequirementForm from "../../components/SubRequirementForm.tsx";
 
+import { getSubCategories } from "@/services/apiSubCategories.ts";
 
+import { useQuery } from "@tanstack/react-query";
 
 export default function SubRequirement() {
+
+  
+  const { data } = useQuery({
+    queryKey: ["sub-categories"],
+    queryFn: getSubCategories,
+  });
+
+  console.log("Sub Categories Data:", data);
+
   return (
-   <div className="p-8 min-h-screen w-full  ">
+    <div className="p-8 min-h-screen w-full  ">
       <div className="max-w-7xl mx-auto mt-10 p-8 shadow-md rounded-2xl bg-zinc-50">
         <div className="flex flex-wrap justify-between items-center mb-4 border-b border-zinc-700/60 pb-2">
           <h2 className="text-xl font-bold tracking-wide bg-gradient-to-r text-black">
@@ -19,7 +28,7 @@ export default function SubRequirement() {
           <SubRequirementForm />
         </div>
 
-         <div className="flex flex-wrap justify-between items-center mb-3 gap-3 text-sm">
+        <div className="flex flex-wrap justify-between items-center mb-3 gap-3 text-sm">
           <div className="flex items-center gap-2 text-black text-xs">
             <span>Show</span>
             <select className="rounded-lg px-2 py-1 bg-zinc-400 text-zinc-100 border border-zinc-400">
@@ -46,7 +55,7 @@ export default function SubRequirement() {
           </div>
         </div>
 
-        <DataTable columns={columns} data={data} enablePagination={true} />
+       {data && <DataTable columns={columns} data={data} enablePagination={true} />}
       </div>
     </div>
   );

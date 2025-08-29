@@ -39,14 +39,12 @@ export default function SubRequirementForm() {
 
   return (
     <Dialog>
-      {/* Trigger Button */}
       <DialogTrigger asChild>
         <Button className="bg-zinc-500 hover:bg-zinc-600 text-white font-medium px-3 py-1.5 text-sm rounded-md shadow-md transition-transform transform hover:-translate-y-0.5 hover:shadow-lg">
           <FaPlus />
         </Button>
       </DialogTrigger>
 
-      {/* Responsive Dialog */}
       <DialogContent
         className="
           w-[90%] max-w-md md:max-w-xl lg:max-w-3xl
@@ -65,9 +63,7 @@ export default function SubRequirementForm() {
           </DialogDescription>
         </DialogHeader>
 
-        {/* Form */}
         <form onSubmit={handleSave} className="mt-6 space-y-6">
-          {/* Main Category */}
           <div>
             <label className="block text-sm font-semibold text-zinc-700 mb-2">
               Main Category <span className="text-zinc-500">(required)</span>
@@ -91,7 +87,6 @@ export default function SubRequirementForm() {
             </select>
           </div>
 
-          {/* Sub Category Name */}
           <div>
             <label className="block text-sm font-semibold text-zinc-700 mb-2">
               Sub Category Name{" "}
@@ -111,7 +106,6 @@ export default function SubRequirementForm() {
             />
           </div>
 
-          {/* Description */}
           <div>
             <label className="block text-sm font-semibold text-zinc-700 mb-2">
               Description{" "}
@@ -132,7 +126,6 @@ export default function SubRequirementForm() {
             />
           </div>
 
-          {/* Buttons */}
           <div className="flex flex-col md:flex-row justify-end gap-3 pt-4 border-t border-zinc-300">
             <Button
               type="submit"

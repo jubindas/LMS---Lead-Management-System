@@ -1,6 +1,5 @@
 export type EnquiryFollowUp = {
-  id: number;
+  id: string;
   lastRemark?: string;
   nextFollowUpDate?: string;
-  
 };

@@ -11,17 +11,14 @@ import { enquiryData } from "../table-datas/enquiry-data.ts";
 import { useState } from "react";
 
 export default function Enquiries() {
-  
   const [data, setData] = useState(enquiryData);
 
-  
   const handleStageUpdate = (sl: number, newStage: string) => {
     setData((prev) =>
       prev.map((item) => (item.sl === sl ? { ...item, stage: newStage } : item))
     );
   };
 
-  
   const columns = enquiryColumns(handleStageUpdate);
 
   return (
@@ -66,11 +63,7 @@ export default function Enquiries() {
         </div>
 
         <div className="w-full overflow-x-auto">
-          <DataTable
-            columns={columns}
-            data={data}  
-            enablePagination={true}
-          />
+          <DataTable columns={columns} data={data} enablePagination={true} />
         </div>
       </div>
     </div>
