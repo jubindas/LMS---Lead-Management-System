@@ -12,3 +12,16 @@ export async function getPayments() {
 
   return response.data.data;
 }
+
+
+
+
+export async function createPayments(payment: { name: string; remarks: string; amount: number }) {
+  const response = await axios.post(`${API_BASE_URL}/payments`, payment);
+
+  if (response.status !== 201) {
+    throw new Error("Failed to create payment");
+  }
+
+  return response.data;
+}
