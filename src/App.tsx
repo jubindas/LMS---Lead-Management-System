@@ -170,7 +170,7 @@ const router = createBrowserRouter([
         ),
       },
       {
-        path: "follow-up",
+        path: "follow-up/:id",
         element: (
           <Suspense fallback={<Loading />}>
             <EnquiryFollowUp />
@@ -178,7 +178,7 @@ const router = createBrowserRouter([
         ),
       },
       {
-        path: "/enquiry-view-details",
+        path: "/enquiry-view-details/:id",
         element: (
           <Suspense fallback={<Loading />}>
             <EnquiryViewDetails />

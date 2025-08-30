@@ -1,6 +1,10 @@
 import type { ReactNode } from "react";
 
-import { useState } from "react";
+import { useParams } from "react-router-dom";
+
+import { useQuery } from "@tanstack/react-query";
+
+import { getEnquiryById } from "@/services/apiEnquiries";
 
 import {
   FaWhatsapp,
@@ -11,42 +15,7 @@ import {
   FaBuilding,
   FaInfoCircle,
   FaEdit,
- 
 } from "react-icons/fa";
-
-type Enquiry = {
-  companyName: string;
-  phoneNumber: string;
-  altPhoneNumber?: string;
-  whatsapp?: boolean;
-  altWhatsapp?: boolean;
-  email: string;
-  businessType: string;
-  source: string;
-  location: string;
-  budget: string;
-  remarks?: string;
-  status: string;
-  mainCategory: string;
-  subCategory: string;
-};
-
-const sampleEnquiry: Enquiry = {
-  companyName: "Acme Corp",
-  phoneNumber: "9876543210",
-  altPhoneNumber: "9123456780",
-  whatsapp: true,
-  altWhatsapp: false,
-  email: "contact@acme.com",
-  businessType: "IT Services",
-  source: "Referral",
-  location: "New Delhi",
-  budget: "5000-10000",
-  remarks: "High priority client",
-  status: "Pending",
-  mainCategory: "Software",
-  subCategory: "Web & Mobile",
-};
 
 interface InfoCardProps {
   icon: ReactNode;
@@ -67,7 +36,40 @@ const InfoCard = ({ icon, label, value, badge }: InfoCardProps) => (
 );
 
 export default function EnquiryViewDetails() {
-  const [enquiry] = useState<Enquiry>(sampleEnquiry);
+  const { id } = useParams<{ id: string }>();
+
+  const {
+    data: enquiry,
+    isLoading,
+    isError,
+    error,
+  } = useQuery({
+    queryKey: ["enquiry", id],
+    queryFn: () => getEnquiryById(id as string),
+    enabled: !!id,
+  });
+
+  if (isLoading) {
+    return (
+      <div className="p-6 text-center text-lg">Loading enquiry details...</div>
+    );
+  }
+
+  if (isError) {
+    return (
+      <div className="p-6 text-center text-red-600">
+        Failed to load enquiry: {(error as Error).message}
+      </div>
+    );
+  }
+
+  if (!enquiry) {
+    return (
+      <div className="p-6 text-center text-zinc-600">
+        No enquiry data found.
+      </div>
+    );
+  }
 
   return (
     <div className="p-6 bg-zinc-100 min-h-screen">
@@ -85,22 +87,18 @@ export default function EnquiryViewDetails() {
             Contact Info
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-             <InfoCard
+            <InfoCard
               icon={<FaBuilding />}
               label="Company Name"
-              value={
-                <>
-                  {enquiry.companyName}
-                </>
-              }
+              value={enquiry.company_name}
             />
             <InfoCard
               icon={<FaPhone />}
               label="Phone Number"
               value={
                 <>
-                  {enquiry.phoneNumber}
-                  {enquiry.whatsapp && (
+                  {enquiry.primary_phone_number}
+                  {enquiry.primary_phone_number_has_whatsapp && (
                     <FaWhatsapp className="text-green-500" />
                   )}
                 </>
@@ -111,8 +109,8 @@ export default function EnquiryViewDetails() {
               label="Alternate Phone"
               value={
                 <>
-                  {enquiry.altPhoneNumber || "-"}
-                  {enquiry.altWhatsapp && (
+                  {enquiry.alternative_phone_number || "-"}
+                  {enquiry.alternative_phone_number_has_whatsapp && (
                     <FaWhatsapp className="text-green-500" />
                   )}
                 </>
@@ -162,7 +160,7 @@ export default function EnquiryViewDetails() {
             <InfoCard
               icon={<FaBuilding />}
               label="Business Type"
-              value={enquiry.businessType}
+              value={enquiry.business_type}
             />
             <InfoCard
               icon={<FaInfoCircle />}
@@ -185,17 +183,17 @@ export default function EnquiryViewDetails() {
             <InfoCard
               icon={<FaInfoCircle />}
               label="Main Category"
-              value={`${enquiry.mainCategory}`}
+              value={enquiry.main_category}
               badge={
                 <span className="px-3 py-1 rounded-full bg-zinc-300 text-zinc-900 text-sm font-medium">
-                  {enquiry.subCategory}
+                  {enquiry.sub_category}
                 </span>
               }
             />
             <InfoCard
               icon={<FaInfoCircle />}
               label="Sub Category"
-              value={`${enquiry.subCategory}`}
+              value={enquiry.sub_category}
             />
           </div>
         </div>

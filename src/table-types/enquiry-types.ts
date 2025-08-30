@@ -1,12 +1,12 @@
 export type Enquiry = {
   id: string;
-  name: string;
-  phone: string;
+  company_name: string;
+  primary_phone_number: string;
   whatsappPrimary: boolean;
   altNumber: string;
   whatsappAlt: boolean;
   email?: string;
-  businessType?: string;
+  business_type?: string;
   status?: string;
   stage: string;
   mainCategory?: string;

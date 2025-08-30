@@ -23,6 +23,8 @@ export default function EnquiryLocation() {
 
   const queryClient = useQueryClient();
 
+  
+
   const createLocationMutation = useMutation({
     mutationFn: (newLocation: { name: string; description?: string | null }) =>
       createLocation(newLocation),

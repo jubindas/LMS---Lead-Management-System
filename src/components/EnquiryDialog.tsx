@@ -11,20 +11,26 @@ import MainRequirementsForm from "@/components/MainRequirementsForm";
 import EnquirySource from "@/components/EnquirySource";
 import EnquiryStatus from "@/components/EnquiryStatus";
 import SubRequirementForm from "@/components/SubRequirementForm.tsx";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { getBusiness } from "@/services/apiBusiness";
 import { getStatus } from "@/services/apiStatus";
 import { getLocation } from "@/services/apiLocation";
 import { getSource } from "@/services/apiSource";
 import { getMainCategories } from "@/services/apiMainCategories";
+import { createEnquiry } from "@/services/apiEnquiries";
 import {
   Popover,
   PopoverTrigger,
   PopoverContent,
 } from "@/components/ui/popover";
 import { Check, ChevronDown } from "lucide-react";
+import { toast } from "sonner";
+
+
 
 export default function EnquiryForm() {
+  const queryClient = useQueryClient();
+
   const [formData, setFormData] = useState({
     companyName: "",
     phone: "",
@@ -40,6 +46,34 @@ export default function EnquiryForm() {
     source: "",
     budget: "",
     remarks: "",
+  });
+
+  const createEnquiryMutation = useMutation({
+    mutationFn: createEnquiry,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["enquiries"] });
+      toast("Enquiry created successfully!");
+      setFormData({
+        companyName: "",
+        phone: "",
+        whatsappPrimary: false,
+        altNumber: "",
+        whatsappAlt: false,
+        email: "",
+        businessType: "",
+        status: "",
+        mainCategory: "",
+        subCategory: "",
+        location: "",
+        source: "",
+        budget: "",
+        remarks: "",
+      });
+    },
+    onError: (error) => {
+      console.error("Error creating enquiry:", error);
+      toast("Failed to create enquiry. Please try again.");
+    },
   });
 
   const handleChange = (
@@ -61,7 +95,30 @@ export default function EnquiryForm() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Form Data Submitted:", formData);
+
+    if (!formData.companyName.trim() || !formData.phone.trim()) {
+      alert("Company Name and Phone are required fields.");
+      return;
+    }
+
+    const enquiryData = {
+      company_name: formData.companyName.trim(),
+      primary_phone_number: formData.phone.trim(),
+      primary_phone_number_has_whatsapp: formData.whatsappPrimary,
+      alternative_phone_number: formData.altNumber.trim() || null,
+      alternative_phone_number_has_whatsapp: formData.whatsappAlt,
+      email: formData.email.trim() || null,
+      budget: formData.budget ? parseFloat(formData.budget) : null,
+      remarks: formData.remarks.trim() || null,
+      location: formData.location || null,
+      status: formData.status || null,
+      source: formData.source || null,
+      main_category: formData.mainCategory || null,
+      sub_category: formData.subCategory || null,
+      business_type: formData.businessType || null,
+    };
+
+    createEnquiryMutation.mutate(enquiryData);
   };
 
   const { data: businessTypes, isLoading: isBusinessLoading } = useQuery({
@@ -93,7 +150,9 @@ export default function EnquiryForm() {
 
   const allSubCategories =
     mainCategories &&
-    mainCategories.flatMap((mainCat) => mainCat.sub_categories);
+    mainCategories.flatMap(
+      (mainCat: { sub_categories: unknown[] }) => mainCat.sub_categories
+    );
 
   return (
     <div className="p-6 max-w-6xl mt-7 mx-auto bg-zinc-50 rounded-2xl shadow-md space-y-6">
@@ -103,7 +162,7 @@ export default function EnquiryForm() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
             <label className="block text-sm font-medium text-zinc-700 mb-1.5">
-              Company Name
+              Company Name <span className="text-red-500">*</span>
             </label>
             <div className="flex items-center border border-zinc-300 rounded-lg px-3 bg-zinc-100 focus-within:ring-2 focus-within:ring-zinc-400">
               <FaBuilding className="text-zinc-500 mr-2" />
@@ -113,6 +172,7 @@ export default function EnquiryForm() {
                 placeholder="Enter Company name"
                 value={formData.companyName}
                 onChange={handleChange}
+                required
                 className="w-full py-2 text-zinc-800 placeholder-zinc-400 bg-transparent focus:outline-none"
               />
             </div>
@@ -120,7 +180,7 @@ export default function EnquiryForm() {
 
           <div>
             <label className="block text-sm font-medium text-zinc-700 mb-1.5">
-              Phone No.
+              Phone No. <span className="text-red-500">*</span>
             </label>
             <div className="flex gap-3">
               <div className="flex items-center border border-zinc-300 rounded-lg px-3 flex-1 bg-zinc-100 focus-within:ring-2 focus-within:ring-zinc-400">
@@ -131,6 +191,7 @@ export default function EnquiryForm() {
                   placeholder="Enter Phone no"
                   value={formData.phone}
                   onChange={handleChange}
+                  required
                   className="w-full py-2 text-zinc-800 placeholder-zinc-400 bg-transparent focus:outline-none"
                 />
               </div>
@@ -545,7 +606,7 @@ export default function EnquiryForm() {
             <div className="flex items-center border border-zinc-300 rounded-lg px-3 bg-zinc-100">
               <FaMoneyBill className="text-zinc-500 mr-2" />
               <input
-                type="text"
+                type="number"
                 name="budget"
                 placeholder="Enter Budget"
                 value={formData.budget}
@@ -573,9 +634,10 @@ export default function EnquiryForm() {
         <div className="flex justify-end gap-4 pt-4">
           <Button
             type="submit"
-            className="bg-zinc-500 hover:bg-zinc-600 text-white px-6 py-2 rounded-lg shadow-md transition-all"
+            disabled={createEnquiryMutation.isPending}
+            className="bg-zinc-500 hover:bg-zinc-600 text-white px-6 py-2 rounded-lg shadow-md transition-all disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            Save & Exit
+            {createEnquiryMutation.isPending ? "Saving..." : "Save & Exit"}
           </Button>
         </div>
       </form>
