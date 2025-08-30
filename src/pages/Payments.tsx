@@ -1,12 +1,26 @@
 import { DataTable } from "@/components/data-table";
 
-import { samplePayments } from "../table-datas/payments-data";
 
 import { columns } from "../table-columns/payments-columns";
 
 import PaymentsEnquiry from "@/components/PaymentsEnquiry";
 
+import { getPayments } from "@/services/apiPayments";
+
+import { useQuery } from "@tanstack/react-query";
+
+
+
 export default function PaymentsTable() {
+
+
+const { data } = useQuery({
+  queryKey: ['payments'],
+  queryFn: getPayments
+})
+
+console.log("the payments data", data);
+
   return (
     <div className="p-8 min-h-screen w-full  ">
       <div className="max-w-7xl mx-auto mt-10 p-8 shadow-md rounded-2xl bg-zinc-50">
@@ -44,11 +58,11 @@ export default function PaymentsTable() {
           </div>
         </div>
 
-        <DataTable
-          columns={columns}
-          data={samplePayments}
-          enablePagination={true}
-        />
+     {data && <DataTable
+            columns={columns}
+            data={data}
+            enablePagination={true}
+          />}
       </div>
     </div>
   );

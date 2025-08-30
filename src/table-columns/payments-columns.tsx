@@ -46,10 +46,10 @@ export const columns: ColumnDef<Payment>[] = [
     ),
   },
   {
-    accessorKey: "date",
-    header: () => <span className="capitalize">Date</span>,
+    accessorKey: "remarks",
+    header: () => <span className="capitalize">Remarks</span>,
     cell: ({ row }) => (
-      <span className="text-black text-sm">{row.getValue("date")}</span>
+      <span className="text-black text-sm">{row.getValue("remarks")}</span>
     ),
   },
  {
