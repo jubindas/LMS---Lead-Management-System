@@ -1,5 +1,6 @@
 export type EnquiryFollowUp = {
+  enquiry_id: number;
   id: string;
-  lastRemark?: string;
-  nextFollowUpDate?: string;
+  remark?: string;
+  follow_up_date?: string;
 };

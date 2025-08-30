@@ -18,26 +18,26 @@ import EnquiryReminder from "@/components/EnquiryReminder.tsx";
 
 export const columns: ColumnDef<EnquiryFollowUp>[] = [
   {
-    accessorKey: "id",
-    header: "ID",
+    accessorKey: "enquiry_id",
+    header: "ENQUIRY ID",
     cell: ({ row }) => (
-      <span className="text-black font-medium">{row.getValue("id")}</span>
+      <span className="text-black font-medium">{row.getValue("enquiry_id")}</span>
     ),
   },
   {
-    accessorKey: "lastRemark",
-    header: "Last Remark",
+    accessorKey: "remark",
+    header: "Remark",
     cell: ({ row }) => (
       <span className="text-zinc-800">
-        {row.getValue("lastRemark") || "-"}
+        {row.getValue("remark") || "-"}
       </span>
     ),
   },
   {
-    accessorKey: "nextFollowUpDate",
+    accessorKey: "follow_up_date",
     header: "Next Follow-Up",
     cell: ({ row }) => {
-      const date = row.getValue("nextFollowUpDate") as string;
+      const date = row.getValue("follow_up_date") as string;
       return (
         <span className="text-zinc-800">
           {date ? new Date(date).toLocaleDateString() : "-"}
