@@ -11,25 +11,54 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 
-import TimePicker from "react-time-picker";
-
 import "react-time-picker/dist/TimePicker.css";
-
 import "react-clock/dist/Clock.css";
 
-export default function FollowUpPaymentReminder({ paymentId }: { paymentId: string | undefined }) {
+import { createPaymentFollowUp } from "@/services/apiPaymentsFollowup";
+
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+
+import { toast } from "sonner";
+
+export default function FollowUpPaymentReminder({
+  paymentId,
+}: {
+  paymentId: string | undefined;
+}) {
+  const queryClient = useQueryClient();
   const [open, setOpen] = useState(false);
   const [showCalendar, setShowCalendar] = useState(false);
   const [form, setForm] = useState({
     reason: "",
     reminder: "",
-    reminderTime: "10:00",
     totalAmount: "",
     paidAmount: "",
   });
 
+  const createFollowUpPaymentMutation = useMutation({
+    mutationFn: (followUpData: {
+      PaymentId: string;
+      total_amount: number;
+      paid_amount: number;
+      remarks: string;
+      next_payment_date: string;
+    }) => createPaymentFollowUp(followUpData),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["followUps", paymentId] });
+      toast("Follow-up payment created successfully!");
+      setOpen(false);
+      setForm({
+        reason: "",
+        reminder: "",
+        totalAmount: "",
+        paidAmount: "",
+      });
+    },
+    onError: () => {
+      toast("Failed to create follow-up payment.");
+    },
+  });
 
-   console.log("FollowUpPaymentReminder paymentId:", paymentId);
   const calendarRef = useRef<HTMLDivElement>(null);
   const remainingAmount =
     Number(form.totalAmount || 0) - Number(form.paidAmount || 0);
@@ -38,13 +67,19 @@ export default function FollowUpPaymentReminder({ paymentId }: { paymentId: stri
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleTimeChange = (time: string | null) => {
-    setForm({ ...form, reminderTime: time || "10:00" });
-  };
-
   const handleAddPayment = () => {
-    console.log("Payment added:", { ...form, remainingAmount });
-    setOpen(false);
+    if (!paymentId) {
+      toast.error("Payment ID is missing");
+      return;
+    }
+
+    createFollowUpPaymentMutation.mutate({
+      PaymentId: paymentId,
+      total_amount: Number(form.totalAmount),
+      paid_amount: Number(form.paidAmount),
+      remarks: form.reason,
+      next_payment_date: form.reminder,
+    });
   };
 
   useEffect(() => {
@@ -167,26 +202,17 @@ export default function FollowUpPaymentReminder({ paymentId }: { paymentId: stri
               </div>
             )}
           </div>
-
-          <div className="flex flex-col">
-            <label className="text-sm font-medium text-zinc-700 mb-1">
-              Reminder Time
-            </label>
-            <TimePicker
-              onChange={handleTimeChange}
-              value={form.reminderTime}
-              className="rounded-lg border-2 bg-zinc-50 text-zinc-800 px-3 py-1.5 shadow-sm focus:outline-none focus:ring-2 focus:ring-zinc-400"
-              disableClock={true}
-            />
-          </div>
         </div>
 
         <div className="mt-6 flex justify-end">
           <button
             onClick={handleAddPayment}
-            className="px-6 py-2.5 bg-zinc-800 text-white font-medium rounded-lg shadow hover:bg-zinc-700 transition"
+            disabled={createFollowUpPaymentMutation.isPending}
+            className="px-6 py-2.5 bg-zinc-800 text-white font-medium rounded-lg shadow hover:bg-zinc-700 transition disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            Add Payment
+            {createFollowUpPaymentMutation.isPending
+              ? "Adding..."
+              : "Add Payment"}
           </button>
         </div>
       </DialogContent>

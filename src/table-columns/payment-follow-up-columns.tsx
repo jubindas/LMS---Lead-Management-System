@@ -16,23 +16,25 @@ import type { Payment } from "../table-types/payment-follow-up-types.ts";
 
 export const columns: ColumnDef<Payment>[] = [
   { accessorKey: "id", header: "ID" },
-  { accessorKey: "totalAmount", header: "Total Amount" },
-  { accessorKey: "paidAmount", header: "Paid Amount" },
+  { accessorKey: "total_amount", header: "Total Amount" },
+  { accessorKey: "paid_amount", header: "Paid Amount" },
   {
     id: "remaining",
     header: "Remaining",
-    cell: ({ row }) => (
-      <span className="text-zinc-800">
-        {(row.original.totalAmount || 0) - (row.original.paidAmount || 0)}
-      </span>
-    ),
+    cell: ({ row }) => {
+      const total = row.original.total_amount || 0;
+      const paid = row.original.paid_amount || 0;
+      const remaining = total - paid;
+      return <span className="text-zinc-800">{remaining}</span>;
+    },
   },
-  { accessorKey: "reason", header: "Remark" },
+
+  { accessorKey: "remarks", header: "Remark" },
   {
-    accessorKey: "nextPaymentDate",
+    accessorKey: "next_payment_date",
     header: "Next Payment Date",
     cell: ({ row }) => {
-      const date = row.getValue("nextPaymentDate") as string;
+      const date = row.getValue("next_payment_date") as string;
       return (
         <span className="text-zinc-800">
           {date ? new Date(date).toLocaleDateString() : "-"}

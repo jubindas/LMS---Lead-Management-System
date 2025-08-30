@@ -1,7 +1,7 @@
 export type Payment = {
   id: string;
-  totalAmount?: number;
-  paidAmount?: number;
+  total_amount?: number;       // match backend key
+  paid_amount?: number;        // match backend key
   remarks?: string;
-  nextPaymentDate?: string;
+  next_payment_date?: string;  // match backend key
 };

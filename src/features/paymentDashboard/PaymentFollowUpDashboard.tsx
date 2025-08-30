@@ -1,6 +1,6 @@
 import { DataTable } from "@/components/data-table";
 
-import PaymentFollowUpForm from "@/components/PaymentFollowUpForm";
+import PaymentFollowUpForm from "@/components/PaymentFollowUpFormDashBoard";
 
 import type { ColumnDef } from "@tanstack/react-table";
 
