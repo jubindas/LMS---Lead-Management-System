@@ -17,7 +17,7 @@ import "react-time-picker/dist/TimePicker.css";
 
 import "react-clock/dist/Clock.css";
 
-export default function FollowUpPaymentReminder() {
+export default function FollowUpPaymentReminder({ paymentId }: { paymentId: string | undefined }) {
   const [open, setOpen] = useState(false);
   const [showCalendar, setShowCalendar] = useState(false);
   const [form, setForm] = useState({
@@ -28,6 +28,8 @@ export default function FollowUpPaymentReminder() {
     paidAmount: "",
   });
 
+
+   console.log("FollowUpPaymentReminder paymentId:", paymentId);
   const calendarRef = useRef<HTMLDivElement>(null);
   const remainingAmount =
     Number(form.totalAmount || 0) - Number(form.paidAmount || 0);

@@ -1,13 +1,10 @@
 import { useState } from "react";
-
 import { Button } from "@/components/ui/button";
 
 import { MoreHorizontal, Repeat, Trash, Pencil } from "lucide-react";
-
 import { Link } from "react-router-dom";
 
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-
 import { toast } from "sonner";
 
 import {
@@ -25,33 +22,35 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
+  DialogDescription,
   DialogFooter,
 } from "@/components/ui/dialog";
 
-import { deleteEnquiry } from "@/services/apiEnquiries";
+import { deletePayment } from "@/services/apiPayments";
 
-type EnquiryActionDropdownProps = {
+type PaymentActionDropdownProps = {
   id: string | number;
 };
 
-export default function EnquiryActionDropdown({ id }: EnquiryActionDropdownProps) {
+export default function PaymentActionDropdown({
+  id,
+}: PaymentActionDropdownProps) {
   const queryClient = useQueryClient();
   const [openDialog, setOpenDialog] = useState(false);
 
-  
   const deleteMutation = useMutation({
-    mutationFn: (enquiryId: string | number) => deleteEnquiry(enquiryId),
+    mutationFn: (paymentId: string | number) =>
+      deletePayment(paymentId.toString()),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["enquiries"] });
-      toast.success("Enquiry deleted successfully!");
+      toast.success("Payment deleted successfully!");
+      queryClient.invalidateQueries({ queryKey: ["payments"] });
       setOpenDialog(false);
     },
     onError: (error: any) => {
-      console.error("Failed to delete enquiry:", error);
-      toast.error("Failed to delete enquiry");
+      console.error("Failed to delete payment:", error);
+      toast.error("Failed to delete payment");
     },
   });
-  
 
   return (
     <DropdownMenu>
@@ -71,23 +70,24 @@ export default function EnquiryActionDropdown({ id }: EnquiryActionDropdownProps
         </DropdownMenuLabel>
         <DropdownMenuSeparator className="bg-zinc-700" />
 
-   
         <DropdownMenuItem
           asChild
           className="flex items-center gap-2 text-sm text-zinc-100 rounded-lg px-2 py-1.5 hover:bg-zinc-800 hover:text-zinc-100 focus:bg-zinc-800"
         >
-          <Link to={`/follow-up/${id}`} className="flex items-center gap-2">
+          <Link
+            to={`/payment-follow-up/${id}`}
+            className="flex items-center gap-2"
+          >
             <Repeat className="h-4 w-4" />
             Follow Up
           </Link>
         </DropdownMenuItem>
 
-      
         <DropdownMenuItem
           asChild
           className="flex items-center gap-2 text-sm text-zinc-100 rounded-lg px-2 py-1.5 hover:bg-zinc-800 hover:text-zinc-100 focus:bg-zinc-800"
         >
-          <Link to={`/enquiry-edit/${id}`} className="flex items-center gap-2">
+          <Link to={`/payment-edit/${id}`} className="flex items-center gap-2">
             <Pencil className="h-4 w-4" />
             Edit
           </Link>
@@ -106,11 +106,13 @@ export default function EnquiryActionDropdown({ id }: EnquiryActionDropdownProps
 
           <DialogContent className="sm:max-w-[400px] bg-zinc-100">
             <DialogHeader>
-              <DialogTitle>Delete Enquiry</DialogTitle>
+              <DialogTitle>Delete Payment</DialogTitle>
+              <DialogDescription>
+                Are you sure you want to delete this payment? This action cannot
+                be undone.
+              </DialogDescription>
             </DialogHeader>
-            <p className="text-sm text-black my-2">
-              Are you sure you want to delete this enquiry? This action cannot be undone.
-            </p>
+
             <DialogFooter className="flex justify-end gap-2">
               <Button
                 variant="outline"
@@ -122,7 +124,10 @@ export default function EnquiryActionDropdown({ id }: EnquiryActionDropdownProps
               <Button
                 variant="destructive"
                 disabled={deleteMutation.isPending}
-                onClick={() => deleteMutation.mutate(id)}
+                onClick={() => {
+                  console.log("Deleting Payment ID:", id);
+                  deleteMutation.mutate(id);
+                }}
               >
                 {deleteMutation.isPending ? "Deleting..." : "Yes, Delete"}
               </Button>

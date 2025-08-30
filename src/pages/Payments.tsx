@@ -19,8 +19,6 @@ const { data } = useQuery({
   queryFn: getPayments
 })
 
-console.log("the payments data", data);
-
   return (
     <div className="p-8 min-h-screen w-full  ">
       <div className="max-w-7xl mx-auto mt-10 p-8 shadow-md rounded-2xl bg-zinc-50">

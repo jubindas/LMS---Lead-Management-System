@@ -194,7 +194,7 @@ const router = createBrowserRouter([
         ),
       },
       {
-        path: "/payment-follow-up",
+        path: "/payment-follow-up/:id",
         element: (
           <Suspense fallback={<Loading />}>
             <PaymentFollowUp />
