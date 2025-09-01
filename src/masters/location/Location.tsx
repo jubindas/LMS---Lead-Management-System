@@ -1,6 +1,5 @@
 import { DataTable } from "@/components/data-table";
 
-
 import { columns } from "./location-columns";
 
 import EnquiryLocation from "@/components/EnquiryLocation";
@@ -10,27 +9,24 @@ import { getLocation } from "@/services/apiLocation";
 import { useQuery } from "@tanstack/react-query";
 
 export default function LocationTable() {
+  const {
+    data: locations,
+    isLoading,
+    error,
+  } = useQuery({
+    queryKey: ["locations"],
+    queryFn: getLocation,
+  });
 
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
 
+  if (error) {
+    return <div>Error fetching locations</div>;
+  }
 
-const { data: locations, isLoading, error } = useQuery({
-  queryKey: ["locations"],
-  queryFn: getLocation,
-});
-
-if (isLoading) {
-  return <div>Loading...</div>;
-}
-
-if (error) {
-  return <div>Error fetching locations</div>;
-}
-
-const sortedLocations = [...(locations || [])].sort((a, b) => a.id - b.id);
-
-
-
-
+  const sortedLocations = [...(locations || [])].sort((a, b) => a.id - b.id);
 
   return (
     <div className="p-8 min-h-screen w-full  ">
@@ -68,18 +64,18 @@ const sortedLocations = [...(locations || [])].sort((a, b) => a.id - b.id);
           </div>
         </div>
         {isLoading ? (
-                 <div className="text-center py-4">Loading data...</div>
-               ) : error ? (
-                 <div className="text-center text-red-500 py-4">
-                   Failed to load data.
-                 </div>
-               ) : (
-                 <DataTable
-                   columns={columns}
-                   data={sortedLocations || []}
-                   enablePagination={true}
-                 />
-               )}
+          <div className="text-center py-4">Loading data...</div>
+        ) : error ? (
+          <div className="text-center text-red-500 py-4">
+            Failed to load data.
+          </div>
+        ) : (
+          <DataTable
+            columns={columns}
+            data={sortedLocations || []}
+            enablePagination={true}
+          />
+        )}
       </div>
     </div>
   );

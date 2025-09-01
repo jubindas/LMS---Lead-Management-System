@@ -39,7 +39,7 @@ export default function StatusActionDropdown({ id }: StatusActionDropdownProps) 
   const deleteSubCategoryMutation = useMutation({
     mutationFn: (subCategoryId: string) => deleteSubCategory(subCategoryId),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["sub-categories"] });
+      queryClient.invalidateQueries({ queryKey: ["mainCategories"] });
       toast.success("Sub category deleted successfully!");
       setOpenDialog(false);
     },

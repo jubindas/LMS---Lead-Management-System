@@ -23,6 +23,21 @@ export async function createLocation(locationData: { name: string; description?:
 }   
 
 
+
+
+export async function updateLocation(id: string, locationData: { name: string; description?: string | null }) {
+  const response = await axios.put(`${API_BASE_URL}/locations/${id}`, locationData);
+
+  if (response.status !== 200) {
+    throw new Error("Failed to update location");
+  }
+
+  return response.data;
+}
+
+
+
+
 export async function deleteLocation(id: string) {
   const response = await axios.delete(`${API_BASE_URL}/locations/${id}`);
 
