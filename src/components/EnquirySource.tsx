@@ -1,42 +1,91 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
-import { FaPlus } from "react-icons/fa";
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogHeader,
   DialogTitle,
+  DialogDescription,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { FaPlus } from "react-icons/fa";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { createSources, updateSource } from "@/services/apiSource";
 import { toast } from "sonner";
-import { createSources } from "@/services/apiSource";
 
-export default function EnquirySource() {
+interface EnquirySourceProps {
+  open?: boolean;
+  setOpen?: (value: boolean) => void;
+  mode?: "create" | "edit";
+  source?: { id: string; name: string; description?: string };
+}
+
+export default function EnquirySource({
+  open: externalOpen,
+  setOpen: externalSetOpen,
+  mode = "create",
+  source,
+}: EnquirySourceProps) {
   const [formData, setFormData] = useState({
-    sourceName: "",
+    name: "",
     description: "",
   });
 
-  const [open, setOpen] = useState(false);
+  const [internalOpen, setInternalOpen] = useState(false);
+  const open = externalOpen !== undefined ? externalOpen : internalOpen;
+  const setOpen = externalSetOpen || setInternalOpen;
 
   const queryClient = useQueryClient();
 
-  const createSourcesMutation = useMutation({
+  
+  useEffect(() => {
+    if (mode === "edit" && source) {
+      setFormData({
+        name: source.name || "",
+        description: source.description || "",
+      });
+    } else {
+      setFormData({ name: "", description: "" });
+    }
+  }, [mode, source, open]);
+
+  
+  const createMutation = useMutation({
     mutationFn: (newSource: { name: string; description?: string | null }) =>
       createSources(newSource),
     onSuccess: () => {
-      toast.success("Source created successfully!");
       queryClient.invalidateQueries({ queryKey: ["sources"] });
-      setFormData({ sourceName: "", description: "" }); 
-      setOpen(false); 
+      toast("Source created successfully!");
+      resetForm();
     },
     onError: (error) => {
-      console.error("Failed to create source:", error);
-      toast.error("Failed to create source.");
+      console.error("Error creating source:", error);
+      toast("Failed to create source.");
     },
   });
+
+  
+  const updateMutation = useMutation({
+    mutationFn: (updatedSource: {
+      id: string;
+      name: string;
+      description?: string | null;
+    }) => updateSource(updatedSource.id, updatedSource),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["sources"] });
+      toast("Source updated successfully!");
+      resetForm();
+    },
+    onError: (error) => {
+      console.error("Error updating source:", error);
+      toast("Failed to update source.");
+    },
+  });
+
+  const resetForm = () => {
+    setFormData({ name: "", description: "" });
+    setOpen(false);
+  };
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -46,46 +95,58 @@ export default function EnquirySource() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-
-    if (!formData.sourceName.trim()) {
-      toast.error("Source name is required.");
+    if (!formData.name.trim()) {
+      toast("Source name is required.");
       return;
     }
 
-    createSourcesMutation.mutate({
-      name: formData.sourceName,
-      description: formData.description || null,
-    });
+    if (mode === "edit" && source) {
+      updateMutation.mutate({
+        id: source.id,
+        name: formData.name,
+        description: formData.description || null,
+      });
+    } else {
+      createMutation.mutate({
+        name: formData.name,
+        description: formData.description || null,
+      });
+    }
   };
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        <Button className="bg-zinc-500 hover:bg-zinc-600 text-white font-medium px-3 py-1.5 text-sm rounded-md shadow-md transition-transform transform hover:-translate-y-0.5 hover:shadow-lg">
-          <FaPlus />
-        </Button>
-      </DialogTrigger>
+      {mode === "create" && (
+        <DialogTrigger asChild>
+          <Button className="bg-zinc-500 hover:bg-zinc-600 text-white font-medium px-3 py-1.5 text-sm rounded-md shadow-md transition-transform transform hover:-translate-y-0.5 hover:shadow-lg">
+            <FaPlus />
+          </Button>
+        </DialogTrigger>
+      )}
 
-      <DialogContent className="w-[90%] max-w-md md:max-w-lg lg:min-w-[40rem] max-h-[80vh] overflow-y-auto bg-zinc-100 rounded-lg shadow-2xl border border-zinc-300 p-4 md:p-6">
+      <DialogContent className="w-[90%] max-w-md md:max-w-xl lg:max-w-3xl max-h-[80vh] overflow-y-auto bg-zinc-100 rounded-lg shadow-2xl border border-zinc-300 p-4 md:p-6">
         <DialogHeader className="pb-4 border-b border-zinc-300">
           <DialogTitle className="text-lg md:text-2xl font-bold text-zinc-800">
-            Add New Source
+            {mode === "edit" ? "EDIT SOURCE" : "ADD NEW SOURCE"}
           </DialogTitle>
           <DialogDescription className="text-sm md:text-base text-zinc-600">
-            Fill in the details for the new enquiry source.
+            {mode === "edit"
+              ? "Update the details for this source."
+              : "Fill in the details for the new source."}
           </DialogDescription>
         </DialogHeader>
 
         <form onSubmit={handleSubmit} className="mt-6 space-y-6">
+      
           <div>
             <label className="block text-sm font-semibold text-zinc-700 mb-2">
-              Source Name <span className="text-zinc-500">(required)</span>
+              Source Name
             </label>
             <input
               type="text"
-              name="sourceName"
+              name="name"
               placeholder="Enter source name"
-              value={formData.sourceName}
+              value={formData.name}
               onChange={handleChange}
               required
               className="w-full border border-zinc-300 rounded-md px-3 py-2 bg-white text-zinc-800 shadow-sm focus:outline-none focus:ring-2 focus:ring-zinc-500 transition"
@@ -99,10 +160,10 @@ export default function EnquirySource() {
             </label>
             <textarea
               name="description"
-              placeholder="Enter description (optional)"
+              placeholder="Enter description"
               value={formData.description}
               onChange={handleChange}
-              rows={3}
+              rows={4}
               className="w-full border border-zinc-300 rounded-md px-3 py-2 bg-white text-zinc-800 shadow-sm resize-none focus:outline-none focus:ring-2 focus:ring-zinc-500 transition"
             />
           </div>
@@ -110,10 +171,12 @@ export default function EnquirySource() {
           <div className="flex flex-col md:flex-row justify-end gap-3 pt-4 border-t border-zinc-300">
             <Button
               type="submit"
-              disabled={createSourcesMutation.isPending}
+              disabled={createMutation.isPending || updateMutation.isPending}
               className="w-full md:w-auto bg-zinc-500 hover:bg-zinc-600 text-white font-medium px-6 py-2 rounded-md shadow-lg transition-transform transform hover:-translate-y-1"
             >
-              {createSourcesMutation.isPending ? "Saving..." : "Save"}
+              {createMutation.isPending || updateMutation.isPending
+                ? "Saving..."
+                : "Save"}
             </Button>
           </div>
         </form>

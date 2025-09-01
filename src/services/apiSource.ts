@@ -25,6 +25,22 @@ export async function createSources(source: { name: string; description?: string
 }
 
 
+
+
+export async function updateSource(id: string, source: { name: string; description?: string | null }) {
+  const response = await axios.put(`${API_BASE_URL}/sources/${id}`, source);
+
+  if (response.status !== 200) {
+    throw new Error("Failed to update source");
+  }
+
+  return response.data;
+}
+
+
+
+
+
 export async function deleteSource(id: string) {
   const response = await axios.delete(`${API_BASE_URL}/sources/${id}`);
 
