@@ -1,10 +1,17 @@
 import { useState } from "react";
+
 import { ListTodo } from "lucide-react";
+
 import { Button } from "@/components/ui/button";
+
 import { DataTable } from "@/components/data-table";
+
 import { columns } from "../table-columns/todo-columns";
+
 import { getTodos, createTodo, updateTodo } from "@/services/apiTodo";
+
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+
 import { toast } from "sonner";
 
 export default function TodoList({ editTodo }: { editTodo?: (todo: { id: string; name: string; content?: string | null }) => void }) {
@@ -73,7 +80,7 @@ export default function TodoList({ editTodo }: { editTodo?: (todo: { id: string;
   };
 
  const handleEdit = (todo: { id: string; name: string; content?: string | null }) => {
-    if (editTodo) editTodo(todo); // use the prop
+    if (editTodo) editTodo(todo); 
     setNewTaskName(todo.name);
     setNewTaskContent(todo.content || "");
     setIsEditing(true);
@@ -88,7 +95,7 @@ export default function TodoList({ editTodo }: { editTodo?: (todo: { id: string;
             <ListTodo size={28} className="text-zinc-900" /> To-Do List
           </h2>
 
-          {/* Add / Edit Form */}
+       
           <form
             onSubmit={handleSubmit}
             className="flex flex-col md:flex-row gap-3 mb-6 items-stretch md:items-center"
@@ -133,7 +140,7 @@ export default function TodoList({ editTodo }: { editTodo?: (todo: { id: string;
             )}
           </form>
 
-          {/* Task Table */}
+      
           <div className="overflow-x-auto rounded-lg border border-zinc-300">
             {todoData && (
               <DataTable

@@ -1,5 +1,7 @@
 import type { Location } from "./location-types";
+
 import type { ColumnDef } from "@tanstack/react-table";
+
 import LocationActionsDropdown from "./LocationActionsDropdown";
 
 export const columns: ColumnDef<Location>[] = [

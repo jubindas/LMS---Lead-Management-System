@@ -7,7 +7,6 @@ import { getSource } from "@/services/apiSource";
 
 import { useQuery } from "@tanstack/react-query";
 
-
 import EnquirySource from "@/components/EnquirySource";
 
 export default function Source() {
@@ -19,7 +18,6 @@ export default function Source() {
   });
 
 
-console.log("Fetched sources:", data);
 
   if (isLoading) {
     return <div>Loading...</div>;

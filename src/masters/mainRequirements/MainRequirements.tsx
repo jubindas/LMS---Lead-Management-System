@@ -15,7 +15,7 @@ export default function MainRequirements() {
     queryFn: getMainCategories,
   });
 
-  console.log("fetched data", data);
+  
 
   if (isLoading) {
     return <div>Loading...</div>;

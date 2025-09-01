@@ -1,9 +1,15 @@
 import { useState } from "react";
+
 import { DataTable } from "@/components/data-table";
-import { createColumns } from "../table-columns/payments-columns"; // Note: changed import
+
+import { createColumns } from "../table-columns/payments-columns"; 
+
 import PaymentsEnquiry from "@/components/PaymentsEnquiry";
+
 import { getPayments } from "@/services/apiPayments";
+
 import { useQuery } from "@tanstack/react-query";
+
 import type { Payment } from "../table-types/payment-types";
 
 export default function PaymentsTable() {

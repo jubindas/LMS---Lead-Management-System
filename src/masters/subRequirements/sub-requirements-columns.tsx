@@ -1,8 +1,6 @@
 
 import type { ColumnDef } from "@tanstack/react-table";
 
-
-
 import type {SubCategory } from "./sub-requirements-types"
 
 import StatusActionDropdown from "./StatusActionDropdown";

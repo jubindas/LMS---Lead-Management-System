@@ -15,7 +15,6 @@ export default function SubRequirement() {
     queryFn: getMainCategories,
   });
 
-  console.log("Main Categories Data:", mainCategoriesData);
 
   const subCategoriesData = mainCategoriesData?.flatMap((mainCat: unknown) => {
   

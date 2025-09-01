@@ -1,9 +1,15 @@
 import { useParams } from "react-router-dom";
+
 import { useQuery } from "@tanstack/react-query";
+
 import { DataTable } from "@/components/data-table";
+
 import type { EnquiryFollowUp } from "../table-types/enquiry-follow-up-types";
+
 import { columns } from "../table-columns/enquiry-follow-up-columns";
+
 import EnquiryFollowUpForm from "../components/EnquiryFollowUpForm";
+
 import { getFollowUpsByEnquiryId } from "@/services/apiFollowUp";
 
 export default function EnquiryFollowUp() {

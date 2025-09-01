@@ -1,4 +1,5 @@
 import { useState } from "react";
+
 import { MoreHorizontal, Trash2, Pencil } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -25,7 +26,8 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 
 import { deleteSubCategory } from "@/services/apiSubCategories";
-import SubRequirementForm from "@/components/SubRequirementForm"; // Import your edit form
+
+import SubRequirementForm from "@/components/SubRequirementForm";
 
 interface StatusActionDropdownProps {
   id: string;
@@ -42,7 +44,7 @@ export default function StatusActionDropdown({
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
   const [openEditDialog, setOpenEditDialog] = useState(false);
 
-  // Delete mutation
+ 
   const deleteSubCategoryMutation = useMutation({
     mutationFn: (subCategoryId: string) => deleteSubCategory(subCategoryId),
     onSuccess: () => {
@@ -75,7 +77,6 @@ export default function StatusActionDropdown({
           </DropdownMenuLabel>
           <DropdownMenuSeparator className="bg-zinc-800" />
 
-          {/* Edit Action */}
           <Button
             variant="ghost"
             className="flex items-center gap-2 w-full justify-start text-sm text-zinc-200 hover:bg-zinc-800"
@@ -85,7 +86,6 @@ export default function StatusActionDropdown({
             Edit
           </Button>
 
-          {/* Delete Action */}
           <Dialog open={openDeleteDialog} onOpenChange={setOpenDeleteDialog}>
             <DialogTrigger asChild>
               <Button
@@ -128,7 +128,6 @@ export default function StatusActionDropdown({
         </DropdownMenuContent>
       </DropdownMenu>
 
-      {/* Edit Form Dialog */}
       {openEditDialog && (
         <SubRequirementForm
           open={openEditDialog}

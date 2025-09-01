@@ -17,8 +17,6 @@ export default function Status() {
     queryFn: getStatus,
   });
 
-  console.log("Fetched statuses:", statusTypes);
-
   const sortedStatusTypes = [...(statusTypes || [])].sort(
     (a, b) => Number(a.id) - Number(b.id)
   );

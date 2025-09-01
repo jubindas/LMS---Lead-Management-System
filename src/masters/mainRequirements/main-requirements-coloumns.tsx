@@ -1,6 +1,7 @@
 import type { MainCategory } from "./main-requirements-types";
 
 import type { ColumnDef } from "@tanstack/react-table";
+
 import MainReqDropdown from "./MainReqDropdown";
 
 

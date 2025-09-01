@@ -1,5 +1,7 @@
 import type { BusinessType } from "./business-types";
+
 import type { ColumnDef } from "@tanstack/react-table";
+
 import BusinessActionDropdown from "./BusinessActionDropdown";
 
 export const columns: ColumnDef<BusinessType>[] = [

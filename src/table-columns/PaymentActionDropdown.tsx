@@ -2,7 +2,7 @@ import { useState } from "react";
 
 import { Button } from "@/components/ui/button";
 
-import { MoreHorizontal, Trash2, Pencil, CheckCircle2 } from "lucide-react";
+import { MoreHorizontal, Trash2, Pencil, CheckCircle2, Repeat } from "lucide-react";
 
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
@@ -26,6 +26,8 @@ import {
 } from "@/components/ui/dialog";
 
 import { deleteTodo } from "@/services/apiTodo";
+import { DropdownMenuItem } from "@radix-ui/react-dropdown-menu";
+import { Link } from "react-router-dom";
 type PaymentActionDropdownProps = {
   id: string;
   name: string;
@@ -72,6 +74,19 @@ export default function PaymentActionDropdown({
       >
         <DropdownMenuLabel className="text-xs text-zinc-400">Actions</DropdownMenuLabel>
         <DropdownMenuSeparator className="bg-zinc-700" />
+
+       <DropdownMenuItem
+          asChild
+          className="flex items-center gap-2 text-sm text-zinc-100 rounded-lg px-2 py-1.5 hover:bg-zinc-800 hover:text-zinc-100 focus:bg-zinc-800"
+        >
+          <Link
+            to={`/payment-follow-up/${id}`}
+            className="flex items-center gap-2"
+          >
+            <Repeat className="h-4 w-4" />
+            Follow Up
+          </Link>
+        </DropdownMenuItem>
 
        
         <Button

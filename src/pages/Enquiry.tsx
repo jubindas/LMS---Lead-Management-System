@@ -24,21 +24,6 @@ export default function Enquiries() {
   })
 
 
-
-
-console.log("the enquiries", enquiries);
-
-
-
-
-
-
-
-
-
-
-
-
   const handleStageUpdate = (sl: number, newStage: string) => {
     setData((prev) =>
       prev.map((item) => (item.sl === sl ? { ...item, stage: newStage } : item))
