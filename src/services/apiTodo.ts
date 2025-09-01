@@ -2,6 +2,10 @@ import { API_BASE_URL } from "@/lib/url";
 
 import axios from "axios";
 
+
+
+
+
 export async function getTodos() {
   const response = await axios.get(`${API_BASE_URL}/todos`);
 
@@ -12,6 +16,9 @@ export async function getTodos() {
   return response.data.data;
 }
 
+
+
+
 export async function createTodo(todoData: { name: string; content?: string | null }) {
   const response = await axios.post(`${API_BASE_URL}/todos`, todoData);
 
@@ -21,6 +28,20 @@ export async function createTodo(todoData: { name: string; content?: string | nu
 
   return response.data;
 }
+
+
+
+
+export async function updateTodo(id: string, todoData: { name: string; content?: string | null }) {
+  const response = await axios.put(`${API_BASE_URL}/todos/${id}`, todoData);
+
+  if (response.status !== 200) {
+    throw new Error("Failed to update todo");
+  }
+
+  return response.data;
+}
+
 
 
 export async function deleteTodo(id: string) {

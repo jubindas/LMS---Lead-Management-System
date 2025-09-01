@@ -1,57 +1,84 @@
 import { useState } from "react";
-
 import { ListTodo } from "lucide-react";
-
 import { Button } from "@/components/ui/button";
-
 import { DataTable } from "@/components/data-table";
-
 import { columns } from "../table-columns/todo-columns";
-
-import { getTodos , createTodo} from "@/services/apiTodo";
-
+import { getTodos, createTodo, updateTodo } from "@/services/apiTodo";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-
 import { toast } from "sonner";
 
-export default function TodoList() {
-   const queryClient = useQueryClient();
+export default function TodoList({ editTodo }: { editTodo?: (todo: { id: string; name: string; content?: string | null }) => void }) {
+  const queryClient = useQueryClient();
+
   const [newTaskName, setNewTaskName] = useState("");
   const [newTaskContent, setNewTaskContent] = useState("");
+  const [isEditing, setIsEditing] = useState(false);
+  const [editingTodoId, setEditingTodoId] = useState<string | null>(null);
 
-  
+  const createTodoMutation = useMutation({
+    mutationFn: (todoData: { name: string; content?: string | null }) =>
+      createTodo(todoData),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["todos"] });
+      toast.success("Todo created successfully!");
+      resetForm();
+    },
+    onError: () => toast.error("Failed to create todo"),
+  });
 
-const createTodoMutation = useMutation({
-  mutationFn: (todoData: { name: string; content?: string | null }) => createTodo(todoData),
-  onSuccess: () => {
-    queryClient.invalidateQueries({ queryKey: ["todos"] });
-    toast("Todo created successfully!");
-  },
-  onError: () => {
-    toast("Failed to create todo");
-  },
-});
-
-  const addTask = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const nameTrimmed = newTaskName.trim();
-    const contentTrimmed = newTaskContent.trim();
-    if (!nameTrimmed) return;
-
-    createTodoMutation.mutate({ name: nameTrimmed, content: contentTrimmed });
-    setNewTaskName("");
-    setNewTaskContent("");
-  };
+  const updateTodoMutation = useMutation({
+    mutationFn: (todoData: { id: string; name: string; content?: string | null }) =>
+      updateTodo(todoData.id, { name: todoData.name, content: todoData.content || null }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["todos"] });
+      toast.success("Todo updated successfully!");
+      resetForm();
+    },
+    onError: () => toast.error("Failed to update todo"),
+  });
 
   const { data: todoData } = useQuery({
     queryKey: ["todos"],
     queryFn: getTodos,
   });
 
-  const sortedTodos = todoData
-    ? [...todoData].sort((a, b) => a.id - b.id)
-    : [];
+  const sortedTodos = todoData ? [...todoData].sort((a, b) => a.id - b.id) : [];
 
+  const resetForm = () => {
+    setNewTaskName("");
+    setNewTaskContent("");
+    setIsEditing(false);
+    setEditingTodoId(null);
+  };
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const nameTrimmed = newTaskName.trim();
+    const contentTrimmed = newTaskContent.trim();
+
+    if (!nameTrimmed) return;
+
+    if (isEditing && editingTodoId) {
+      updateTodoMutation.mutate({
+        id: editingTodoId,
+        name: nameTrimmed,
+        content: contentTrimmed,
+      });
+    } else {
+      createTodoMutation.mutate({
+        name: nameTrimmed,
+        content: contentTrimmed,
+      });
+    }
+  };
+
+ const handleEdit = (todo: { id: string; name: string; content?: string | null }) => {
+    if (editTodo) editTodo(todo); // use the prop
+    setNewTaskName(todo.name);
+    setNewTaskContent(todo.content || "");
+    setIsEditing(true);
+    setEditingTodoId(todo.id);
+  }
 
   return (
     <div className="min-h-screen text-white font-['Poppins'] p-4">
@@ -61,8 +88,9 @@ const createTodoMutation = useMutation({
             <ListTodo size={28} className="text-zinc-900" /> To-Do List
           </h2>
 
+          {/* Add / Edit Form */}
           <form
-            onSubmit={addTask}
+            onSubmit={handleSubmit}
             className="flex flex-col md:flex-row gap-3 mb-6 items-stretch md:items-center"
           >
             <input
@@ -83,14 +111,33 @@ const createTodoMutation = useMutation({
             <Button
               type="submit"
               className="w-full md:w-auto bg-gradient-to-r from-purple-600 to-purple-400 h-12 text-white font-medium px-6 py-3 rounded-md shadow-lg hover:from-purple-700 hover:to-purple-500 transition-transform transform hover:-translate-y-1"
-            >{createTodoMutation.isPending ? "Adding..." : "Add Task"}
+            >
+              {isEditing
+                ? updateTodoMutation.isPending
+                  ? "Updating..."
+                  : "Update Task"
+                : createTodoMutation.isPending
+                ? "Adding..."
+                : "Add Task"}
             </Button>
+
+            {isEditing && (
+              <Button
+                type="button"
+                variant="outline"
+                onClick={resetForm}
+                className="w-full md:w-auto h-12 font-medium px-6 py-3 rounded-md shadow-md border-zinc-300 text-zinc-800 hover:bg-zinc-100"
+              >
+                Cancel
+              </Button>
+            )}
           </form>
 
+          {/* Task Table */}
           <div className="overflow-x-auto rounded-lg border border-zinc-300">
             {todoData && (
               <DataTable
-                columns={columns}
+                columns={columns({ onEdit: handleEdit })}
                 data={sortedTodos}
                 enablePagination={true}
               />

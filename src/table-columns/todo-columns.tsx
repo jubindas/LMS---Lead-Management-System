@@ -4,17 +4,30 @@ import TodoActionDropdown from "./TodoActionDropdown";
 export type Todo = {
   id: number;
   name: string;
-  content?: string;
-  is_complete: boolean;
+  content: string;
 };
 
-export const columns: ColumnDef<Todo>[] = [
+export const columns = ({
+  onEdit,
+}: {
+  onEdit: (todo: Todo) => void; 
+}): ColumnDef<Todo>[] => [
   { accessorKey: "id", header: "ID" },
   { accessorKey: "name", header: "Task Name" },
   { accessorKey: "content", header: "Content" },
   {
     id: "actions",
     header: "Actions",
-    cell: ({ row }) => <TodoActionDropdown id={row.original.id} />,
+    cell: ({ row }) => {
+      const todo = row.original;
+      return (
+        <TodoActionDropdown
+          id={todo.id}
+          name={todo.name}
+          content={todo.content}
+          onEdit={() => onEdit(todo)}
+        />
+      );
+    },
   },
 ];

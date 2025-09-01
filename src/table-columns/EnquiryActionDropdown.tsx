@@ -1,13 +1,8 @@
 import { useState } from "react";
-
 import { Button } from "@/components/ui/button";
-
-import { MoreHorizontal, Repeat, Trash, Pencil } from "lucide-react";
-
+import { MoreHorizontal, Repeat, Trash, Pencil, Eye } from "lucide-react"; // Added Eye icon
 import { Link } from "react-router-dom";
-
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-
 import { toast } from "sonner";
 
 import {
@@ -38,7 +33,6 @@ export default function EnquiryActionDropdown({ id }: EnquiryActionDropdownProps
   const queryClient = useQueryClient();
   const [openDialog, setOpenDialog] = useState(false);
 
-  
   const deleteMutation = useMutation({
     mutationFn: (enquiryId: string | number) => deleteEnquiry(enquiryId),
     onSuccess: () => {
@@ -51,7 +45,6 @@ export default function EnquiryActionDropdown({ id }: EnquiryActionDropdownProps
       toast.error("Failed to delete enquiry");
     },
   });
-  
 
   return (
     <DropdownMenu>
@@ -66,12 +59,21 @@ export default function EnquiryActionDropdown({ id }: EnquiryActionDropdownProps
         align="end"
         className="w-44 rounded-xl bg-zinc-900 border border-zinc-700 shadow-lg"
       >
-        <DropdownMenuLabel className="text-xs text-zinc-400">
-          Actions
-        </DropdownMenuLabel>
+        <DropdownMenuLabel className="text-xs text-zinc-400">Actions</DropdownMenuLabel>
         <DropdownMenuSeparator className="bg-zinc-700" />
 
-   
+        {/* View Details */}
+        <DropdownMenuItem
+          asChild
+          className="flex items-center gap-2 text-sm text-zinc-100 rounded-lg px-2 py-1.5 hover:bg-zinc-800 hover:text-zinc-100 focus:bg-zinc-800"
+        >
+          <Link to={`/enquiry-view-details/${id}`} className="flex items-center gap-2">
+            <Eye className="h-4 w-4" />
+            View Details
+          </Link>
+        </DropdownMenuItem>
+
+        {/* Follow Up */}
         <DropdownMenuItem
           asChild
           className="flex items-center gap-2 text-sm text-zinc-100 rounded-lg px-2 py-1.5 hover:bg-zinc-800 hover:text-zinc-100 focus:bg-zinc-800"
@@ -82,7 +84,7 @@ export default function EnquiryActionDropdown({ id }: EnquiryActionDropdownProps
           </Link>
         </DropdownMenuItem>
 
-      
+        {/* Edit */}
         <DropdownMenuItem
           asChild
           className="flex items-center gap-2 text-sm text-zinc-100 rounded-lg px-2 py-1.5 hover:bg-zinc-800 hover:text-zinc-100 focus:bg-zinc-800"
@@ -93,6 +95,7 @@ export default function EnquiryActionDropdown({ id }: EnquiryActionDropdownProps
           </Link>
         </DropdownMenuItem>
 
+        {/* Delete */}
         <Dialog open={openDialog} onOpenChange={setOpenDialog}>
           <DialogTrigger asChild>
             <Button

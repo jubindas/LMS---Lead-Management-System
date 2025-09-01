@@ -1,6 +1,9 @@
 import { useState } from "react";
+
 import { MoreHorizontal, Trash2, Edit3 } from "lucide-react";
+
 import { Button } from "@/components/ui/button";
+
 import {
   DropdownMenu,
   DropdownMenuTrigger,
@@ -8,6 +11,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
+
 import {
   Dialog,
   DialogTrigger,
@@ -16,9 +20,12 @@ import {
   DialogTitle,
   DialogFooter,
 } from "@/components/ui/dialog";
+
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+
 import { toast } from "sonner";
-import { deleteMainReq } from "@/services/apiMainCategories"; // <-- Replace with your API service
+
+import { deleteMainReq } from "@/services/apiMainCategories";
 
 interface MainReqDropdownProps {
   id: string;
@@ -29,7 +36,6 @@ export default function MainReqDropdown({ id, onEdit }: MainReqDropdownProps) {
   const queryClient = useQueryClient();
   const [openDialog, setOpenDialog] = useState(false);
 
-  // Mutation for deleting MainReq
   const deleteMutation = useMutation({
     mutationFn: (mainReqId: string) => deleteMainReq(mainReqId),
     onSuccess: () => {
@@ -45,7 +51,7 @@ export default function MainReqDropdown({ id, onEdit }: MainReqDropdownProps) {
 
   return (
     <DropdownMenu>
-      {/* Trigger Button */}
+     
       <DropdownMenuTrigger asChild>
         <Button
           variant="ghost"
@@ -56,7 +62,6 @@ export default function MainReqDropdown({ id, onEdit }: MainReqDropdownProps) {
         </Button>
       </DropdownMenuTrigger>
 
-      {/* Dropdown Menu Content */}
       <DropdownMenuContent
         align="end"
         className="w-40 rounded-xl bg-zinc-900 border border-zinc-800 shadow-lg"
@@ -66,7 +71,7 @@ export default function MainReqDropdown({ id, onEdit }: MainReqDropdownProps) {
         </DropdownMenuLabel>
         <DropdownMenuSeparator className="bg-zinc-800" />
 
-        {/* Edit Option */}
+      
         <Button
           variant="ghost"
           className="flex items-center gap-2 w-full justify-start text-sm text-zinc-200 hover:bg-zinc-800"
@@ -76,7 +81,7 @@ export default function MainReqDropdown({ id, onEdit }: MainReqDropdownProps) {
           Edit
         </Button>
 
-        {/* Delete Option with Confirmation Dialog */}
+      
         <Dialog open={openDialog} onOpenChange={setOpenDialog}>
           <DialogTrigger asChild>
             <Button
