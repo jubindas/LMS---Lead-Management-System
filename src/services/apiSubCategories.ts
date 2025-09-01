@@ -2,15 +2,7 @@ import { API_BASE_URL } from "@/lib/url";
 
 import axios from "axios";
 
-export async function getSubCategories() {
-  const response = await axios.get(`${API_BASE_URL}/sub-categories`);
 
-  if (response.status !== 200) {
-    throw new Error("Failed to fetch sub categories");
-  }
-
-  return response.data;
-}
 
 export async function createSubCategory(subCategoryData: {
   main_category_id: string;
@@ -25,6 +17,24 @@ export async function createSubCategory(subCategoryData: {
 
   return response.data;
 }
+
+
+export async function updateSubCategory(id: string, subCategoryData: {
+  main_category_id: string;
+  name: string;
+  description?: string | null;
+}) {
+  const response = await axios.put(`${API_BASE_URL}/sub-categories/${id}`, subCategoryData);
+
+  if (response.status !== 200) {
+    throw new Error("Failed to update sub category");
+  }
+
+  return response.data;
+}
+
+
+
 
 export async function deleteSubCategory(id: string) {
   const response = await axios.delete(`${API_BASE_URL}/sub-categories/${id}`);

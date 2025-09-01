@@ -1,13 +1,12 @@
 import type { ColumnDef } from "@tanstack/react-table";
-
 import type { Payment } from "../table-types/payment-types";
-
 import PaymentActionDropdown from "./PaymentActionDropdown";
 
-export const columns: ColumnDef<Payment>[] = [
+// Create a function that returns columns with the onEdit handler
+export const createColumns = (onEdit: (payment: Payment) => void): ColumnDef<Payment>[] => [
   {
     accessorKey: "id",
-    header: () => <span className="capitalize"> ID</span>,
+    header: () => <span className="capitalize">ID</span>,
     cell: ({ row }) => (
       <span className="text-black text-sm">{row.getValue("id")}</span>
     ),
@@ -21,7 +20,6 @@ export const columns: ColumnDef<Payment>[] = [
       </span>
     ),
   },
-
   {
     accessorKey: "amount",
     header: () => <span className="capitalize">Amount</span>,
@@ -38,11 +36,19 @@ export const columns: ColumnDef<Payment>[] = [
       <span className="text-black text-sm">{row.getValue("remarks")}</span>
     ),
   },
- {
-  id: "actions",
-  header: "Actions",
-  cell: ({row}) => {
-    return <PaymentActionDropdown id={row.original.id} />;
+  {
+    id: "actions",
+    header: "Actions",
+    cell: ({ row }) => {
+      const payment = row.original;
+      return (
+        <PaymentActionDropdown
+          id={payment.id}
+          name={payment.name}
+          amount={payment.amount}
+          onEdit={() => onEdit(payment)} // Now onEdit is properly passed
+        />
+      );
+    },
   },
-}
 ];

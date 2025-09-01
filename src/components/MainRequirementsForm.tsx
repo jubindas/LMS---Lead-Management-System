@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
+
 import { Button } from "@/components/ui/button";
+
 import {
   Dialog,
   DialogContent,
@@ -8,9 +10,13 @@ import {
   DialogDescription,
   DialogTrigger,
 } from "@/components/ui/dialog";
+
 import { FaPlus } from "react-icons/fa";
+
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+
 import { createMainCategory, updateMainCategory } from "@/services/apiMainCategories";
+
 import { toast } from "sonner";
 
 interface MainRequirementsFormProps {
@@ -37,7 +43,6 @@ export default function MainRequirementsForm({
 
   const queryClient = useQueryClient();
 
-  // Sync form data for edit mode
   useEffect(() => {
     if (mode === "edit" && mainCategory) {
       setFormData({
@@ -49,7 +54,6 @@ export default function MainRequirementsForm({
     }
   }, [mode, mainCategory, open]);
 
-  // Mutation for creating a new category
   const createMutation = useMutation({
     mutationFn: (newCategory: { name: string; description?: string | null }) =>
       createMainCategory(newCategory),
@@ -82,20 +86,20 @@ export default function MainRequirementsForm({
     },
   });
 
-  // Reset form and close dialog
+ 
   const resetForm = () => {
     setFormData({ name: "", description: "" });
     setOpen(false);
   };
 
-  // Handle input change
+  
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  // Handle form submit
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (mode === "edit" && mainCategory) {
@@ -135,7 +139,7 @@ export default function MainRequirementsForm({
         </DialogHeader>
 
         <form onSubmit={handleSubmit} className="mt-6 space-y-6">
-          {/* Main Category Name */}
+      
           <div>
             <label className="block text-sm font-semibold text-zinc-700 mb-2">
               Main Category Name
@@ -151,7 +155,7 @@ export default function MainRequirementsForm({
             />
           </div>
 
-          {/* Description */}
+      
           <div>
             <label className="block text-sm font-semibold text-zinc-700 mb-2">
               Description{" "}
@@ -167,7 +171,7 @@ export default function MainRequirementsForm({
             />
           </div>
 
-          {/* Buttons */}
+
           <div className="flex flex-col md:flex-row justify-end gap-3 pt-4 border-t border-zinc-300">
             <Button
               type="submit"

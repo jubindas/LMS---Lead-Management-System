@@ -1,7 +1,5 @@
-import { useState } from "react";
-
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-
 import {
   Dialog,
   DialogContent,
@@ -10,21 +8,50 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-
-import { createPayments } from "@/services/apiPayments";
-
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-
 import { toast } from "sonner";
+import { createPayments, updatePayment } from "@/services/apiPayments";
 
-export default function PaymentsEnquiry() {
+type PaymentsEnquiryProps = {
+  paymentToEdit?: {
+    id: string;
+    name: string;
+    amount: number;
+    remarks: string;
+  };
+  isEdit?: boolean;
+  onEditComplete?: () => void;
+};
+
+export default function PaymentsEnquiry({ 
+  paymentToEdit, 
+  isEdit = false,
+  onEditComplete 
+}: PaymentsEnquiryProps) {
   const queryClient = useQueryClient();
+  const [open, setOpen] = useState(isEdit);
 
   const [formData, setFormData] = useState({
     name: "",
     amount: "",
     remarks: "",
   });
+
+  // Fill form if editing
+  useEffect(() => {
+    if (paymentToEdit) {
+      setFormData({
+        name: paymentToEdit.name,
+        amount: String(paymentToEdit.amount),
+        remarks: paymentToEdit.remarks,
+      });
+    }
+  }, [paymentToEdit]);
+
+  // Handle edit mode
+  useEffect(() => {
+    setOpen(isEdit);
+  }, [isEdit]);
 
   const createPaymentMutation = useMutation({
     mutationFn: (newPayment: { name: string; amount: number; remarks: string }) =>
@@ -33,12 +60,29 @@ export default function PaymentsEnquiry() {
       queryClient.invalidateQueries({ queryKey: ["payments"] });
       toast.success("Payment enquiry added successfully");
       setFormData({ name: "", amount: "", remarks: "" });
+      setOpen(false);
     },
   });
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
+  const updatePaymentMutation = useMutation({
+    mutationFn: (updatedPayment: { id: string; name: string; amount: number; remarks: string }) =>
+      updatePayment(updatedPayment.id, {
+        name: updatedPayment.name,
+        amount: updatedPayment.amount,
+        remarks: updatedPayment.remarks,
+      }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["payments"] });
+      toast.success("Payment updated successfully");
+      setOpen(false);
+      onEditComplete?.();
+    },
+    onError: () => {
+      toast.error("Failed to update payment");
+    },
+  });
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
@@ -50,32 +94,44 @@ export default function PaymentsEnquiry() {
       amount: Number(formData.amount),
       remarks: formData.remarks.trim(),
     };
-    console.log("Payment enquiry submitted:", payload);
-    createPaymentMutation.mutate(payload);
+
+    if (paymentToEdit) {
+      // Update existing payment
+      updatePaymentMutation.mutate({ id: paymentToEdit.id, ...payload });
+    } else {
+      // Create new payment
+      createPaymentMutation.mutate(payload);
+    }
+  };
+
+  const handleOpenChange = (newOpen: boolean) => {
+    setOpen(newOpen);
+    if (!newOpen && onEditComplete) {
+      onEditComplete();
+    }
   };
 
   return (
-    <Dialog>
-      <DialogTrigger asChild>
-        <Button className="bg-zinc-500 hover:bg-zinc-600 text-white font-medium px-4 py-2 rounded-md shadow-md transition-transform transform hover:-translate-y-0.5 hover:shadow-lg">
-          Add Payment Enquiry
-        </Button>
-      </DialogTrigger>
+    <Dialog open={open} onOpenChange={handleOpenChange}>
+      {!isEdit && (
+        <DialogTrigger asChild>
+          <Button className="bg-zinc-500 hover:bg-zinc-600 text-white font-medium px-4 py-2 rounded-md shadow-md transition-transform transform hover:-translate-y-0.5 hover:shadow-lg">
+            Add Payment Enquiry
+          </Button>
+        </DialogTrigger>
+      )}
 
       <DialogContent className="w-[95%] max-w-md md:max-w-lg lg:max-w-xl max-h-[85vh] overflow-y-auto bg-zinc-100 rounded-lg shadow-2xl border border-zinc-300 p-4 md:p-6">
-        {/* Header */}
         <DialogHeader className="pb-4 border-b border-zinc-300">
           <DialogTitle className="text-lg md:text-2xl font-bold text-zinc-800">
-            ADD PAYMENT ENQUIRY
+            {paymentToEdit ? "EDIT PAYMENT ENQUIRY" : "ADD PAYMENT ENQUIRY"}
           </DialogTitle>
           <DialogDescription className="text-sm md:text-base text-zinc-600">
             Fill in the details for the payment enquiry.
           </DialogDescription>
         </DialogHeader>
 
-        {/* Form */}
         <form onSubmit={handleSubmit} className="mt-6 space-y-6">
-          {/* Name Field */}
           <div>
             <label className="block text-sm font-semibold text-zinc-700 mb-2">
               Name
@@ -91,7 +147,6 @@ export default function PaymentsEnquiry() {
             />
           </div>
 
-          {/* Amount Field */}
           <div>
             <label className="block text-sm font-semibold text-zinc-700 mb-2">
               Amount
@@ -107,7 +162,6 @@ export default function PaymentsEnquiry() {
             />
           </div>
 
-          {/* Remarks Field */}
           <div>
             <label className="block text-sm font-semibold text-zinc-700 mb-2">
               Remarks
@@ -122,13 +176,20 @@ export default function PaymentsEnquiry() {
             />
           </div>
 
-          {/* Submit Button */}
           <div className="flex justify-end gap-4 pt-4 border-t border-zinc-300">
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => handleOpenChange(false)}
+              className="w-full md:w-auto"
+            >
+              Cancel
+            </Button>
             <Button
               type="submit"
               className="w-full md:w-auto bg-zinc-500 hover:bg-zinc-600 text-white font-medium px-6 py-2 rounded-md shadow-md transition-transform transform hover:-translate-y-0.5 hover:shadow-lg"
             >
-              Save
+              {paymentToEdit ? (updatePaymentMutation.isPending ? "Updating..." : "Update") : (createPaymentMutation.isPending ? "Saving..." : "Save")}
             </Button>
           </div>
         </form>

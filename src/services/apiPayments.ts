@@ -26,6 +26,31 @@ export async function createPayments(payment: {
   return response.data;
 }
 
+
+
+
+
+export async function updatePayment(id: string, payment: {
+  name: string;
+  remarks: string;
+  amount: number;
+}) {
+  const response = await axios.put(`${API_BASE_URL}/payments/${id}`, payment);
+
+  if (response.status !== 200) {
+    throw new Error("Failed to update payment");
+  }
+
+  return response.data;
+}
+
+
+
+
+
+
+
+
 export async function deletePayment(id: string) {
   const response = await axios.delete(`${API_BASE_URL}/payments/${id}`);
 

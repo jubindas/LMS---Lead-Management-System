@@ -1,34 +1,60 @@
+import { useState } from "react";
 import { DataTable } from "@/components/data-table";
-
-
-import { columns } from "../table-columns/payments-columns";
-
+import { createColumns } from "../table-columns/payments-columns"; // Note: changed import
 import PaymentsEnquiry from "@/components/PaymentsEnquiry";
-
 import { getPayments } from "@/services/apiPayments";
-
 import { useQuery } from "@tanstack/react-query";
-
-
+import type { Payment } from "../table-types/payment-types";
 
 export default function PaymentsTable() {
+  const [paymentToEdit, setPaymentToEdit] = useState<Payment | undefined>();
+  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
 
+  const { data } = useQuery({
+    queryKey: ['payments'],
+    queryFn: getPayments
+  });
 
-const { data } = useQuery({
-  queryKey: ['payments'],
-  queryFn: getPayments
-})
+  console.log("payments data", data);
 
-console.log("payments data", data)
+  const handleEdit = (payment: Payment) => {
+    setPaymentToEdit(payment);
+    setIsEditDialogOpen(true);
+  };
+
+  const handleEditComplete = () => {
+    setPaymentToEdit(undefined);
+    setIsEditDialogOpen(false);
+  };
+
+  
+  const columns = createColumns(handleEdit);
 
   return (
-    <div className="p-8 min-h-screen w-full  ">
+    <div className="p-8 min-h-screen w-full">
       <div className="max-w-7xl mx-auto mt-10 p-8 shadow-md rounded-2xl bg-zinc-50">
-        <div className="flex flex-wrap justify-between items-center mb-4 border-b border-zinc-700/60 pb-2">
+        <div className="flex flex-wrap justify-between items-center mb-4 pb-2">
           <h2 className="text-xl font-bold tracking-wide bg-gradient-to-r text-black">
             Payments
           </h2>
           <PaymentsEnquiry />
+        </div>
+
+        {isEditDialogOpen && paymentToEdit && (
+          <PaymentsEnquiry 
+            key={`edit-${paymentToEdit.id}`} 
+            paymentToEdit={{
+              id: paymentToEdit.id,
+              name: paymentToEdit.name,
+              amount: paymentToEdit.amount,
+              remarks: paymentToEdit.remarks
+            }}
+            isEdit={true}
+            onEditComplete={handleEditComplete}
+          />
+        )}
+
+        <div className="flex flex-wrap justify-between items-center mb-4 border-b border-zinc-700/60 pb-2">
         </div>
 
         <div className="flex flex-wrap justify-between items-center mb-3 gap-3 text-sm">
@@ -53,16 +79,18 @@ console.log("payments data", data)
             <input
               type="text"
               placeholder="Type to search..."
-              className="border border-zinc-400 rounded-lg px-2 py-1 bg-zinc-400 placeholder-zinc-900  focus:ring-2 focus:ring-purple-500 focus:outline-none text-sm transition-all"
+              className="border border-zinc-400 rounded-lg px-2 py-1 bg-zinc-400 placeholder-zinc-900 focus:ring-2 focus:ring-purple-500 focus:outline-none text-sm transition-all"
             />
           </div>
         </div>
 
-     {data && <DataTable
+        {data && (
+          <DataTable
             columns={columns}
             data={data}
             enablePagination={true}
-          />}
+          />
+        )}
       </div>
     </div>
   );

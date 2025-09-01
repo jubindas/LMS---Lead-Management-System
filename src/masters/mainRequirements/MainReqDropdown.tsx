@@ -21,9 +21,11 @@ import {
 } from "@/components/ui/dialog";
 
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+
 import { toast } from "sonner";
 
 import { deleteMainReq } from "@/services/apiMainCategories";
+
 import MainRequirementsForm from "@/components/MainRequirementsForm";
 
 interface MainReqDropdownProps {
