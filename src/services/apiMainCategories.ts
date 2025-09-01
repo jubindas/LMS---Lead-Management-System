@@ -26,7 +26,15 @@ export async function createMainCategory(categoryData: { name: string; descripti
 
 
 
+export async function updateMainCategory(id: string, categoryData: { name?: string; description?: string | null }) {
+  const response = await axios.put(`${API_BASE_URL}/main-categories/${id}`, categoryData);
 
+  if (response.status !== 200) {
+    throw new Error("Failed to update main category");
+  }
+
+  return response.data;
+}
 
 export async function deleteMainReq(id: string) {
   const response = await axios.delete(`${API_BASE_URL}/main-categories/${id}`);

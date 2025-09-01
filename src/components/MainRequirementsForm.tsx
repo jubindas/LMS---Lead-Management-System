@@ -1,87 +1,150 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
-import { FaPlus } from "react-icons/fa";
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogHeader,
   DialogTitle,
+  DialogDescription,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { FaPlus } from "react-icons/fa";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { createMainCategory, updateMainCategory } from "@/services/apiMainCategories";
 import { toast } from "sonner";
-import { createMainCategory } from "@/services/apiMainCategories";
 
-export default function MainRequirementsForm() {
+interface MainRequirementsFormProps {
+  open?: boolean;
+  setOpen?: (value: boolean) => void;
+  mode?: "create" | "edit";
+  mainCategory?: { id: string; name: string; description?: string };
+}
+
+export default function MainRequirementsForm({
+  open: externalOpen,
+  setOpen: externalSetOpen,
+  mode = "create",
+  mainCategory,
+}: MainRequirementsFormProps) {
   const [formData, setFormData] = useState({
-    categoryName: "",
+    name: "",
     description: "",
   });
 
-  const [open, setOpen] = useState(false);
+  const [internalOpen, setInternalOpen] = useState(false);
+  const open = externalOpen !== undefined ? externalOpen : internalOpen;
+  const setOpen = externalSetOpen || setInternalOpen;
+
   const queryClient = useQueryClient();
 
-  const createMainCategoryMutation = useMutation({
+  // Sync form data for edit mode
+  useEffect(() => {
+    if (mode === "edit" && mainCategory) {
+      setFormData({
+        name: mainCategory.name || "",
+        description: mainCategory.description || "",
+      });
+    } else {
+      setFormData({ name: "", description: "" });
+    }
+  }, [mode, mainCategory, open]);
+
+  // Mutation for creating a new category
+  const createMutation = useMutation({
     mutationFn: (newCategory: { name: string; description?: string | null }) =>
       createMainCategory(newCategory),
     onSuccess: () => {
-      toast("Main category created successfully!");
       queryClient.invalidateQueries({ queryKey: ["mainCategories"] });
-      setFormData({ categoryName: "", description: "" });
-      setOpen(false);
+      toast("Main category created successfully!");
+      resetForm();
     },
     onError: (error) => {
-      console.error("Failed to create main category:", error);
-      toast("Failed to create main category");
+      console.error("Error creating main category:", error);
+      toast("Failed to create main category.");
     },
   });
 
+  // Mutation for updating a category
+  const updateMutation = useMutation({
+    mutationFn: (updatedCategory: {
+      id: string;
+      name: string;
+      description?: string | null;
+    }) => updateMainCategory(updatedCategory.id, updatedCategory),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["mainCategories"] });
+      toast("Main category updated successfully!");
+      resetForm();
+    },
+    onError: (error) => {
+      console.error("Error updating main category:", error);
+      toast("Failed to update main category.");
+    },
+  });
+
+  // Reset form and close dialog
+  const resetForm = () => {
+    setFormData({ name: "", description: "" });
+    setOpen(false);
+  };
+
+  // Handle input change
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
+  // Handle form submit
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    createMainCategoryMutation.mutate({
-      name: formData.categoryName,
-      description: formData.description || null,
-    });
+    if (mode === "edit" && mainCategory) {
+      updateMutation.mutate({
+        id: mainCategory.id,
+        name: formData.name,
+        description: formData.description || null,
+      });
+    } else {
+      createMutation.mutate({
+        name: formData.name,
+        description: formData.description || null,
+      });
+    }
   };
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      {/* Trigger button */}
-      <DialogTrigger asChild>
-        <Button className="bg-zinc-500 hover:bg-zinc-600 text-white font-medium px-3 py-1.5 text-sm rounded-md shadow-md transition-transform transform hover:-translate-y-0.5 hover:shadow-lg">
-          <FaPlus />
-        </Button>
-      </DialogTrigger>
+      {mode === "create" && (
+        <DialogTrigger asChild>
+          <Button className="bg-zinc-500 hover:bg-zinc-600 text-white font-medium px-3 py-1.5 text-sm rounded-md shadow-md transition-transform transform hover:-translate-y-0.5 hover:shadow-lg">
+            <FaPlus />
+          </Button>
+        </DialogTrigger>
+      )}
 
-      {/* Dialog content */}
-      <DialogContent className="w-[90%] max-w-md md:max-w-lg lg:min-w-[40rem] max-h-[80vh] overflow-y-auto bg-zinc-100 rounded-lg shadow-2xl border border-zinc-300 p-4 md:p-6">
+      <DialogContent className="w-[90%] max-w-md md:max-w-xl lg:max-w-3xl max-h-[80vh] overflow-y-auto bg-zinc-100 rounded-lg shadow-2xl border border-zinc-300 p-4 md:p-6">
         <DialogHeader className="pb-4 border-b border-zinc-300">
           <DialogTitle className="text-lg md:text-2xl font-bold text-zinc-800">
-            Add Main Category
+            {mode === "edit" ? "EDIT MAIN CATEGORY" : "ADD NEW MAIN CATEGORY"}
           </DialogTitle>
           <DialogDescription className="text-sm md:text-base text-zinc-600">
-            Fill in the details for the main category.
+            {mode === "edit"
+              ? "Update the details for this main category."
+              : "Fill in the details for the new main category."}
           </DialogDescription>
         </DialogHeader>
 
         <form onSubmit={handleSubmit} className="mt-6 space-y-6">
-          {/* Category Name */}
+          {/* Main Category Name */}
           <div>
             <label className="block text-sm font-semibold text-zinc-700 mb-2">
-              Main Category Name <span className="text-zinc-500">(required)</span>
+              Main Category Name
             </label>
             <input
               type="text"
-              name="categoryName"
-              placeholder="Enter category name"
-              value={formData.categoryName}
+              name="name"
+              placeholder="Enter main category name"
+              value={formData.name}
               onChange={handleChange}
               required
               className="w-full border border-zinc-300 rounded-md px-3 py-2 bg-white text-zinc-800 shadow-sm focus:outline-none focus:ring-2 focus:ring-zinc-500 transition"
@@ -96,22 +159,24 @@ export default function MainRequirementsForm() {
             </label>
             <textarea
               name="description"
-              placeholder="Enter description (optional)"
+              placeholder="Enter description"
               value={formData.description}
               onChange={handleChange}
-              rows={3}
+              rows={4}
               className="w-full border border-zinc-300 rounded-md px-3 py-2 bg-white text-zinc-800 shadow-sm resize-none focus:outline-none focus:ring-2 focus:ring-zinc-500 transition"
             />
           </div>
 
-          {/* Action Buttons */}
+          {/* Buttons */}
           <div className="flex flex-col md:flex-row justify-end gap-3 pt-4 border-t border-zinc-300">
             <Button
               type="submit"
-              disabled={createMainCategoryMutation.isPending}
+              disabled={createMutation.isPending || updateMutation.isPending}
               className="w-full md:w-auto bg-zinc-500 hover:bg-zinc-600 text-white font-medium px-6 py-2 rounded-md shadow-lg transition-transform transform hover:-translate-y-1"
             >
-              {createMainCategoryMutation.isPending ? "Saving..." : "Save"}
+              {createMutation.isPending || updateMutation.isPending
+                ? "Saving..."
+                : "Save"}
             </Button>
           </div>
         </form>
