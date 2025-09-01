@@ -21,3 +21,14 @@ export async function createTodo(todoData: { name: string; content?: string | nu
 
   return response.data;
 }
+
+
+export async function deleteTodo(id: string) {
+  const response = await axios.delete(`${API_BASE_URL}/todos/${id}`);
+
+  if (response.status !== 200 && response.status !== 204) {
+    throw new Error("Failed to delete todo");
+  }
+
+  return response.data;
+}

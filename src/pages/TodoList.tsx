@@ -1,14 +1,21 @@
 import { useState } from "react";
+
 import { ListTodo } from "lucide-react";
+
 import { Button } from "@/components/ui/button";
+
 import { DataTable } from "@/components/data-table";
+
 import { columns } from "../table-columns/todo-columns";
+
 import { getTodos , createTodo} from "@/services/apiTodo";
-import { useQuery, useMutation, QueryClient } from "@tanstack/react-query";
+
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+
 import { toast } from "sonner";
 
 export default function TodoList() {
-  const queryClient = new QueryClient();
+   const queryClient = useQueryClient();
   const [newTaskName, setNewTaskName] = useState("");
   const [newTaskContent, setNewTaskContent] = useState("");
 
@@ -41,7 +48,10 @@ const createTodoMutation = useMutation({
     queryFn: getTodos,
   });
 
-  console.log("Fetched todos:", todoData);
+  const sortedTodos = todoData
+    ? [...todoData].sort((a, b) => a.id - b.id)
+    : [];
+
 
   return (
     <div className="min-h-screen text-white font-['Poppins'] p-4">
@@ -81,7 +91,7 @@ const createTodoMutation = useMutation({
             {todoData && (
               <DataTable
                 columns={columns}
-                data={todoData}
+                data={sortedTodos}
                 enablePagination={true}
               />
             )}
