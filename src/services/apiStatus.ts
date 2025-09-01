@@ -2,6 +2,9 @@ import { API_BASE_URL } from "@/lib/url";
 
 import axios from "axios";
 
+
+
+
 export async function getStatus() {
   const response = await axios.get(`${API_BASE_URL}/statuses`);
 
@@ -12,6 +15,9 @@ export async function getStatus() {
   return response.data.data.data;
 }
 
+
+
+
 export async function createStatus(status: { name: string; description?: string | null }) {
   const response = await axios.post(`${API_BASE_URL}/statuses`, status);
 
@@ -21,6 +27,21 @@ export async function createStatus(status: { name: string; description?: string 
 
   return response.data;
 }
+
+
+
+
+export async function updateStatus(id: string, status: { name: string; description?: string | null }) {
+  const response = await axios.put(`${API_BASE_URL}/statuses/${id}`, status);
+
+  if (response.status !== 200) {
+    throw new Error("Failed to update status");
+  }
+
+  return response.data;
+}
+
+
 
 
 export async function deleteStatus(id: string) {

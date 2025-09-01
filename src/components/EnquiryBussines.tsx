@@ -46,7 +46,7 @@ export default function EnquiryBusiness({
   useEffect(() => {
     if (mode === "edit" && business) {
       setFormData({
-        name: business.name,
+        name: business.name || "",
         description: business.description || "",
       });
     } else {

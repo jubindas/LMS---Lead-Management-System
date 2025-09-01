@@ -76,7 +76,6 @@ export default function BusinessActionDropdown({
           </DropdownMenuLabel>
           <DropdownMenuSeparator className="bg-zinc-800" />
 
-          {/* Edit Button */}
           <Button
             variant="ghost"
             className="flex items-center gap-2 w-full justify-start text-sm text-zinc-200"
@@ -86,7 +85,6 @@ export default function BusinessActionDropdown({
             Edit
           </Button>
 
-          {/* Delete Button */}
           <Dialog open={openDialog} onOpenChange={setOpenDialog}>
             <DialogTrigger asChild>
               <Button
