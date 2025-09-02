@@ -2,7 +2,6 @@ import type { ColumnDef } from "@tanstack/react-table";
 import type { Payment } from "../table-types/payment-types";
 import PaymentActionDropdown from "./PaymentActionDropdown";
 
-// Create a function that returns columns with the onEdit handler
 export const createColumns = (onEdit: (payment: Payment) => void): ColumnDef<Payment>[] => [
   {
     accessorKey: "id",
@@ -46,7 +45,7 @@ export const createColumns = (onEdit: (payment: Payment) => void): ColumnDef<Pay
           id={payment.id}
           name={payment.name}
           amount={payment.amount}
-          onEdit={() => onEdit(payment)} // Now onEdit is properly passed
+          onEdit={() => onEdit(payment)} 
         />
       );
     },

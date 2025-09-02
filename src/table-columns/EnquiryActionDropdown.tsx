@@ -40,7 +40,7 @@ export default function EnquiryActionDropdown({ id }: EnquiryActionDropdownProps
       toast.success("Enquiry deleted successfully!");
       setOpenDialog(false);
     },
-    onError: (error: any) => {
+    onError: (error) => {
       console.error("Failed to delete enquiry:", error);
       toast.error("Failed to delete enquiry");
     },
@@ -62,7 +62,7 @@ export default function EnquiryActionDropdown({ id }: EnquiryActionDropdownProps
         <DropdownMenuLabel className="text-xs text-zinc-400">Actions</DropdownMenuLabel>
         <DropdownMenuSeparator className="bg-zinc-700" />
 
-        {/* View Details */}
+     
         <DropdownMenuItem
           asChild
           className="flex items-center gap-2 text-sm text-zinc-100 rounded-lg px-2 py-1.5 hover:bg-zinc-800 hover:text-zinc-100 focus:bg-zinc-800"
@@ -73,7 +73,7 @@ export default function EnquiryActionDropdown({ id }: EnquiryActionDropdownProps
           </Link>
         </DropdownMenuItem>
 
-        {/* Follow Up */}
+     
         <DropdownMenuItem
           asChild
           className="flex items-center gap-2 text-sm text-zinc-100 rounded-lg px-2 py-1.5 hover:bg-zinc-800 hover:text-zinc-100 focus:bg-zinc-800"
@@ -84,7 +84,7 @@ export default function EnquiryActionDropdown({ id }: EnquiryActionDropdownProps
           </Link>
         </DropdownMenuItem>
 
-        {/* Edit */}
+     
         <DropdownMenuItem
           asChild
           className="flex items-center gap-2 text-sm text-zinc-100 rounded-lg px-2 py-1.5 hover:bg-zinc-800 hover:text-zinc-100 focus:bg-zinc-800"
@@ -95,7 +95,7 @@ export default function EnquiryActionDropdown({ id }: EnquiryActionDropdownProps
           </Link>
         </DropdownMenuItem>
 
-        {/* Delete */}
+     
         <Dialog open={openDialog} onOpenChange={setOpenDialog}>
           <DialogTrigger asChild>
             <Button
