@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { MoreHorizontal, Trash2, Pencil, CheckCircle2 } from "lucide-react";
+import { MoreHorizontal, Trash2, CheckCircle2 } from "lucide-react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 
@@ -33,8 +33,6 @@ type DashboardTodoTodayDropdownProps = {
 export default function DashboardTodoTodayDropdown({
   id,
   name,
-  content,
-  onEdit,
 }: DashboardTodoTodayDropdownProps) {
   const queryClient = useQueryClient();
   const [openDialog, setOpenDialog] = useState(false);
@@ -79,14 +77,7 @@ export default function DashboardTodoTodayDropdown({
         <DropdownMenuSeparator className="bg-zinc-700" />
 
         
-        <Button
-          variant="ghost"
-          className="flex items-center gap-2 w-full justify-start text-sm text-zinc-100"
-          onClick={() => onEdit({ id, name, content })}
-        >
-          <Pencil className="h-4 w-4 text-blue-400" />
-          Edit
-        </Button>
+        
 
     
         <Button

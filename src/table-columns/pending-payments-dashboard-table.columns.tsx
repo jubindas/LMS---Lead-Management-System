@@ -1,92 +1,29 @@
 import type { ColumnDef } from "@tanstack/react-table";
-
-import { Button } from "@/components/ui/button";
-
-import { MoreHorizontal, CheckCircle2, PlusCircle } from "lucide-react";
-
-import { Link } from "react-router-dom";
-
-import {
-  DropdownMenu,
-  DropdownMenuTrigger,
-  DropdownMenuContent,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuItem,
-} from "@/components/ui/dropdown-menu";
-
 import type { Payment } from "@/table-types/pending-payments-dashboard-table-types";
+
+import DashboardPendingPaymentDropdown from "@/table-columns/DashboardPendingPaymentDropdown";
 
 export const paymentColumns: ColumnDef<Payment>[] = [
   { accessorKey: "id", header: "ID" },
   {
     accessorKey: "name",
     header: "Lead Name",
-    cell: ({ row }) => {
-      return <span className="text-black">{row.original.payment.name}</span>;
-    },
+    cell: ({ row }) => (
+      <span className="text-black">{row.original.payment.name}</span>
+    ),
   },
   { accessorKey: "total_amount", header: "Total Amount" },
   {
     accessorKey: "next_payment_date",
     header: "Next Payment Date",
     cell: ({ row }) => {
-      const payment: Payment = row.original;
-      const nextPaymentDate = payment.next_payment_date;
-      const date = new Date(nextPaymentDate);
+      const date = new Date(row.original.next_payment_date);
       return <span className="text-black">{date.toLocaleDateString()}</span>;
     },
   },
   {
     id: "actions",
     header: "Actions",
-    cell: ({ row }) => {
-      const payment: Payment = row.original;
-      const remaining =
-        (payment.total_amount ?? 0) - (payment.paid_amount ?? 0);
-
-      if (remaining <= 0) {
-        return <span className="text-gray-400">No actions</span>;
-      }
-
-      return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0">
-              <MoreHorizontal className="h-4 w-4 text-zinc-900" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent
-            align="end"
-            className="w-48 bg-zinc-900 text-white rounded-xl shadow-lg"
-          >
-            <DropdownMenuLabel className="text-xs text-zinc-400">
-              Actions
-            </DropdownMenuLabel>
-            <DropdownMenuSeparator className="bg-zinc-800" />
-
-            <DropdownMenuItem asChild>
-              <Link
-                to={`/payment-follow-up-dashboard/${payment.id}`}
-                className="flex items-center w-full gap-2 text-red-400"
-              >
-                <PlusCircle className="h-4 w-4" />
-                Add Follow Up
-              </Link>
-            </DropdownMenuItem>
-
-            <DropdownMenuItem
-              onClick={() => {
-                console.log(`${payment.name} payment marked as done`);
-              }}
-              className="flex items-center gap-2 text-green-400"
-            >
-              <CheckCircle2 className="h-4 w-4" />
-              Mark as Done
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      );
-    },
+    cell: ({ row }) => < DashboardPendingPaymentDropdown payment={row.original} />,
   },
 ];

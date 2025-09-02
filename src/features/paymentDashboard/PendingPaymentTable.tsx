@@ -1,6 +1,3 @@
-
-
-
 import {paymentColumns} from "@/table-columns/pending-payments-dashboard-table.columns";
 
 import { DataTable } from "@/components/data-table";

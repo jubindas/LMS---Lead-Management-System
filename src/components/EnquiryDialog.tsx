@@ -1,29 +1,53 @@
 import { useState, useRef, useCallback } from "react";
+
 import { Button } from "@/components/ui/button";
+
 import { FaBuilding, FaPhone, FaEnvelope, FaMoneyBill } from "react-icons/fa";
+
 import { MdLocationOn, MdBusiness } from "react-icons/md";
+
 import { BsFillFileEarmarkTextFill } from "react-icons/bs";
+
 import { AiOutlineCheckCircle } from "react-icons/ai";
+
 import { RiUserVoiceFill } from "react-icons/ri";
+
 import EnquiryBussines from "@/components/EnquiryBussines";
+
 import EnquiryLocation from "@/components/EnquiryLocation";
+
 import MainRequirementsForm from "@/components/MainRequirementsForm";
+
 import EnquirySource from "@/components/EnquirySource";
+
 import EnquiryStatus from "@/components/EnquiryStatus";
+
 import SubRequirementForm from "@/components/SubRequirementForm.tsx";
+
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+
 import { getBusiness } from "@/services/apiBusiness";
+
 import { getStatus } from "@/services/apiStatus";
+
 import { getLocation } from "@/services/apiLocation";
+
 import { getSource } from "@/services/apiSource";
+
 import { getMainCategories } from "@/services/apiMainCategories";
+
 import { createEnquiry } from "@/services/apiEnquiries";
+
+import { useNavigate } from "react-router-dom";
+
 import {
   Popover,
   PopoverTrigger,
   PopoverContent,
 } from "@/components/ui/popover";
+
 import { Check, ChevronDown } from "lucide-react";
+
 import { toast } from "sonner";
 
 const initialFormData = {
@@ -44,6 +68,8 @@ const initialFormData = {
 };
 
 export default function EnquiryForm() {
+  const navigate = useNavigate();
+
   const queryClient = useQueryClient();
   
   const formDataRef = useRef(initialFormData);
@@ -58,6 +84,7 @@ export default function EnquiryForm() {
       toast("Enquiry created successfully!");
       formDataRef.current = { ...initialFormData };
       triggerUpdate();
+      navigate("/enquiry");
     },
     onError: (error) => {
       console.error("Error creating enquiry:", error);

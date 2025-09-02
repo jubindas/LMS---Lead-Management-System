@@ -4,6 +4,8 @@ import PaymentFollowUpForm from "@/components/PaymentFollowUpFormDashBoard";
 
 import type { ColumnDef } from "@tanstack/react-table";
 
+import { useParams } from "react-router-dom";
+
 type Payment = {
   id: number;
   leadName?: string;
@@ -33,6 +35,10 @@ const initialPaymentData: Payment[] = [
 ];
 
 export default function PaymentFollowUpDashboard() {
+
+    const { id } = useParams();
+
+    console.log("Route parameter id:", id);
   const columns: ColumnDef<Payment>[] = [
     { accessorKey: "leadName", header: "Lead Name" },
     { accessorKey: "totalAmount", header: "Total Amount" },
