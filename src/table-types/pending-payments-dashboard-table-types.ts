@@ -6,6 +6,5 @@ export type Payment = {
   next_payment_date: string;
   payment: {
     name: string;
-
   }
 };

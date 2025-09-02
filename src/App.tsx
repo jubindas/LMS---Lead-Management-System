@@ -74,7 +74,7 @@ const router = createBrowserRouter([
         ),
       },
       {
-        path: "home/bussines",
+        path: "/bussines",
         element: (
           <Suspense fallback={<Loading />}>
             <BusinessTypeTable />
@@ -82,7 +82,7 @@ const router = createBrowserRouter([
         ),
       },
       {
-        path: "home/status",
+        path: "/status",
         element: (
           <Suspense fallback={<Loading />}>
             <StatusTypeTable />

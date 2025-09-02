@@ -1,5 +1,7 @@
 import { Button } from "@/components/ui/button";
+
 import { MoreHorizontal, CheckCircle2, PlusCircle } from "lucide-react";
+
 import { Link } from "react-router-dom";
 
 import {
@@ -18,12 +20,6 @@ type PaymentActionCellProps = {
 };
 
 export default function DashboardPendingPaymentDropdown({ payment }: PaymentActionCellProps) {
-  const remaining = (payment.total_amount ?? 0) - (payment.paid_amount ?? 0);
-
-  if (remaining <= 0) {
-    return <span className="text-gray-400">No actions</span>;
-  }
-
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -35,12 +31,9 @@ export default function DashboardPendingPaymentDropdown({ payment }: PaymentActi
         align="end"
         className="w-48 bg-zinc-900 text-white rounded-xl shadow-lg"
       >
-        <DropdownMenuLabel className="text-xs text-zinc-400">
-          Actions
-        </DropdownMenuLabel>
+        <DropdownMenuLabel className="text-xs text-zinc-400">Actions</DropdownMenuLabel>
         <DropdownMenuSeparator className="bg-zinc-800" />
 
-     
         <DropdownMenuItem asChild>
           <Link
             to={`/payment-follow-up-dashboard/${payment.id}`}
@@ -51,10 +44,9 @@ export default function DashboardPendingPaymentDropdown({ payment }: PaymentActi
           </Link>
         </DropdownMenuItem>
 
-        
         <DropdownMenuItem
           onClick={() => {
-            console.log(`${payment.name} payment marked as done`);
+            console.log(`${payment.name ?? "Payment"} marked as done`);
           }}
           className="flex items-center gap-2 text-green-400"
         >
@@ -65,3 +57,4 @@ export default function DashboardPendingPaymentDropdown({ payment }: PaymentActi
     </DropdownMenu>
   );
 }
+

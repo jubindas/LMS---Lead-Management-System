@@ -35,8 +35,8 @@ const items = [
     title: "Masters",
     icon: Briefcase,
     children: [
-      { title: "Bussiness Type", url: "/home/bussines" },
-      { title: "Status Type", url: "/home/status" },
+      { title: "Bussiness Type", url: "/bussines" },
+      { title: "Status Type", url: "/status" },
       { title: "Main Category", url: "/main-category" },
       { title: "Sub Category", url: "/sub-category" },
       { title: "Source", url: "/source" },

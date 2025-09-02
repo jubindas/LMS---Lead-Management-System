@@ -1,29 +1,40 @@
 import type { ColumnDef } from "@tanstack/react-table";
-import type { Payment } from "@/table-types/pending-payments-dashboard-table-types";
+import DashboardPendingPaymentDropdown from "./DashboardPendingPaymentDropdown";
 
-import DashboardPendingPaymentDropdown from "@/table-columns/DashboardPendingPaymentDropdown";
+export type Payment = {
+  id: string;
+  name?: string;
+  amount: number;
+  remarks: string;
+  total_amount?: number;
+  paid_amount?: number;
+};
 
 export const paymentColumns: ColumnDef<Payment>[] = [
-  { accessorKey: "id", header: "ID" },
   {
-    accessorKey: "name",
-    header: "Lead Name",
-    cell: ({ row }) => (
-      <span className="text-black">{row.original.payment.name}</span>
-    ),
+    header: "ID",
+    accessorKey: "id",
+    cell: ({ row }) => <span>{row.original.id}</span>,
   },
-  { accessorKey: "total_amount", header: "Total Amount" },
   {
-    accessorKey: "next_payment_date",
-    header: "Next Payment Date",
-    cell: ({ row }) => {
-      const date = new Date(row.original.next_payment_date);
-      return <span className="text-black">{date.toLocaleDateString()}</span>;
-    },
+    header: " Name",
+    accessorKey: "name",
+    cell: ({ row }) => <span>{row.original.name || "N/A"}</span>,
+  },
+  {
+    header: "Amount",
+    accessorKey: "amount",
+    cell: ({ row }) => <span>₹{row.original.amount}</span>,
+  },
+ 
+  {
+    header: "Remarks",
+    accessorKey: "remarks",
+    cell: ({ row }) => <span>{row.original.remarks || "N/A"}</span>,
   },
   {
     id: "actions",
     header: "Actions",
-    cell: ({ row }) => < DashboardPendingPaymentDropdown payment={row.original} />,
+    cell: ({ row }) => <DashboardPendingPaymentDropdown payment={row.original} />,
   },
 ];
