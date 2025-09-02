@@ -1,7 +1,11 @@
 import { useState } from "react";
+
 import { Button } from "@/components/ui/button";
+
 import { MoreHorizontal, Trash2, Pencil, CheckCircle2 } from "lucide-react";
+
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+
 import { toast } from "sonner";
 
 import {
@@ -21,7 +25,7 @@ import {
   DialogFooter,
 } from "@/components/ui/dialog";
 
-import { deleteTodo } from "@/services/apiTodo";
+import { deleteTodo, markAsDoneTodo } from "@/services/apiTodo";
 
 type TodoActionDropdownProps = {
   id: string;
@@ -30,7 +34,12 @@ type TodoActionDropdownProps = {
   onEdit: (todo: { id: string; name: string; content?: string | null }) => void;
 };
 
-export default function TodoActionDropdown({ id, name, content, onEdit }: TodoActionDropdownProps) {
+export default function TodoActionDropdown({
+  id,
+  name,
+  content,
+  onEdit,
+}: TodoActionDropdownProps) {
   const queryClient = useQueryClient();
   const [openDialog, setOpenDialog] = useState(false);
 
@@ -42,6 +51,15 @@ export default function TodoActionDropdown({ id, name, content, onEdit }: TodoAc
       setOpenDialog(false);
     },
     onError: () => toast("Failed to delete todo"),
+  });
+
+  const markDoneMutation = useMutation({
+    mutationFn: (todoId: string) => markAsDoneTodo(todoId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["todos"] });
+      toast.success(`Todo "${name}" marked as done!`);
+    },
+    onError: () => toast.error("Failed to mark todo as done"),
   });
 
   return (
@@ -58,10 +76,11 @@ export default function TodoActionDropdown({ id, name, content, onEdit }: TodoAc
           align="end"
           className="w-44 rounded-xl bg-zinc-900 border border-zinc-700 shadow-lg"
         >
-          <DropdownMenuLabel className="text-xs text-zinc-400">Actions</DropdownMenuLabel>
+          <DropdownMenuLabel className="text-xs text-zinc-400">
+            Actions
+          </DropdownMenuLabel>
           <DropdownMenuSeparator className="bg-zinc-700" />
 
-          {/* Edit Option */}
           <Button
             variant="ghost"
             className="flex items-center gap-2 w-full justify-start text-sm text-zinc-100"
@@ -71,17 +90,16 @@ export default function TodoActionDropdown({ id, name, content, onEdit }: TodoAc
             Edit
           </Button>
 
-          {/* Mark as Done Option */}
           <Button
             variant="ghost"
             className="flex items-center gap-2 w-full justify-start text-sm text-green-400"
-            onClick={() => toast.success(`Todo "${name}" marked as done!`)}
+            disabled={markDoneMutation.isPending}
+            onClick={() => markDoneMutation.mutate(id)}
           >
             <CheckCircle2 className="h-4 w-4" />
-            Mark as Done
+            {markDoneMutation.isPending ? "Marking..." : "Mark as Done"}
           </Button>
 
-          {/* Delete Option */}
           <Dialog open={openDialog} onOpenChange={setOpenDialog}>
             <DialogTrigger asChild>
               <Button
@@ -98,7 +116,8 @@ export default function TodoActionDropdown({ id, name, content, onEdit }: TodoAc
                 <DialogTitle>Delete Todo</DialogTitle>
               </DialogHeader>
               <p className="text-sm text-black my-2">
-                Are you sure you want to delete this todo? This action cannot be undone.
+                Are you sure you want to delete this todo? This action cannot be
+                undone.
               </p>
               <DialogFooter className="flex justify-end gap-2">
                 <Button

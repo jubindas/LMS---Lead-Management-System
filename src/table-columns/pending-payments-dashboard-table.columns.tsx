@@ -1,7 +1,11 @@
 import type { ColumnDef } from "@tanstack/react-table";
+
 import { Button } from "@/components/ui/button";
+
 import { MoreHorizontal, CheckCircle2, PlusCircle } from "lucide-react";
+
 import { Link } from "react-router-dom";
+
 import {
   DropdownMenu,
   DropdownMenuTrigger,
@@ -10,6 +14,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuItem,
 } from "@/components/ui/dropdown-menu";
+
 import type { Payment } from "@/table-types/pending-payments-dashboard-table-types";
 
 export const paymentColumns: ColumnDef<Payment>[] = [

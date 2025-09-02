@@ -22,6 +22,7 @@ export default function Enquiries() {
     queryKey:["enquiries"],
     queryFn: getEnquiries
   })
+  
 
 
   const handleStageUpdate = (sl: number, newStage: string) => {

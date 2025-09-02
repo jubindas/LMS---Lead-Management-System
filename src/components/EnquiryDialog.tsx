@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef, useCallback } from "react";
 import { Button } from "@/components/ui/button";
 import { FaBuilding, FaPhone, FaEnvelope, FaMoneyBill } from "react-icons/fa";
 import { MdLocationOn, MdBusiness } from "react-icons/md";
@@ -26,49 +26,38 @@ import {
 import { Check, ChevronDown } from "lucide-react";
 import { toast } from "sonner";
 
-
+const initialFormData = {
+  companyName: "",
+  phone: "",
+  whatsappPrimary: false,
+  altNumber: "",
+  whatsappAlt: false,
+  email: "",
+  businessType: "",
+  status: "",
+  mainCategory: "",
+  subCategory: "",
+  location: "",
+  source: "",
+  budget: "",
+  remarks: "",
+};
 
 export default function EnquiryForm() {
   const queryClient = useQueryClient();
-
-  const [formData, setFormData] = useState({
-    companyName: "",
-    phone: "",
-    whatsappPrimary: false,
-    altNumber: "",
-    whatsappAlt: false,
-    email: "",
-    businessType: "",
-    status: "",
-    mainCategory: "",
-    subCategory: "",
-    location: "",
-    source: "",
-    budget: "",
-    remarks: "",
-  });
+  
+  const formDataRef = useRef(initialFormData);
+  const [, forceUpdate] = useState({});
+  
+  const triggerUpdate = useCallback(() => forceUpdate({}), []);
 
   const createEnquiryMutation = useMutation({
     mutationFn: createEnquiry,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["enquiries"] });
       toast("Enquiry created successfully!");
-      setFormData({
-        companyName: "",
-        phone: "",
-        whatsappPrimary: false,
-        altNumber: "",
-        whatsappAlt: false,
-        email: "",
-        businessType: "",
-        status: "",
-        mainCategory: "",
-        subCategory: "",
-        location: "",
-        source: "",
-        budget: "",
-        remarks: "",
-      });
+      formDataRef.current = { ...initialFormData };
+      triggerUpdate();
     },
     onError: (error) => {
       console.error("Error creating enquiry:", error);
@@ -76,7 +65,7 @@ export default function EnquiryForm() {
     },
   });
 
-  const handleChange = (
+  const handleChange = useCallback((
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     const target = e.target;
@@ -87,72 +76,86 @@ export default function EnquiryForm() {
 
     const name = target.name;
 
-    setFormData((prev) => ({
-      ...prev,
+    formDataRef.current = {
+      ...formDataRef.current,
       [name]: value,
-    }));
-  };
+    };
+    triggerUpdate();
+  }, [triggerUpdate]);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleDropdownChange = useCallback((field: string, value: string) => {
+    formDataRef.current = {
+      ...formDataRef.current,
+      [field]: value,
+    };
+    triggerUpdate();
+  }, [triggerUpdate]);
+
+  const handleSubmit = useCallback((e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!formData.companyName.trim() || !formData.phone.trim()) {
+    if (!formDataRef.current.companyName.trim() || !formDataRef.current.phone.trim()) {
       alert("Company Name and Phone are required fields.");
       return;
     }
 
     const enquiryData = {
-      company_name: formData.companyName.trim(),
-      primary_phone_number: formData.phone.trim(),
-      primary_phone_number_has_whatsapp: formData.whatsappPrimary,
-      alternative_phone_number: formData.altNumber.trim() || null,
-      alternative_phone_number_has_whatsapp: formData.whatsappAlt,
-      email: formData.email.trim() || null,
-      budget: formData.budget ? parseFloat(formData.budget) : null,
-      remarks: formData.remarks.trim() || null,
-      location: formData.location || null,
-      status: formData.status || null,
-      source: formData.source || null,
-      main_category: formData.mainCategory || null,
-      sub_category: formData.subCategory || null,
-      business_type: formData.businessType || null,
+      company_name: formDataRef.current.companyName.trim(),
+      primary_phone_number: formDataRef.current.phone.trim(),
+      primary_phone_number_has_whatsapp: formDataRef.current.whatsappPrimary,
+      alternative_phone_number: formDataRef.current.altNumber.trim() || null,
+      alternative_phone_number_has_whatsapp: formDataRef.current.whatsappAlt,
+      email: formDataRef.current.email.trim() || null,
+      budget: formDataRef.current.budget ? parseFloat(formDataRef.current.budget) : null,
+      remarks: formDataRef.current.remarks.trim() || null,
+      location: formDataRef.current.location || null,
+      status: formDataRef.current.status || null,
+      source: formDataRef.current.source || null,
+      main_category: formDataRef.current.mainCategory || null,
+      sub_category: formDataRef.current.subCategory || null,
+      business_type: formDataRef.current.businessType || null,
     };
 
     createEnquiryMutation.mutate(enquiryData);
-  };
+  }, [createEnquiryMutation]);
 
   const { data: businessTypes, isLoading: isBusinessLoading } = useQuery({
     queryKey: ["businessTypes"],
     queryFn: getBusiness,
+    staleTime: 5 * 60 * 1000, // 5 minutes
   });
 
   const { data: statusTypes, isLoading: isStatusLoading } = useQuery({
     queryKey: ["statusTypes"],
     queryFn: getStatus,
+    staleTime: 5 * 60 * 1000,
   });
 
   const { data: locationTypes, isLoading: isLocationLoading } = useQuery({
     queryKey: ["locations"],
     queryFn: getLocation,
+    staleTime: 5 * 60 * 1000,
   });
 
   const { data: sourcesType, isLoading: isSourcesLoading } = useQuery({
     queryKey: ["sources"],
     queryFn: getSource,
+    staleTime: 5 * 60 * 1000,
   });
 
-  const { data: mainCategories, isLoading: isMainCategoriesLoading } = useQuery(
-    {
-      queryKey: ["mainCategories"],
-      queryFn: getMainCategories,
-    }
-  );
+  const { data: mainCategories, isLoading: isMainCategoriesLoading } = useQuery({
+    queryKey: ["mainCategories"],
+    queryFn: getMainCategories,
+    staleTime: 5 * 60 * 1000,
+  });
 
   const allSubCategories =
     mainCategories &&
     mainCategories.flatMap(
       (mainCat: { sub_categories: unknown[] }) => mainCat.sub_categories
     );
+
+  const formData = formDataRef.current;
 
   return (
     <div className="p-6 max-w-6xl mt-7 mx-auto bg-zinc-50 rounded-2xl shadow-md space-y-6">
@@ -285,12 +288,7 @@ export default function EnquiryForm() {
                               ? "bg-zinc-300"
                               : ""
                           }`}
-                          onClick={() =>
-                            setFormData((prev) => ({
-                              ...prev,
-                              businessType: type.name,
-                            }))
-                          }
+                          onClick={() => handleDropdownChange("businessType", type.name)}
                         >
                           <span className="flex-1">{type.name}</span>
                           {formData.businessType === type.name && (
@@ -341,12 +339,7 @@ export default function EnquiryForm() {
                           className={`flex items-center w-120 px-3 py-2 bg-zinc-100 cursor-pointer hover:bg-zinc-200 ${
                             formData.location === type.name ? "bg-zinc-300" : ""
                           }`}
-                          onClick={() =>
-                            setFormData((prev) => ({
-                              ...prev,
-                              location: type.name,
-                            }))
-                          }
+                          onClick={() => handleDropdownChange("location", type.name)}
                         >
                           <span className="flex-1">{type.name}</span>
                           {formData.location === type.name && (
@@ -396,12 +389,7 @@ export default function EnquiryForm() {
                         className={`flex items-center w-120 px-3 py-2 bg-zinc-100 cursor-pointer hover:bg-zinc-200 ${
                           formData.status === type.name ? "bg-zinc-300" : ""
                         }`}
-                        onClick={() =>
-                          setFormData((prev) => ({
-                            ...prev,
-                            status: type.name,
-                          }))
-                        }
+                        onClick={() => handleDropdownChange("status", type.name)}
                       >
                         <span className="flex-1">{type.name}</span>
                         {formData.status === type.name && (
@@ -451,12 +439,7 @@ export default function EnquiryForm() {
                         className={`flex items-center w-120 px-3 py-2 bg-zinc-100 cursor-pointer hover:bg-zinc-200 ${
                           formData.source === type.name ? "bg-zinc-300" : ""
                         }`}
-                        onClick={() =>
-                          setFormData((prev) => ({
-                            ...prev,
-                            source: type.name,
-                          }))
-                        }
+                        onClick={() => handleDropdownChange("source", type.name)}
                       >
                         <span className="flex-1">{type.name}</span>
                         {formData.source === type.name && (
@@ -509,12 +492,7 @@ export default function EnquiryForm() {
                               ? "bg-zinc-300"
                               : ""
                           }`}
-                          onClick={() =>
-                            setFormData((prev) => ({
-                              ...prev,
-                              mainCategory: type.name,
-                            }))
-                          }
+                          onClick={() => handleDropdownChange("mainCategory", type.name)}
                         >
                           <span className="flex-1">{type.name}</span>
                           {formData.mainCategory === type.name && (
@@ -570,12 +548,7 @@ export default function EnquiryForm() {
                                 ? "bg-zinc-300"
                                 : ""
                             }`}
-                            onClick={() =>
-                              setFormData((prev) => ({
-                                ...prev,
-                                subCategory: sub.name,
-                              }))
-                            }
+                            onClick={() => handleDropdownChange("subCategory", sub.name)}
                           >
                             <span className="flex-1">{sub.name}</span>
                             {formData.subCategory === sub.name && (

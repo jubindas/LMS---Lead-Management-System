@@ -53,3 +53,18 @@ export async function deleteTodo(id: string) {
 
   return response.data;
 }
+
+
+
+
+export async function markAsDoneTodo(id: string) {
+  const response = await axios.patch(`${API_BASE_URL}/todos/${id}/toggle`, {
+    is_complete: true,
+  });
+
+  if (response.status !== 200) {
+    throw new Error("Failed to mark todo as done");
+  }
+
+  return response.data;
+}

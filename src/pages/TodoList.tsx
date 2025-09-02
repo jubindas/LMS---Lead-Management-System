@@ -51,6 +51,8 @@ export default function TodoList({ editTodo }: { editTodo?: (todo: { id: string;
 
   const sortedTodos = todoData ? [...todoData].sort((a, b) => a.id - b.id) : [];
 
+  console.log("Sorted Todos:", sortedTodos);
+
   const resetForm = () => {
     setNewTaskName("");
     setNewTaskContent("");
