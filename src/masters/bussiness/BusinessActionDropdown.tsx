@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-import { MoreHorizontal, Trash2, Pencil } from "lucide-react";
+import { MoreHorizontal, Trash2 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 
@@ -28,21 +28,21 @@ import { toast } from "sonner";
 import { deleteBusiness } from "@/services/apiBusiness";
 
 import EnquiryBusiness from "@/components/EnquiryBussines";
+import type { BusinessType } from "./business-types";
 
 interface BusinessActionDropdownProps {
-  id: string | number;
-  name?: string;
-  description?: string;
+  id: string;
+  rowData: BusinessType;
 }
 
 export default function BusinessActionDropdown({
   id,
-  name,
-  description,
-}: BusinessActionDropdownProps) { 
+  rowData,
+}: BusinessActionDropdownProps) {
   const queryClient = useQueryClient();
   const [openDialog, setOpenDialog] = useState(false);
-  const [openEditDialog, setOpenEditDialog] = useState(false);
+
+  console.log("the row datas are", rowData);
 
   const deleteMutation = useMutation({
     mutationFn: (businessId: string) => deleteBusiness(businessId),
@@ -76,13 +76,8 @@ export default function BusinessActionDropdown({
           </DropdownMenuLabel>
           <DropdownMenuSeparator className="bg-zinc-800" />
 
-          <Button
-            variant="ghost"
-            className="flex items-center gap-2 w-full justify-start text-sm text-zinc-200"
-            onClick={() => setOpenEditDialog(true)}
-          >
-            <Pencil className="h-4 w-4 text-blue-400" />
-            Edit
+          <Button variant="ghost">
+            <EnquiryBusiness mode="edit" business={rowData} />
           </Button>
 
           <Dialog open={openDialog} onOpenChange={setOpenDialog}>
@@ -122,15 +117,6 @@ export default function BusinessActionDropdown({
           </Dialog>
         </DropdownMenuContent>
       </DropdownMenu>
-
-      {openEditDialog && (
-        <EnquiryBusiness
-          open={openEditDialog}
-          setOpen={setOpenEditDialog}
-          mode="edit"
-          business={{ id, name: name || "", description: description || "" }}
-        />
-      )}
     </>
   );
 }

@@ -20,8 +20,6 @@ import MainRequirementsForm from "@/components/MainRequirementsForm";
 
 import EnquirySource from "@/components/EnquirySource";
 
-import EnquiryStatus from "@/components/EnquiryStatus";
-
 import SubRequirementForm from "@/components/SubRequirementForm.tsx";
 
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
@@ -38,7 +36,7 @@ import { getMainCategories } from "@/services/apiMainCategories";
 
 import { createEnquiry } from "@/services/apiEnquiries";
 
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 import {
   Popover,
@@ -49,6 +47,7 @@ import {
 import { Check, ChevronDown } from "lucide-react";
 
 import { toast } from "sonner";
+import StatusForm from "@/components/EnquiryStatus";
 
 const initialFormData = {
   companyName: "",
@@ -69,12 +68,14 @@ const initialFormData = {
 
 export default function EnquiryForm() {
   const navigate = useNavigate();
+  const { id } = useParams();
+  console.log("edited id", id);
 
   const queryClient = useQueryClient();
-  
+
   const formDataRef = useRef(initialFormData);
   const [, forceUpdate] = useState({});
-  
+
   const triggerUpdate = useCallback(() => forceUpdate({}), []);
 
   const createEnquiryMutation = useMutation({
@@ -92,59 +93,71 @@ export default function EnquiryForm() {
     },
   });
 
-  const handleChange = useCallback((
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    const target = e.target;
-    const value =
-      target instanceof HTMLInputElement && target.type === "checkbox"
-        ? target.checked
-        : target.value;
+  const handleChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+      const target = e.target;
+      const value =
+        target instanceof HTMLInputElement && target.type === "checkbox"
+          ? target.checked
+          : target.value;
 
-    const name = target.name;
+      const name = target.name;
 
-    formDataRef.current = {
-      ...formDataRef.current,
-      [name]: value,
-    };
-    triggerUpdate();
-  }, [triggerUpdate]);
+      formDataRef.current = {
+        ...formDataRef.current,
+        [name]: value,
+      };
+      triggerUpdate();
+    },
+    [triggerUpdate]
+  );
 
-  const handleDropdownChange = useCallback((field: string, value: string) => {
-    formDataRef.current = {
-      ...formDataRef.current,
-      [field]: value,
-    };
-    triggerUpdate();
-  }, [triggerUpdate]);
+  const handleDropdownChange = useCallback(
+    (field: string, value: string) => {
+      formDataRef.current = {
+        ...formDataRef.current,
+        [field]: value,
+      };
+      triggerUpdate();
+    },
+    [triggerUpdate]
+  );
 
-  const handleSubmit = useCallback((e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSubmit = useCallback(
+    (e: React.FormEvent) => {
+      e.preventDefault();
 
-    if (!formDataRef.current.companyName.trim() || !formDataRef.current.phone.trim()) {
-      alert("Company Name and Phone are required fields.");
-      return;
-    }
+      if (
+        !formDataRef.current.companyName.trim() ||
+        !formDataRef.current.phone.trim()
+      ) {
+        alert("Company Name and Phone are required fields.");
+        return;
+      }
 
-    const enquiryData = {
-      company_name: formDataRef.current.companyName.trim(),
-      primary_phone_number: formDataRef.current.phone.trim(),
-      primary_phone_number_has_whatsapp: formDataRef.current.whatsappPrimary,
-      alternative_phone_number: formDataRef.current.altNumber.trim() || null,
-      alternative_phone_number_has_whatsapp: formDataRef.current.whatsappAlt,
-      email: formDataRef.current.email.trim() || null,
-      budget: formDataRef.current.budget ? parseFloat(formDataRef.current.budget) : null,
-      remarks: formDataRef.current.remarks.trim() || null,
-      location: formDataRef.current.location || null,
-      status: formDataRef.current.status || null,
-      source: formDataRef.current.source || null,
-      main_category: formDataRef.current.mainCategory || null,
-      sub_category: formDataRef.current.subCategory || null,
-      business_type: formDataRef.current.businessType || null,
-    };
+      const enquiryData = {
+        company_name: formDataRef.current.companyName.trim(),
+        primary_phone_number: formDataRef.current.phone.trim(),
+        primary_phone_number_has_whatsapp: formDataRef.current.whatsappPrimary,
+        alternative_phone_number: formDataRef.current.altNumber.trim() || null,
+        alternative_phone_number_has_whatsapp: formDataRef.current.whatsappAlt,
+        email: formDataRef.current.email.trim() || null,
+        budget: formDataRef.current.budget
+          ? parseFloat(formDataRef.current.budget)
+          : null,
+        remarks: formDataRef.current.remarks.trim() || null,
+        location: formDataRef.current.location || null,
+        status: formDataRef.current.status || null,
+        source: formDataRef.current.source || null,
+        main_category: formDataRef.current.mainCategory || null,
+        sub_category: formDataRef.current.subCategory || null,
+        business_type: formDataRef.current.businessType || null,
+      };
 
-    createEnquiryMutation.mutate(enquiryData);
-  }, [createEnquiryMutation]);
+      createEnquiryMutation.mutate(enquiryData);
+    },
+    [createEnquiryMutation]
+  );
 
   const { data: businessTypes, isLoading: isBusinessLoading } = useQuery({
     queryKey: ["businessTypes"],
@@ -170,11 +183,13 @@ export default function EnquiryForm() {
     staleTime: 5 * 60 * 1000,
   });
 
-  const { data: mainCategories, isLoading: isMainCategoriesLoading } = useQuery({
-    queryKey: ["mainCategories"],
-    queryFn: getMainCategories,
-    staleTime: 5 * 60 * 1000,
-  });
+  const { data: mainCategories, isLoading: isMainCategoriesLoading } = useQuery(
+    {
+      queryKey: ["mainCategories"],
+      queryFn: getMainCategories,
+      staleTime: 5 * 60 * 1000,
+    }
+  );
 
   const allSubCategories =
     mainCategories &&
@@ -315,7 +330,9 @@ export default function EnquiryForm() {
                               ? "bg-zinc-300"
                               : ""
                           }`}
-                          onClick={() => handleDropdownChange("businessType", type.name)}
+                          onClick={() =>
+                            handleDropdownChange("businessType", type.name)
+                          }
                         >
                           <span className="flex-1">{type.name}</span>
                           {formData.businessType === type.name && (
@@ -333,7 +350,7 @@ export default function EnquiryForm() {
                   </div>
                 </PopoverContent>
               </Popover>
-              <EnquiryBussines />
+              <EnquiryBussines mode="create" />
             </div>
           </div>
 
@@ -366,7 +383,9 @@ export default function EnquiryForm() {
                           className={`flex items-center w-120 px-3 py-2 bg-zinc-100 cursor-pointer hover:bg-zinc-200 ${
                             formData.location === type.name ? "bg-zinc-300" : ""
                           }`}
-                          onClick={() => handleDropdownChange("location", type.name)}
+                          onClick={() =>
+                            handleDropdownChange("location", type.name)
+                          }
                         >
                           <span className="flex-1">{type.name}</span>
                           {formData.location === type.name && (
@@ -416,7 +435,9 @@ export default function EnquiryForm() {
                         className={`flex items-center w-120 px-3 py-2 bg-zinc-100 cursor-pointer hover:bg-zinc-200 ${
                           formData.status === type.name ? "bg-zinc-300" : ""
                         }`}
-                        onClick={() => handleDropdownChange("status", type.name)}
+                        onClick={() =>
+                          handleDropdownChange("status", type.name)
+                        }
                       >
                         <span className="flex-1">{type.name}</span>
                         {formData.status === type.name && (
@@ -434,7 +455,7 @@ export default function EnquiryForm() {
                 </PopoverContent>
               </Popover>
 
-              <EnquiryStatus />
+              <StatusForm mode="create" />
             </div>
           </div>
 
@@ -466,7 +487,9 @@ export default function EnquiryForm() {
                         className={`flex items-center w-120 px-3 py-2 bg-zinc-100 cursor-pointer hover:bg-zinc-200 ${
                           formData.source === type.name ? "bg-zinc-300" : ""
                         }`}
-                        onClick={() => handleDropdownChange("source", type.name)}
+                        onClick={() =>
+                          handleDropdownChange("source", type.name)
+                        }
                       >
                         <span className="flex-1">{type.name}</span>
                         {formData.source === type.name && (
@@ -519,7 +542,9 @@ export default function EnquiryForm() {
                               ? "bg-zinc-300"
                               : ""
                           }`}
-                          onClick={() => handleDropdownChange("mainCategory", type.name)}
+                          onClick={() =>
+                            handleDropdownChange("mainCategory", type.name)
+                          }
                         >
                           <span className="flex-1">{type.name}</span>
                           {formData.mainCategory === type.name && (
@@ -575,7 +600,9 @@ export default function EnquiryForm() {
                                 ? "bg-zinc-300"
                                 : ""
                             }`}
-                            onClick={() => handleDropdownChange("subCategory", sub.name)}
+                            onClick={() =>
+                              handleDropdownChange("subCategory", sub.name)
+                            }
                           >
                             <span className="flex-1">{sub.name}</span>
                             {formData.subCategory === sub.name && (

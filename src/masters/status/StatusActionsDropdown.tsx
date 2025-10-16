@@ -1,9 +1,6 @@
 import { useState } from "react";
-
-import { MoreHorizontal, Trash2, Pencil } from "lucide-react";
-
+import { MoreHorizontal, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-
 import {
   DropdownMenu,
   DropdownMenuTrigger,
@@ -11,7 +8,6 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
-
 import {
   Dialog,
   DialogTrigger,
@@ -20,32 +16,29 @@ import {
   DialogTitle,
   DialogFooter,
 } from "@/components/ui/dialog";
-
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-
 import { toast } from "sonner";
 
 import { deleteStatus } from "@/services/apiStatus";
-
-import EnquiryStatus from "@/components/EnquiryStatus"; 
+import StatusForm from "@/components/EnquiryStatus";
+import type { StatusType } from "./status-types";
 
 interface StatusActionsDropdownProps {
-  id: string | number;
-  name?: string;
-  description?: string | null;
+  id: string;
+  rowData: StatusType;
 }
 
 export default function StatusActionsDropdown({
   id,
-  name,
-  description,
+  rowData,
 }: StatusActionsDropdownProps) {
   const queryClient = useQueryClient();
   const [openDialog, setOpenDialog] = useState(false);
-  const [openEditDialog, setOpenEditDialog] = useState(false);
 
-  const deleteStatusMutation = useMutation({
-    mutationFn: (statusId: string ) => deleteStatus(statusId),
+  console.log("the row datas are", rowData);
+
+  const deleteMutation = useMutation({
+    mutationFn: (statusId: string) => deleteStatus(statusId),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["statusTypes"] });
       toast("Status deleted successfully!");
@@ -61,7 +54,7 @@ export default function StatusActionsDropdown({
     <>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button variant="ghost">
+          <Button variant="ghost" className="">
             <span className="sr-only">Open menu</span>
             <MoreHorizontal className="h-4 w-4 text-zinc-900" />
           </Button>
@@ -76,15 +69,11 @@ export default function StatusActionsDropdown({
           </DropdownMenuLabel>
           <DropdownMenuSeparator className="bg-zinc-800" />
 
-          <Button
-            variant="ghost"
-            className="flex items-center gap-2 w-full justify-start text-sm text-zinc-200"
-            onClick={() => setOpenEditDialog(true)}
-          >
-            <Pencil className="h-4 w-4 text-blue-400" />
-            Edit
+          <Button variant="ghost">
+            <StatusForm initialData={rowData} mode="edit" />
           </Button>
 
+          {/* Delete Confirmation Dialog */}
           <Dialog open={openDialog} onOpenChange={setOpenDialog}>
             <DialogTrigger asChild>
               <Button
@@ -113,7 +102,7 @@ export default function StatusActionsDropdown({
                 </Button>
                 <Button
                   variant="destructive"
-                  onClick={() => deleteStatusMutation.mutate(id)}
+                  onClick={() => deleteMutation.mutate(id)}
                 >
                   Yes, Delete
                 </Button>
@@ -122,15 +111,6 @@ export default function StatusActionsDropdown({
           </Dialog>
         </DropdownMenuContent>
       </DropdownMenu>
-
-      {openEditDialog && (
-        <EnquiryStatus
-          open={openEditDialog}
-          setOpen={setOpenEditDialog}
-          mode="edit"
-          status={{ id, name: name || "", description: description || "" }}
-        />
-      )}
     </>
   );
 }

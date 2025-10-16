@@ -1,9 +1,6 @@
 import { Button } from "@/components/ui/button";
-
 import { MoreHorizontal, CheckCircle2, PlusCircle } from "lucide-react";
-
 import { Link } from "react-router-dom";
-
 import {
   DropdownMenu,
   DropdownMenuTrigger,
@@ -12,7 +9,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuItem,
 } from "@/components/ui/dropdown-menu";
-
 import type { Payment } from "@/table-types/pending-payments-dashboard-table-types";
 
 type PaymentActionCellProps = {
@@ -20,6 +16,8 @@ type PaymentActionCellProps = {
 };
 
 export default function DashboardPendingPaymentDropdown({ payment }: PaymentActionCellProps) {
+  const paymentName = payment.name || "Payment";
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -27,6 +25,7 @@ export default function DashboardPendingPaymentDropdown({ payment }: PaymentActi
           <MoreHorizontal className="h-4 w-4 text-zinc-900" />
         </Button>
       </DropdownMenuTrigger>
+
       <DropdownMenuContent
         align="end"
         className="w-48 bg-zinc-900 text-white rounded-xl shadow-lg"
@@ -37,7 +36,7 @@ export default function DashboardPendingPaymentDropdown({ payment }: PaymentActi
         <DropdownMenuItem asChild>
           <Link
             to={`/payment-follow-up-dashboard/${payment.id}`}
-            className="flex items-center w-full gap-2 text-red-400"
+            className="flex items-center gap-2 text-red-400"
           >
             <PlusCircle className="h-4 w-4" />
             Add Follow Up
@@ -45,9 +44,7 @@ export default function DashboardPendingPaymentDropdown({ payment }: PaymentActi
         </DropdownMenuItem>
 
         <DropdownMenuItem
-          onClick={() => {
-            console.log(`${payment.name ?? "Payment"} marked as done`);
-          }}
+          onClick={() => console.log(`${paymentName} marked as done`)}
           className="flex items-center gap-2 text-green-400"
         >
           <CheckCircle2 className="h-4 w-4" />
@@ -57,4 +54,3 @@ export default function DashboardPendingPaymentDropdown({ payment }: PaymentActi
     </DropdownMenu>
   );
 }
-

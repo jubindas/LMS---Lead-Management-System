@@ -1,58 +1,47 @@
-import { useEffect, useState } from "react";
-
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
-
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogHeader,
   DialogTitle,
+  DialogDescription,
   DialogTrigger,
 } from "@/components/ui/dialog";
-
 import { FaPlus } from "react-icons/fa";
-
+import { Pencil } from "lucide-react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-
 import { createStatus, updateStatus } from "@/services/apiStatus";
-
 import { toast } from "sonner";
+import type { StatusType } from "@/masters/status/status-types";
 
 interface StatusFormProps {
-  open?: boolean;
-  setOpen?: (value: boolean) => void;
   mode?: "create" | "edit";
-  status?: { id: string; name: string; description?: string | null };
+  initialData?: StatusType;
 }
 
-export default function StatusForm({
-  open: externalOpen,
-  setOpen: externalSetOpen,
-  mode = "create",
-  status,
-}: StatusFormProps) {
+export default function StatusForm({ mode, initialData }: StatusFormProps) {
+  const queryClient = useQueryClient();
+
   const [formData, setFormData] = useState({
-    statusName: "",
+    name: "",
     description: "",
   });
 
-  const [internalOpen, setInternalOpen] = useState(false);
-  const open = externalOpen !== undefined ? externalOpen : internalOpen;
-  const setOpen = externalSetOpen || setInternalOpen;
+  const resetForm = () => {
+    setFormData({ name: "", description: "" });
+  };
 
-  const queryClient = useQueryClient();
-
-  useEffect(() => {
-    if (mode === "edit" && status) {
+  const handleDialogChange = (open: boolean) => {
+    if (open && mode === "edit" && initialData) {
       setFormData({
-        statusName: status.name || "",
-        description: status.description || "",
+        name: initialData.name || "",
+        description: initialData.description || "",
       });
-    } else {
-      setFormData({ statusName: "", description: "" });
+    } else if (!open) {
+      resetForm();
     }
-  }, [mode, status, open]);
+  };
 
   const createMutation = useMutation({
     mutationFn: (newStatus: { name: string; description?: string | null }) =>
@@ -85,11 +74,6 @@ export default function StatusForm({
     },
   });
 
-  const resetForm = () => {
-    setFormData({ statusName: "", description: "" });
-    setOpen(false);
-  };
-
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
@@ -99,26 +83,38 @@ export default function StatusForm({
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (mode === "edit" && status) {
+    if (mode === "edit" && initialData) {
       updateMutation.mutate({
-        id: status.id,
-        name: formData.statusName,
+        id: initialData.id,
+        name: formData.name,
         description: formData.description || null,
       });
     } else {
       createMutation.mutate({
-        name: formData.statusName,
+        name: formData.name,
         description: formData.description || null,
       });
     }
   };
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog onOpenChange={handleDialogChange}>
       {mode === "create" && (
         <DialogTrigger asChild>
           <Button className="bg-zinc-500 hover:bg-zinc-600 text-white font-medium px-3 py-1.5 text-sm rounded-md shadow-md transition-transform transform hover:-translate-y-0.5 hover:shadow-lg">
             <FaPlus />
+          </Button>
+        </DialogTrigger>
+      )}
+
+      {mode === "edit" && (
+        <DialogTrigger asChild>
+          <Button
+            variant="ghost"
+            className="w-full justify-start text-sm text-zinc-200 flex items-center gap-2 text-left"
+          >
+            <Pencil className="h-4 w-4 text-blue-400" />
+            Edit
           </Button>
         </DialogTrigger>
       )}
@@ -142,9 +138,9 @@ export default function StatusForm({
             </label>
             <input
               type="text"
-              name="statusName"
+              name="name"
               placeholder="Enter status name"
-              value={formData.statusName}
+              value={formData.name}
               onChange={handleChange}
               required
               className="w-full border border-zinc-300 rounded-md px-3 py-2 bg-white text-zinc-800 shadow-sm focus:outline-none focus:ring-2 focus:ring-zinc-500 transition"
@@ -158,7 +154,7 @@ export default function StatusForm({
             </label>
             <textarea
               name="description"
-              placeholder="Enter description (optional)"
+              placeholder="Enter description"
               value={formData.description}
               onChange={handleChange}
               rows={4}

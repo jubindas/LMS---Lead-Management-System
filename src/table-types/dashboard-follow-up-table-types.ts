@@ -1,5 +1,5 @@
 export type FollowUp = {
-  sl: number;
+  id: string;
   lead_name: string;
   contact: string;
   follow_up_date: string;

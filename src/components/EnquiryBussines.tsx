@@ -1,7 +1,5 @@
-import { useEffect, useState } from "react";
-
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
-
 import {
   Dialog,
   DialogContent,
@@ -10,50 +8,45 @@ import {
   DialogDescription,
   DialogTrigger,
 } from "@/components/ui/dialog";
-
 import { FaPlus } from "react-icons/fa";
-
+import { Pencil } from "lucide-react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-
 import { createBusiness, updateBusiness } from "@/services/apiBusiness";
-
 import { toast } from "sonner";
+import type { BusinessType } from "@/masters/bussiness/business-types";
 
 interface EnquiryBusinessProps {
-  open?: boolean;
-  setOpen?: (value: boolean) => void;
   mode?: "create" | "edit";
-  business?: { id: string; name: string; description?: string };
+  business?: BusinessType;
 }
 
-export default function EnquiryBusiness({
-  open: externalOpen,
-  setOpen: externalSetOpen,
-  mode = "create",
-  business,
-}: EnquiryBusinessProps) {
+export default function EnquiryBusiness({ mode, business }: EnquiryBusinessProps) {
+  const queryClient = useQueryClient();
+
   const [formData, setFormData] = useState({
     name: "",
     description: "",
   });
 
-  const [internalOpen, setInternalOpen] = useState(false);
-  const open = externalOpen !== undefined ? externalOpen : internalOpen;
-  const setOpen = externalSetOpen || setInternalOpen;
+  const resetForm = () => {
+    setFormData({ name: "", description: "" });
+  };
 
-  const queryClient = useQueryClient();
-
-  useEffect(() => {
-    if (mode === "edit" && business) {
+  // 🧠 Handle opening/closing dialog
+  const handleDialogChange = (open: boolean) => {
+    if (open && mode === "edit" && business) {
+      // Prefill data when dialog opens in edit mode
       setFormData({
         name: business.name || "",
         description: business.description || "",
       });
-    } else {
-      setFormData({ name: "", description: "" });
+    } else if (!open) {
+      // Reset form when dialog closes
+      resetForm();
     }
-  }, [mode, business, open]);
+  };
 
+  // ✅ Create Business
   const createMutation = useMutation({
     mutationFn: (newBusiness: { name: string; description?: string | null }) =>
       createBusiness(newBusiness),
@@ -68,6 +61,7 @@ export default function EnquiryBusiness({
     },
   });
 
+  // ✅ Update Business
   const updateMutation = useMutation({
     mutationFn: (updatedBusiness: {
       id: string;
@@ -85,11 +79,6 @@ export default function EnquiryBusiness({
     },
   });
 
-  const resetForm = () => {
-    setFormData({ name: "", description: "" });
-    setOpen(false);
-  };
-
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
@@ -98,6 +87,7 @@ export default function EnquiryBusiness({
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+
     if (mode === "edit" && business) {
       updateMutation.mutate({
         id: business.id,
@@ -113,7 +103,8 @@ export default function EnquiryBusiness({
   };
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog onOpenChange={handleDialogChange}>
+
       {mode === "create" && (
         <DialogTrigger asChild>
           <Button className="bg-zinc-500 hover:bg-zinc-600 text-white font-medium px-3 py-1.5 text-sm rounded-md shadow-md transition-transform transform hover:-translate-y-0.5 hover:shadow-lg">
@@ -122,6 +113,20 @@ export default function EnquiryBusiness({
         </DialogTrigger>
       )}
 
+      {mode === "edit" && (
+  <DialogTrigger asChild>
+    <Button
+      variant="ghost"
+      className="w-full justify-start text-sm text-zinc-200 flex items-center gap-2 text-left"
+    >
+      <Pencil className="h-4 w-4 text-blue-400" />
+      Edit
+    </Button>
+  </DialogTrigger>
+)}
+
+
+      {/* DIALOG CONTENT */}
       <DialogContent className="w-[90%] max-w-md md:max-w-xl lg:max-w-3xl max-h-[80vh] overflow-y-auto bg-zinc-100 rounded-lg shadow-2xl border border-zinc-300 p-4 md:p-6">
         <DialogHeader className="pb-4 border-b border-zinc-300">
           <DialogTitle className="text-lg md:text-2xl font-bold text-zinc-800">
@@ -134,7 +139,9 @@ export default function EnquiryBusiness({
           </DialogDescription>
         </DialogHeader>
 
+        {/* FORM */}
         <form onSubmit={handleSubmit} className="mt-6 space-y-6">
+          {/* Business Name */}
           <div>
             <label className="block text-sm font-semibold text-zinc-700 mb-2">
               Business Name
@@ -150,6 +157,7 @@ export default function EnquiryBusiness({
             />
           </div>
 
+          {/* Description */}
           <div>
             <label className="block text-sm font-semibold text-zinc-700 mb-2">
               Description{" "}
@@ -165,6 +173,7 @@ export default function EnquiryBusiness({
             />
           </div>
 
+          {/* Submit Button */}
           <div className="flex flex-col md:flex-row justify-end gap-3 pt-4 border-t border-zinc-300">
             <Button
               type="submit"

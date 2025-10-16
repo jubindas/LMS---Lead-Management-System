@@ -1,11 +1,8 @@
-
 import type { ColumnDef } from "@tanstack/react-table";
 
-import type {SubCategory } from "./sub-requirements-types"
+import type { SubCategory } from "./sub-requirements-types";
 
-import StatusActionDropdown from "./StatusActionDropdown";
-
-
+import SubCategoryActionDropdown from "./StatusActionDropdown";
 
 export const columns: ColumnDef<SubCategory>[] = [
   {
@@ -33,14 +30,12 @@ export const columns: ColumnDef<SubCategory>[] = [
     accessorKey: "description",
     header: "Description",
     cell: ({ row }) => (
-      <span className="text-black text-sm">
-        {row.getValue("description")}
-      </span>
+      <span className="text-black text-sm">{row.getValue("description")}</span>
     ),
   },
- {
-  id: "actions",
-  header: () => <span className="capitalize">Actions</span>,
-  cell: ({ row }) => <StatusActionDropdown id={row.original.id} />
-},
+  {
+    id: "actions",
+    header: () => <span className="capitalize">Actions</span>,
+    cell: ({ row }) => <SubCategoryActionDropdown rawData={row.original} />,
+  },
 ];

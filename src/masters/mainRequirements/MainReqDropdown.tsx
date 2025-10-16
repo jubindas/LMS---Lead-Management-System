@@ -1,7 +1,5 @@
 import { useState } from "react";
-
-import { MoreHorizontal, Trash2, Pencil } from "lucide-react";
-
+import { MoreHorizontal, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 import {
@@ -22,38 +20,34 @@ import {
 } from "@/components/ui/dialog";
 
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-
 import { toast } from "sonner";
 
 import { deleteMainReq } from "@/services/apiMainCategories";
 
 import MainRequirementsForm from "@/components/MainRequirementsForm";
 
+import type { MainCategory } from "./main-requirements-types";
+
 interface MainReqDropdownProps {
   id: string;
-  name?: string;
-  description?: string;
+  rowData: MainCategory;
 }
 
-export default function MainReqDropdown({
-  id,
-  name,
-  description,
-}: MainReqDropdownProps) {
+export default function MainReqDropdown({ id, rowData }: MainReqDropdownProps) {
   const queryClient = useQueryClient();
-  const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
-  const [openEditDialog, setOpenEditDialog] = useState(false);
+  const [openDialog, setOpenDialog] = useState(false);
 
+  console.log("the rowData is", rowData);
   const deleteMutation = useMutation({
     mutationFn: (mainReqId: string) => deleteMainReq(mainReqId),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["mainCategories"] });
-      toast("Request deleted successfully!");
-      setOpenDeleteDialog(false);
+      toast("Main requirement deleted successfully!");
+      setOpenDialog(false);
     },
     onError: (error) => {
       console.error("Failed to delete request:", error);
-      toast("Failed to delete request");
+      toast("Failed to delete main requirement");
     },
   });
 
@@ -61,7 +55,7 @@ export default function MainReqDropdown({
     <>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button variant="ghost">
+          <Button variant="ghost" className="">
             <span className="sr-only">Open menu</span>
             <MoreHorizontal className="h-4 w-4 text-zinc-900" />
           </Button>
@@ -79,13 +73,12 @@ export default function MainReqDropdown({
           <Button
             variant="ghost"
             className="flex items-center gap-2 w-full justify-start text-sm text-zinc-200 hover:bg-zinc-800"
-            onClick={() => setOpenEditDialog(true)}
           >
-            <Pencil className="h-4 w-4 text-blue-400" />
-            Edit
+            <MainRequirementsForm mode="edit" mainCategory={rowData} />
           </Button>
 
-          <Dialog open={openDeleteDialog} onOpenChange={setOpenDeleteDialog}>
+          {/* 🔴 DELETE DIALOG */}
+          <Dialog open={openDialog} onOpenChange={setOpenDialog}>
             <DialogTrigger asChild>
               <Button
                 variant="ghost"
@@ -98,17 +91,16 @@ export default function MainReqDropdown({
 
             <DialogContent className="sm:max-w-[400px] bg-zinc-100">
               <DialogHeader>
-                <DialogTitle>Delete Request</DialogTitle>
+                <DialogTitle>Delete Main Requirement</DialogTitle>
               </DialogHeader>
               <p className="text-sm text-black my-2">
-                Are you sure you want to delete this request? This action cannot
-                be undone.
+                Are you sure you want to delete this main requirement?
               </p>
               <DialogFooter className="flex justify-end gap-2">
                 <Button
                   variant="outline"
                   className="bg-zinc-500 hover:bg-zinc-600 text-white"
-                  onClick={() => setOpenDeleteDialog(false)}
+                  onClick={() => setOpenDialog(false)}
                 >
                   Cancel
                 </Button>
@@ -124,19 +116,6 @@ export default function MainReqDropdown({
           </Dialog>
         </DropdownMenuContent>
       </DropdownMenu>
-
-      {openEditDialog && (
-        <MainRequirementsForm
-          open={openEditDialog}
-          setOpen={setOpenEditDialog}
-          mode="edit"
-          mainCategory={{
-            id,
-            name: name || "",
-            description: description || "",
-          }}
-        />
-      )}
     </>
   );
 }

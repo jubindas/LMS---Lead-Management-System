@@ -17,13 +17,13 @@ export default function PendingTodoWorksTable() {
   const todayStr = today.toISOString().split("T")[0]; 
 
   const pendingTodos = todoData
-    ? todoData.filter((todo) => {
+    ? todoData.filter((todo: any) => {
         const todoDate = todo.created_at.split("T")[0]; 
         return todoDate < todayStr && todo.is_complete === false;
       })
     : [];
 
-  const sortedTodos = pendingTodos.sort((a, b) => Number(a.id) - Number(b.id));
+  const sortedTodos = pendingTodos.sort((a: any, b: any) => Number(a.id) - Number(b.id));
 
   console.log("Pending Todos:", sortedTodos);
 

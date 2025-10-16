@@ -2,7 +2,7 @@ import type { ColumnDef } from "@tanstack/react-table";
 import TodoActionDropdown from "./TodoActionDropdown";
 
 export type Todo = {
-  id: number;
+  id: string;
   name: string;
   content: string;
   is_complete: boolean;

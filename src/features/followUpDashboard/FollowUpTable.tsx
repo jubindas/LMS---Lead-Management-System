@@ -16,7 +16,7 @@ export default function FollowUpTable() {
 
   const today = new Date().toISOString().split("T")[0];
 
-  const todaysEnquiries = enquiries?.filter((enquiry) => {
+  const todaysEnquiries = enquiries?.filter((enquiry: any) => {
     if (!enquiry?.created_at) return false; 
     const createdDate = new Date(enquiry.created_at).toISOString().split("T")[0];
     return createdDate === today;

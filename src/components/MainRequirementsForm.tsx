@@ -1,7 +1,5 @@
-import { useEffect, useState } from "react";
-
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-
 import {
   Dialog,
   DialogContent,
@@ -10,50 +8,48 @@ import {
   DialogDescription,
   DialogTrigger,
 } from "@/components/ui/dialog";
-
 import { FaPlus } from "react-icons/fa";
-
+import { Pencil } from "lucide-react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-
-import { createMainCategory, updateMainCategory } from "@/services/apiMainCategories";
-
+import {
+  createMainCategory,
+  updateMainCategory,
+} from "@/services/apiMainCategories";
 import { toast } from "sonner";
+import type {MainCategory} from "@/masters/mainRequirements/main-requirements-types"
 
 interface MainRequirementsFormProps {
-  open?: boolean;
-  setOpen?: (value: boolean) => void;
   mode?: "create" | "edit";
-  mainCategory?: { id: string; name: string; description?: string };
+  mainCategory?: MainCategory;
 }
 
 export default function MainRequirementsForm({
-  open: externalOpen,
-  setOpen: externalSetOpen,
   mode = "create",
   mainCategory,
 }: MainRequirementsFormProps) {
+  console.log("the main category prefill is", mainCategory);
+  const queryClient = useQueryClient();
+
   const [formData, setFormData] = useState({
     name: "",
     description: "",
   });
 
-  const [internalOpen, setInternalOpen] = useState(false);
-  const open = externalOpen !== undefined ? externalOpen : internalOpen;
-  const setOpen = externalSetOpen || setInternalOpen;
+  const resetForm = () => setFormData({ name: "", description: "" });
 
-  const queryClient = useQueryClient();
-
+  // Prefill form when editing
   useEffect(() => {
     if (mode === "edit" && mainCategory) {
       setFormData({
         name: mainCategory.name || "",
         description: mainCategory.description || "",
       });
-    } else {
-      setFormData({ name: "", description: "" });
+    } else if (mode === "create") {
+      resetForm();
     }
-  }, [mode, mainCategory, open]);
+  }, [mode, mainCategory]);
 
+  // Create mutation
   const createMutation = useMutation({
     mutationFn: (newCategory: { name: string; description?: string | null }) =>
       createMainCategory(newCategory),
@@ -68,7 +64,7 @@ export default function MainRequirementsForm({
     },
   });
 
-  // Mutation for updating a category
+  // Update mutation
   const updateMutation = useMutation({
     mutationFn: (updatedCategory: {
       id: string;
@@ -86,19 +82,11 @@ export default function MainRequirementsForm({
     },
   });
 
- 
-  const resetForm = () => {
-    setFormData({ name: "", description: "" });
-    setOpen(false);
-  };
-
-  
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
-
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -117,11 +105,25 @@ export default function MainRequirementsForm({
   };
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog>
+      {/* CREATE BUTTON */}
       {mode === "create" && (
         <DialogTrigger asChild>
           <Button className="bg-zinc-500 hover:bg-zinc-600 text-white font-medium px-3 py-1.5 text-sm rounded-md shadow-md transition-transform transform hover:-translate-y-0.5 hover:shadow-lg">
             <FaPlus />
+          </Button>
+        </DialogTrigger>
+      )}
+
+      {/* EDIT BUTTON */}
+      {mode === "edit" && (
+        <DialogTrigger asChild>
+          <Button
+            variant="ghost"
+            className="w-full justify-start text-sm text-zinc-200 flex items-center gap-2 text-left"
+          >
+            <Pencil className="h-4 w-4 text-blue-400" />
+            Edit
           </Button>
         </DialogTrigger>
       )}
@@ -139,7 +141,6 @@ export default function MainRequirementsForm({
         </DialogHeader>
 
         <form onSubmit={handleSubmit} className="mt-6 space-y-6">
-      
           <div>
             <label className="block text-sm font-semibold text-zinc-700 mb-2">
               Main Category Name
@@ -155,7 +156,6 @@ export default function MainRequirementsForm({
             />
           </div>
 
-      
           <div>
             <label className="block text-sm font-semibold text-zinc-700 mb-2">
               Description{" "}
@@ -170,7 +170,6 @@ export default function MainRequirementsForm({
               className="w-full border border-zinc-300 rounded-md px-3 py-2 bg-white text-zinc-800 shadow-sm resize-none focus:outline-none focus:ring-2 focus:ring-zinc-500 transition"
             />
           </div>
-
 
           <div className="flex flex-col md:flex-row justify-end gap-3 pt-4 border-t border-zinc-300">
             <Button

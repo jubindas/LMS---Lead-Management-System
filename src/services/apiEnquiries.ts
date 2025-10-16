@@ -85,3 +85,39 @@ export async function deleteEnquiry(enquiryId: string | number) {
   }
 }
 
+
+
+
+export async function updateEnquiry(
+  enquiryId: string | number,
+  enquiryData: {
+    company_name?: string;
+    primary_phone_number?: string;
+    primary_phone_number_has_whatsapp?: boolean;
+    alternative_phone_number?: string | null;
+    alternative_phone_number_has_whatsapp?: boolean;
+    email?: string | null;
+    budget?: number | null;
+    remarks?: string | null;
+    location?: string | null;
+    status?: string | null;
+    source?: string | null;
+    main_category?: string | null;
+    sub_category?: string | null;
+    business_type?: string | null;
+  }
+) {
+  try {
+    console.log(`Updating enquiry ID ${enquiryId} with data:`, enquiryData);
+    const response = await axios.put(`${API_BASE_URL}/enquiries/${enquiryId}`, enquiryData);
+    if (response.status !== 200) {
+      throw new Error(`Failed to update enquiry with ID ${enquiryId}`);
+    }
+    return response.data;
+  } catch (error: any) {
+    console.error(`Error updating enquiry ID ${enquiryId}:`, error);
+    console.error("Error response data:", error.response?.data);
+    console.error("Error response status:", error.response?.status);
+    throw error;
+  }
+}

@@ -17,6 +17,8 @@ import {
   FaEdit,
 } from "react-icons/fa";
 
+import {Link} from "react-router-dom"
+
 interface InfoCardProps {
   icon: ReactNode;
   label: string;
@@ -78,7 +80,8 @@ export default function EnquiryViewDetails() {
           <h1 className="text-3xl font-semibold text-zinc-900">Lead Details</h1>
           <button className="flex items-center gap-2 px-4 py-2 bg-zinc-600 hover:bg-zinc-700 text-white rounded-lg shadow transition">
             <FaEdit />
-            Edit
+         <Link to={`/edit-enquiry/${id}`}>Edit</Link>
+
           </button>
         </div>
 

@@ -1,14 +1,9 @@
+
 import type { ColumnDef } from "@tanstack/react-table";
+
 import DashboardPendingPaymentDropdown from "./DashboardPendingPaymentDropdown";
 
-export type Payment = {
-  id: string;
-  name?: string;
-  amount: number;
-  remarks: string;
-  total_amount?: number;
-  paid_amount?: number;
-};
+import type { Payment } from "@/table-types/pending-payments-dashboard-table-types";
 
 export const paymentColumns: ColumnDef<Payment>[] = [
   {
@@ -17,16 +12,15 @@ export const paymentColumns: ColumnDef<Payment>[] = [
     cell: ({ row }) => <span>{row.original.id}</span>,
   },
   {
-    header: " Name",
+    header: "Name",
     accessorKey: "name",
     cell: ({ row }) => <span>{row.original.name || "N/A"}</span>,
   },
   {
     header: "Amount",
     accessorKey: "amount",
-    cell: ({ row }) => <span>₹{row.original.amount}</span>,
+    cell: ({ row }) => <span>₹{row.original.total_amount}</span>,
   },
- 
   {
     header: "Remarks",
     accessorKey: "remarks",
@@ -35,6 +29,8 @@ export const paymentColumns: ColumnDef<Payment>[] = [
   {
     id: "actions",
     header: "Actions",
-    cell: ({ row }) => <DashboardPendingPaymentDropdown payment={row.original} />,
+    cell: ({ row }) => (  <DashboardPendingPaymentDropdown payment={row.original} />
+
+    ),
   },
 ];

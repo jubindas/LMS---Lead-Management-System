@@ -32,7 +32,7 @@ export const columns: ColumnDef<MainCategory>[] = [
   id: "actions",
   header: () => <span className="capitalize">Actions</span>,
   cell: ({row}) => (
-    <MainReqDropdown id={row.original.id} />
+    <MainReqDropdown id={row.original.id} rowData={row.original} />
   ),
 },
 ];

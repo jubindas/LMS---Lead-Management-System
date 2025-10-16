@@ -1,6 +1,6 @@
 import type { ColumnDef } from "@tanstack/react-table";
 
-import DashboardTodoTodayDropdown from "@/table-columns/dashboardTodoTodayDropdown";
+import DashboardTodoTodayDropdown from "@/table-columns/DashboardTodoTodayDropdown";
 
 import type {TodoList } from "@/table-types/todo-dashboard-today-types";
 

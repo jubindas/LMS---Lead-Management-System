@@ -1,7 +1,7 @@
 import { DataTable } from "@/components/data-table";
 import { useQuery } from "@tanstack/react-query";
 import { getPayments } from "@/services/apiPayments";
-import { paymentColumns } from "@/table-columns/pending-payments-dashboard-table.columns";
+import { paymentColumns } from "@/table-columns/pending-payments-dashboard-table-columns";
 
 export default function PendingPaymentTable() {
   const { data, isLoading, error } = useQuery({

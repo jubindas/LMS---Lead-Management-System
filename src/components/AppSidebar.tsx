@@ -99,7 +99,6 @@ export function AppSidebar() {
                   <SidebarMenuItem key={item.title}>
                     {item.children ? (
                       <>
-                        {/* Parent Button */}
                         <SidebarMenuButton
                           onClick={() => toggleMenu(item.title)}
                           className={`flex items-center gap-3 px-4 py-2 rounded-md transition-all duration-200 cursor-pointer

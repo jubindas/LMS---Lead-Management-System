@@ -6,9 +6,7 @@ import { Button } from "../components/ui/button.tsx";
 
 import { Link } from "react-router-dom";
 
-import { enquiryData } from "../table-datas/enquiry-data.ts";
 
-import { useState } from "react";
 
 import { useQuery } from "@tanstack/react-query";
 
@@ -16,7 +14,6 @@ import { getEnquiries } from "@/services/apiEnquiries.ts";
 
 export default function Enquiries() {
 
-  const [setData] = useState(enquiryData);
 
    const {data: enquiries}= useQuery({
     queryKey:["enquiries"],
@@ -25,13 +22,7 @@ export default function Enquiries() {
   
 
 
-  const handleStageUpdate = (sl: number, newStage: string) => {
-    setData((prev) =>
-      prev.map((item) => (item.sl === sl ? { ...item, stage: newStage } : item))
-    );
-  };
 
-  const columns = enquiryColumns(handleStageUpdate);
 
   return (
     <div className="p-8 min-h-screen w-full">
@@ -75,7 +66,7 @@ export default function Enquiries() {
         </div>
 
         <div className="w-full overflow-x-auto">
-        {enquiries &&  <DataTable columns={columns} data={enquiries} enablePagination={true} />}
+        {enquiries &&  <DataTable  data={enquiries} columns={enquiryColumns} enablePagination={true} />}
         </div>
       </div>
     </div>

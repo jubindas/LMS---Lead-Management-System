@@ -1,6 +1,5 @@
 import { DataTable } from "@/components/data-table";
 
-import EnquiryStatus from "@/components/EnquiryStatus";
 
 import { columns } from "./status-columns";
 
@@ -9,10 +8,14 @@ import type { StatusType } from "./status-types";
 import { useQuery } from "@tanstack/react-query";
 
 import { getStatus } from "@/services/apiStatus";
+import Loading from "@/components/Loading";
+import StatusForm from "@/components/EnquiryStatus";
 
 export default function Status() {
-
-  const { data: statusTypes, isLoading, isError } = useQuery<StatusType[]>({
+  const {
+    data: statusTypes,
+    isLoading,
+  } = useQuery<StatusType[]>({
     queryKey: ["statusTypes"],
     queryFn: getStatus,
   });
@@ -21,6 +24,7 @@ export default function Status() {
     (a, b) => Number(a.id) - Number(b.id)
   );
 
+  if (isLoading) return <Loading />;
 
   return (
     <div className="p-8 min-h-screen w-full">
@@ -29,7 +33,7 @@ export default function Status() {
           <h2 className="text-xl font-bold tracking-wide text-black">
             Status Type
           </h2>
-          <EnquiryStatus />
+          <StatusForm mode="create" />
         </div>
 
         <div className="flex flex-wrap justify-between items-center mb-3 gap-3 text-sm">
@@ -58,16 +62,10 @@ export default function Status() {
             />
           </div>
         </div>
-        {isLoading ? (
-          <div className="text-center py-4">Loading data...</div>
-        ) : isError ? (
-          <div className="text-center text-red-500 py-4">
-            Failed to load data.
-          </div>
-        ) : (
+        {statusTypes && (
           <DataTable
             columns={columns}
-            data={ sortedStatusTypes || []}
+            data={sortedStatusTypes || []}
             enablePagination={true}
           />
         )}

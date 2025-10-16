@@ -14,7 +14,7 @@ export default function PendingFollowUpTable() {
 
   console.log("Enquiries Data:", enquiries);
 
-  const formatDate = (date) =>
+  const formatDate = ( date : any) =>
     date.toLocaleDateString("en-CA", { timeZone: "Asia/Kolkata" }); 
 
   const today = new Date();
@@ -25,7 +25,7 @@ export default function PendingFollowUpTable() {
 
 
   const pendingEnquiries =
-  enquiries?.filter((enquiry) => {
+  enquiries?.filter((enquiry: any) => {
     if (!enquiry?.created_at) return false;
     const createdDate = formatDate(new Date(enquiry.created_at));
     return createdDate !== todayStr;

@@ -1,5 +1,5 @@
 export type PendingFollowUp = {
-  sl: number;
+  id: string;
   lead_name: string;
   contact: string;
   last_follow_up_date: string;

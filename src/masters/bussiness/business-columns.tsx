@@ -46,6 +46,6 @@ export const columns: ColumnDef<BusinessType>[] = [
   {
     id: "actions",
     header: () => <span className="capitalize">Actions</span>,
-    cell: ({ row }) => <BusinessActionDropdown id={row.original.id} />,
+    cell: ({ row }) => <BusinessActionDropdown id={row.original.id} rowData={row.original} />,
   },
 ];

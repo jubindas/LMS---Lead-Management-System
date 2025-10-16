@@ -1,7 +1,5 @@
 import { useEffect, useState } from "react";
-
 import { Button } from "@/components/ui/button";
-
 import {
   Dialog,
   DialogContent,
@@ -10,31 +8,20 @@ import {
   DialogDescription,
   DialogTrigger,
 } from "@/components/ui/dialog";
-
-import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover";
-
-import { ChevronDown, Check } from "lucide-react";
-
 import { FaPlus } from "react-icons/fa";
-
+import { Pencil } from "lucide-react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-
 import { toast } from "sonner";
-
 import { getMainCategories } from "@/services/apiMainCategories";
-
 import { createSubCategory, updateSubCategory } from "@/services/apiSubCategories";
+import type { SubCategory } from "@/masters/subRequirements/sub-requirements-types";
 
 interface SubRequirementFormProps {
-  open?: boolean;
-  setOpen?: (value: boolean) => void;
   mode?: "create" | "edit";
-  subCategory?: { id: string; name: string; description?: string; main_category_id?: string };
+  subCategory?: SubCategory;
 }
 
 export default function SubRequirementForm({
-  open: externalOpen,
-  setOpen: externalSetOpen,
   mode = "create",
   subCategory,
 }: SubRequirementFormProps) {
@@ -46,32 +33,26 @@ export default function SubRequirementForm({
     description: "",
   });
 
-  const [internalOpen, setInternalOpen] = useState(false);
-  const open = externalOpen !== undefined ? externalOpen : internalOpen;
-  const setOpen = externalSetOpen || setInternalOpen;
-
-  const [isPopoverOpen, setIsPopoverOpen] = useState(false);
-
-  
-  const { data: mainCategories, isLoading: isMainLoading } = useQuery({
+  // Fetch main categories
+  const { data: mainCategories } = useQuery({
     queryKey: ["mainCategories"],
     queryFn: getMainCategories,
   });
 
- 
+  // Prefill form when editing
   useEffect(() => {
     if (mode === "edit" && subCategory) {
       setFormData({
-        main_category_id: subCategory.main_category_id || "",
+        main_category_id: subCategory.name|| "",
         name: subCategory.name || "",
         description: subCategory.description || "",
       });
-    } else {
+    } else if (mode === "create") {
       setFormData({ main_category_id: "", name: "", description: "" });
     }
-  }, [mode, subCategory, open]);
+  }, [mode, subCategory]);
 
-
+  // Create mutation
   const createMutation = useMutation({
     mutationFn: (newSubCategory: {
       main_category_id: string;
@@ -89,7 +70,7 @@ export default function SubRequirementForm({
     },
   });
 
-
+  // Update mutation
   const updateMutation = useMutation({
     mutationFn: (updatedSubCategory: {
       id: string;
@@ -98,7 +79,7 @@ export default function SubRequirementForm({
       description?: string | null;
     }) => updateSubCategory(updatedSubCategory.id, updatedSubCategory),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["mainCategories"] });
+      queryClient.invalidateQueries({ queryKey: ["subCategories"] });
       toast.success("Sub-category updated successfully!");
       resetForm();
     },
@@ -108,16 +89,13 @@ export default function SubRequirementForm({
     },
   });
 
-  const resetForm = () => {
-    setFormData({ main_category_id: "", name: "", description: "" });
-    setOpen(false);
-  };
+  const resetForm = () => setFormData({ main_category_id: "", name: "", description: "" });
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => setFormData({ ...formData, [e.target.name]: e.target.value });
 
-  const handleSave = (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
     if (!formData.main_category_id || !formData.name.trim()) {
@@ -141,11 +119,25 @@ export default function SubRequirementForm({
   };
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog>
+      {/* CREATE BUTTON */}
       {mode === "create" && (
         <DialogTrigger asChild>
           <Button className="bg-zinc-500 hover:bg-zinc-600 text-white font-medium px-3 py-1.5 text-sm rounded-md shadow-md transition-transform transform hover:-translate-y-0.5 hover:shadow-lg">
             <FaPlus />
+          </Button>
+        </DialogTrigger>
+      )}
+
+      {/* EDIT BUTTON */}
+      {mode === "edit" && (
+        <DialogTrigger asChild>
+          <Button
+            variant="ghost"
+            className="w-full justify-start text-sm text-zinc-200 flex items-center gap-2 text-left"
+          >
+            <Pencil className="h-4 w-4 text-blue-400" />
+            Edit
           </Button>
         </DialogTrigger>
       )}
@@ -162,52 +154,27 @@ export default function SubRequirementForm({
           </DialogDescription>
         </DialogHeader>
 
-        <form onSubmit={handleSave} className="mt-6 space-y-6">
-       
+        <form onSubmit={handleSubmit} className="mt-6 space-y-6">
           <div>
             <label className="block text-sm font-semibold text-zinc-700 mb-2">
               Main Category <span className="text-zinc-500">(required)</span>
             </label>
-            <Popover open={isPopoverOpen} onOpenChange={setIsPopoverOpen}>
-              <PopoverTrigger asChild>
-                <div className="flex items-center justify-between border border-zinc-300 rounded-lg px-3 bg-zinc-100 h-12 cursor-pointer">
-                  <span className="truncate text-zinc-800">
-                    {isMainLoading
-                      ? "Loading..."
-                      : mainCategories?.find((c: any) => c.id === Number(formData.main_category_id))?.name ||
-                        "Select Main Category"}
-                  </span>
-                  <ChevronDown className="w-4 h-4 text-zinc-500 ml-2" />
-                </div>
-              </PopoverTrigger>
-              <PopoverContent className="w-full p-0">
-                <div className="max-h-48 overflow-y-auto">
-                  {mainCategories?.map((main: { id: number; name: string }) => (
-                    <div
-                      key={main.id}
-                      className="flex items-center px-3 py-2 bg-zinc-100 cursor-pointer hover:bg-zinc-200"
-                      onClick={() => {
-                        setFormData({ ...formData, main_category_id: String(main.id) });
-                        setIsPopoverOpen(false);
-                      }}
-                    >
-                      <span className="flex-1">{main.name}</span>
-                      {formData.main_category_id === String(main.id) && (
-                        <Check className="w-4 h-4 text-green-500" />
-                      )}
-                    </div>
-                  ))}
-                  {!isMainLoading && mainCategories?.length === 0 && (
-                    <div className="px-3 py-2 text-sm text-zinc-500">
-                      No main categories available
-                    </div>
-                  )}
-                </div>
-              </PopoverContent>
-            </Popover>
+            <select
+              name="main_category_id"
+              value={formData.main_category_id}
+              onChange={handleChange}
+              className="w-full border border-zinc-300 rounded-md px-3 py-2 bg-white text-zinc-800 shadow-sm focus:outline-none focus:ring-2 focus:ring-zinc-500 transition"
+              required
+            >
+              <option value="">Select Main Category</option>
+              {mainCategories?.map((main: any) => (
+                <option key={main.id} value={main.id}>
+                  {main.name}
+                </option>
+              ))}
+            </select>
           </div>
 
-         
           <div>
             <label className="block text-sm font-semibold text-zinc-700 mb-2">
               Sub Category Name <span className="text-zinc-500">(required)</span>
@@ -223,7 +190,6 @@ export default function SubRequirementForm({
             />
           </div>
 
-         
           <div>
             <label className="block text-sm font-semibold text-zinc-700 mb-2">
               Description <span className="text-xs text-zinc-500">(optional)</span>
@@ -238,7 +204,6 @@ export default function SubRequirementForm({
             />
           </div>
 
-       
           <div className="flex flex-col md:flex-row justify-end gap-3 pt-4 border-t border-zinc-300">
             <Button
               type="submit"
