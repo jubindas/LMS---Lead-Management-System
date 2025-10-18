@@ -38,7 +38,7 @@ export default function PaymentsTable() {
   return (
     <div className="p-8 min-h-screen w-full">
       <div className="max-w-7xl mx-auto mt-10 p-8 shadow-md rounded-2xl bg-zinc-50">
-        <div className="flex flex-wrap justify-between items-center mb-4 pb-2">
+        <div className="flex justify-between items-center mb-6 border-b border-zinc-700/60 pb-4">
           <h2 className="text-xl font-bold tracking-wide bg-gradient-to-r text-black">
             Payments
           </h2>
