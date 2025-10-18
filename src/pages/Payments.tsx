@@ -1,27 +1,20 @@
 import { useState } from "react";
-
 import { DataTable } from "@/components/data-table";
-
-import { createColumns } from "../table-columns/payments-columns"; 
-
+import { createColumns } from "../table-columns/payments-columns";
 import PaymentsEnquiry from "@/components/PaymentsEnquiry";
-
 import { getPayments } from "@/services/apiPayments";
-
 import { useQuery } from "@tanstack/react-query";
-
 import type { Payment } from "../table-types/payment-types";
 
 export default function PaymentsTable() {
   const [paymentToEdit, setPaymentToEdit] = useState<Payment | undefined>();
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
 
   const { data } = useQuery({
-    queryKey: ['payments'],
-    queryFn: getPayments
+    queryKey: ["payments"],
+    queryFn: getPayments,
   });
-
-  console.log("payments data", data);
 
   const handleEdit = (payment: Payment) => {
     setPaymentToEdit(payment);
@@ -33,8 +26,14 @@ export default function PaymentsTable() {
     setIsEditDialogOpen(false);
   };
 
-  
   const columns = createColumns(handleEdit);
+
+  const filteredPayments = data?.filter(
+    (payment: Payment) =>
+      payment.id.toString().includes(searchTerm) ||
+      payment.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      payment.remarks?.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   return (
     <div className="p-8 min-h-screen w-full">
@@ -47,21 +46,18 @@ export default function PaymentsTable() {
         </div>
 
         {isEditDialogOpen && paymentToEdit && (
-          <PaymentsEnquiry 
-            key={`edit-${paymentToEdit.id}`} 
+          <PaymentsEnquiry
+            key={`edit-${paymentToEdit.id}`}
             paymentToEdit={{
               id: paymentToEdit.id,
               name: paymentToEdit.name,
               amount: paymentToEdit.amount,
-              remarks: paymentToEdit.remarks
+              remarks: paymentToEdit.remarks,
             }}
             isEdit={true}
             onEditComplete={handleEditComplete}
           />
         )}
-
-        <div className="flex flex-wrap justify-between items-center mb-4 border-b border-zinc-700/60 pb-2">
-        </div>
 
         <div className="flex flex-wrap justify-between items-center mb-3 gap-3 text-sm">
           <div className="flex items-center gap-2 text-black text-xs">
@@ -86,14 +82,16 @@ export default function PaymentsTable() {
               type="text"
               placeholder="Type to search..."
               className="border border-zinc-400 rounded-lg px-2 py-1 bg-zinc-400 placeholder-zinc-900 focus:ring-2 focus:ring-purple-500 focus:outline-none text-sm transition-all"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
             />
           </div>
         </div>
 
-        {data && (
+        {filteredPayments && (
           <DataTable
             columns={columns}
-            data={data}
+            data={filteredPayments || []}
             enablePagination={true}
           />
         )}

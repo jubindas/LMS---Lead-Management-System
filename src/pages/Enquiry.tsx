@@ -1,3 +1,5 @@
+import { useState } from "react";
+
 import { DataTable } from "../components/data-table.tsx";
 
 import { enquiryColumns } from "../table-columns/enquiry-columns.tsx";
@@ -6,23 +8,30 @@ import { Button } from "../components/ui/button.tsx";
 
 import { Link } from "react-router-dom";
 
-
-
 import { useQuery } from "@tanstack/react-query";
 
 import { getEnquiries } from "@/services/apiEnquiries.ts";
 
 export default function Enquiries() {
+  const [searchTerm, setSearchTerm] = useState("");
 
+  const { data: enquiries, isLoading } = useQuery({
+    queryKey: ["enquiries"],
+    queryFn: getEnquiries,
+  });
 
-   const {data: enquiries}= useQuery({
-    queryKey:["enquiries"],
-    queryFn: getEnquiries
-  })
-  
+  if (isLoading) return <div>Loading...</div>;
 
+  const sortedEnquiries = [...(enquiries || [])].sort(
+    (a, b) => Number(a.id) - Number(b.id)
+  );
 
-
+  const filteredEnquiries = sortedEnquiries.filter(
+    (enquiry) =>
+      enquiry.id.toString().includes(searchTerm) ||
+      enquiry.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      enquiry.email?.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   return (
     <div className="p-8 min-h-screen w-full">
@@ -60,13 +69,21 @@ export default function Enquiries() {
             <input
               type="text"
               placeholder="Type to search..."
-              className="border border-zinc-400 rounded-lg px-2 py-1 bg-zinc-400 placeholder-zinc-900  focus:ring-2 focus:ring-purple-500 focus:outline-none text-sm transition-all"
+              className="border border-zinc-400 rounded-lg px-2 py-1 bg-zinc-400 placeholder-zinc-900 focus:ring-2 focus:ring-purple-500 focus:outline-none text-sm transition-all"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
             />
           </div>
         </div>
 
         <div className="w-full overflow-x-auto">
-        {enquiries &&  <DataTable  data={enquiries} columns={enquiryColumns} enablePagination={true} />}
+          {filteredEnquiries && (
+            <DataTable
+              data={filteredEnquiries || []}
+              columns={enquiryColumns}
+              enablePagination={true}
+            />
+          )}
         </div>
       </div>
     </div>

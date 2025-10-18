@@ -69,11 +69,12 @@ export default function StatusActionsDropdown({
           </DropdownMenuLabel>
           <DropdownMenuSeparator className="bg-zinc-800" />
 
-          <Button variant="ghost">
-            <StatusForm initialData={rowData} mode="edit" />
-          </Button>
+          <Dialog>
+            <DialogTrigger asChild></DialogTrigger>
 
-          {/* Delete Confirmation Dialog */}
+            <StatusForm initialData={rowData} mode="edit" />
+          </Dialog>
+
           <Dialog open={openDialog} onOpenChange={setOpenDialog}>
             <DialogTrigger asChild>
               <Button

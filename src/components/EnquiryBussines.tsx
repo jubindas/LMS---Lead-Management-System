@@ -35,7 +35,6 @@ export default function EnquiryBusiness({
     setFormData({ name: "", description: "" });
   };
 
-  // 🧠 Handle opening/closing dialog
   const handleDialogChange = (open: boolean) => {
     if (open && mode === "edit" && business) {
       setFormData({

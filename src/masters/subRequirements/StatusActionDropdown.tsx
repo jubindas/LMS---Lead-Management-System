@@ -32,7 +32,7 @@ import SubRequirementForm from "@/components/SubRequirementForm";
 import type { SubCategory } from "./sub-requirements-types";
 
 interface SubCategoryActionDropdownProps {
-  rawData: SubCategory;  
+  rawData: SubCategory;
 }
 
 export default function SubCategoryActionDropdown({
@@ -67,17 +67,16 @@ export default function SubCategoryActionDropdown({
         align="end"
         className="w-40 rounded-xl bg-zinc-900 border border-zinc-800 shadow-lg"
       >
-        <DropdownMenuLabel className="text-xs text-zinc-400">Actions</DropdownMenuLabel>
+        <DropdownMenuLabel className="text-xs text-zinc-400">
+          Actions
+        </DropdownMenuLabel>
         <DropdownMenuSeparator className="bg-zinc-800" />
 
-        <Button
-          variant="ghost"
-          className="flex items-center gap-2 w-full justify-start text-sm text-zinc-200 hover:bg-zinc-800"
-        >
+        <Dialog>
+          <DialogTrigger asChild></DialogTrigger>
           <SubRequirementForm mode="edit" subCategory={rawData} />
-        </Button>
+        </Dialog>
 
-      
         <Dialog open={openDeleteDialog} onOpenChange={setOpenDeleteDialog}>
           <DialogTrigger asChild>
             <Button
@@ -94,7 +93,8 @@ export default function SubCategoryActionDropdown({
               <DialogTitle>Delete Sub-Category</DialogTitle>
             </DialogHeader>
             <p className="text-sm text-black my-2">
-              Are you sure you want to delete this sub-category? This action cannot be undone.
+              Are you sure you want to delete this sub-category? This action
+              cannot be undone.
             </p>
             <DialogFooter className="flex justify-end gap-2">
               <Button

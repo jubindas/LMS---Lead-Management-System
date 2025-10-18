@@ -1,3 +1,5 @@
+import { useState } from "react";
+
 import { DataTable } from "@/components/data-table";
 
 import { columns } from "./sub-requirements-columns.tsx";
@@ -8,29 +10,45 @@ import { getMainCategories } from "@/services/apiMainCategories.ts";
 
 import { useQuery } from "@tanstack/react-query";
 
-export default function SubRequirement() {
+import type { SubCategory } from "./sub-requirements-types.ts";
 
-  const { data: mainCategoriesData } = useQuery({
+export default function SubRequirement() {
+  const [searchTerm, setSearchTerm] = useState("");
+
+  const { data: mainCategoriesData, isLoading } = useQuery({
     queryKey: ["mainCategories"],
     queryFn: getMainCategories,
   });
 
+  if (isLoading) return <div>Loading...</div>;
 
   const subCategoriesData = mainCategoriesData?.flatMap((mainCat: unknown) => {
-  
-    const cat = mainCat as { name: string; sub_categories: Array<{ id: number; name: string; description: string | null }> };
-  
-  return cat.sub_categories.map((subCat) => ({
-    id: subCat.id.toString(),
-    name: subCat.name,
-    description: subCat.description || "",
-    mainCategory: cat.name,
-  }));
-});
+    const cat = mainCat as {
+      name: string;
+      sub_categories: Array<{
+        id: number;
+        name: string;
+        description: string | null;
+      }>;
+    };
 
+    return cat.sub_categories.map((subCat) => ({
+      id: subCat.id.toString(),
+      name: subCat.name,
+      description: subCat.description || "",
+      mainCategory: cat.name,
+    }));
+  });
+
+  const filteredSubCategories = subCategoriesData?.filter(
+    (sub: SubCategory) =>
+      sub.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      sub.id.toString().includes(searchTerm) ||
+      sub.mainCategory.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   return (
-    <div className="p-8 min-h-screen w-full  ">
+    <div className="p-8 min-h-screen w-full">
       <div className="max-w-7xl mx-auto mt-10 p-8 shadow-md rounded-2xl bg-zinc-50">
         <div className="flex flex-wrap justify-between items-center mb-4 border-b border-zinc-700/60 pb-2">
           <h2 className="text-xl font-bold tracking-wide bg-gradient-to-r text-black">
@@ -61,15 +79,17 @@ export default function SubRequirement() {
             <input
               type="text"
               placeholder="Type to search..."
-              className="border border-zinc-400 rounded-lg px-2 py-1 bg-zinc-400 placeholder-zinc-900  focus:ring-2 focus:ring-purple-500 focus:outline-none text-sm transition-all"
+              className="border border-zinc-400 rounded-lg px-2 py-1 bg-zinc-400 placeholder-zinc-900 focus:ring-2 focus:ring-purple-500 focus:outline-none text-sm transition-all"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
             />
           </div>
         </div>
 
-        {subCategoriesData && (
+        {filteredSubCategories && (
           <DataTable
             columns={columns}
-            data={subCategoriesData}
+            data={filteredSubCategories || []}
             enablePagination={true}
           />
         )}

@@ -1,4 +1,5 @@
-import { useState, useRef, useCallback } from "react";
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { useState, useRef, useCallback, useEffect } from "react";
 
 import { Button } from "@/components/ui/button";
 
@@ -34,7 +35,11 @@ import { getSource } from "@/services/apiSource";
 
 import { getMainCategories } from "@/services/apiMainCategories";
 
-import { createEnquiry } from "@/services/apiEnquiries";
+import {
+  createEnquiry,
+  updateEnquiry,
+  getEnquiryById,
+} from "@/services/apiEnquiries";
 
 import { useNavigate, useParams } from "react-router-dom";
 
@@ -47,6 +52,7 @@ import {
 import { Check, ChevronDown } from "lucide-react";
 
 import { toast } from "sonner";
+
 import StatusForm from "@/components/EnquiryStatus";
 
 const initialFormData = {
@@ -69,27 +75,71 @@ const initialFormData = {
 export default function EnquiryForm() {
   const navigate = useNavigate();
   const { id } = useParams();
-  console.log("edited id", id);
+  const isEditMode = !!id;
 
   const queryClient = useQueryClient();
-
   const formDataRef = useRef(initialFormData);
   const [, forceUpdate] = useState({});
-
   const triggerUpdate = useCallback(() => forceUpdate({}), []);
+
+  const { data: existingEnquiry, isLoading: isLoadingEnquiry } = useQuery({
+    queryKey: ["enquiry", id],
+    queryFn: () => getEnquiryById(id!),
+    enabled: isEditMode,
+    staleTime: 5 * 60 * 1000,
+  });
+
+  useEffect(() => {
+    if (existingEnquiry && isEditMode) {
+      formDataRef.current = {
+        companyName: existingEnquiry.company_name || "",
+        phone: existingEnquiry.primary_phone_number || "",
+        whatsappPrimary:
+          existingEnquiry.primary_phone_number_has_whatsapp || false,
+        altNumber: existingEnquiry.alternative_phone_number || "",
+        whatsappAlt:
+          existingEnquiry.alternative_phone_number_has_whatsapp || false,
+        email: existingEnquiry.email || "",
+        businessType: existingEnquiry.business_type || "",
+        status: existingEnquiry.status || "",
+        mainCategory: existingEnquiry.main_category || "",
+        subCategory: existingEnquiry.sub_category || "",
+        location: existingEnquiry.location || "",
+        source: existingEnquiry.source || "",
+        budget: existingEnquiry.budget ? String(existingEnquiry.budget) : "",
+        remarks: existingEnquiry.remarks || "",
+      };
+      triggerUpdate();
+    }
+  }, [existingEnquiry, isEditMode, triggerUpdate]);
 
   const createEnquiryMutation = useMutation({
     mutationFn: createEnquiry,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["enquiries"] });
-      toast("Enquiry created successfully!");
+      toast.success("Enquiry created successfully!");
       formDataRef.current = { ...initialFormData };
       triggerUpdate();
       navigate("/enquiry");
     },
     onError: (error) => {
       console.error("Error creating enquiry:", error);
-      toast("Failed to create enquiry. Please try again.");
+      toast.error("Failed to create enquiry. Please try again.");
+    },
+  });
+
+  const updateEnquiryMutation = useMutation({
+    mutationFn: ({ id, data }: { id: string; data: any }) =>
+      updateEnquiry(id, data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["enquiries"] });
+      queryClient.invalidateQueries({ queryKey: ["enquiry", id] });
+      toast.success("Enquiry updated successfully!");
+      navigate("/enquiry");
+    },
+    onError: (error) => {
+      console.error("Error updating enquiry:", error);
+      toast.error("Failed to update enquiry. Please try again.");
     },
   });
 
@@ -131,7 +181,7 @@ export default function EnquiryForm() {
         !formDataRef.current.companyName.trim() ||
         !formDataRef.current.phone.trim()
       ) {
-        alert("Company Name and Phone are required fields.");
+        toast.error("Company Name and Phone are required fields.");
         return;
       }
 
@@ -154,15 +204,19 @@ export default function EnquiryForm() {
         business_type: formDataRef.current.businessType || null,
       };
 
-      createEnquiryMutation.mutate(enquiryData);
+      if (isEditMode) {
+        updateEnquiryMutation.mutate({ id: id!, data: enquiryData });
+      } else {
+        createEnquiryMutation.mutate(enquiryData);
+      }
     },
-    [createEnquiryMutation]
+    [isEditMode, id, createEnquiryMutation, updateEnquiryMutation]
   );
 
   const { data: businessTypes, isLoading: isBusinessLoading } = useQuery({
     queryKey: ["businessTypes"],
     queryFn: getBusiness,
-    staleTime: 5 * 60 * 1000, 
+    staleTime: 5 * 60 * 1000,
   });
 
   const { data: statusTypes, isLoading: isStatusLoading } = useQuery({
@@ -198,10 +252,24 @@ export default function EnquiryForm() {
     );
 
   const formData = formDataRef.current;
+  const isSubmitting =
+    createEnquiryMutation.isPending || updateEnquiryMutation.isPending;
+
+  if (isEditMode && isLoadingEnquiry) {
+    return (
+      <div className="p-6 max-w-6xl mt-7 mx-auto bg-zinc-50 rounded-2xl shadow-md">
+        <div className="text-center py-12">
+          <p className="text-zinc-600">Loading enquiry data...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="p-6 max-w-6xl mt-7 mx-auto bg-zinc-50 rounded-2xl shadow-md space-y-6">
-      <h2 className="text-2xl font-bold text-zinc-900 mb-6"> Add New Entry</h2>
+      <h2 className="text-2xl font-bold text-zinc-900 mb-6">
+        {isEditMode ? "Edit Entry" : "Add New Entry"}
+      </h2>
 
       <form onSubmit={handleSubmit} className="space-y-6">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -660,11 +728,25 @@ export default function EnquiryForm() {
 
         <div className="flex justify-end gap-4 pt-4">
           <Button
+            type="button"
+            onClick={() => navigate("/enquiry")}
+            variant="outline"
+            className="px-6 py-2 rounded-lg"
+          >
+            Cancel
+          </Button>
+          <Button
             type="submit"
-            disabled={createEnquiryMutation.isPending}
+            disabled={isSubmitting}
             className="bg-zinc-500 hover:bg-zinc-600 text-white px-6 py-2 rounded-lg shadow-md transition-all disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            {createEnquiryMutation.isPending ? "Saving..." : "Save & Exit"}
+            {isSubmitting
+              ? isEditMode
+                ? "Updating..."
+                : "Saving..."
+              : isEditMode
+              ? "Update & Exit"
+              : "Save & Exit"}
           </Button>
         </div>
       </form>

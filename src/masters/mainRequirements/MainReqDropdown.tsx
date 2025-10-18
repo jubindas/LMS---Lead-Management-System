@@ -70,14 +70,12 @@ export default function MainReqDropdown({ id, rowData }: MainReqDropdownProps) {
           </DropdownMenuLabel>
           <DropdownMenuSeparator className="bg-zinc-800" />
 
-          <Button
-            variant="ghost"
-            className="flex items-center gap-2 w-full justify-start text-sm text-zinc-200 hover:bg-zinc-800"
-          >
-            <MainRequirementsForm mode="edit" mainCategory={rowData} />
-          </Button>
+          <Dialog>
+            <DialogTrigger asChild></DialogTrigger>
 
-          {/* 🔴 DELETE DIALOG */}
+            <MainRequirementsForm mode="edit" mainCategory={rowData} />
+          </Dialog>
+
           <Dialog open={openDialog} onOpenChange={setOpenDialog}>
             <DialogTrigger asChild>
               <Button

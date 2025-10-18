@@ -75,10 +75,11 @@ export default function BusinessActionDropdown({
             Actions
           </DropdownMenuLabel>
           <DropdownMenuSeparator className="bg-zinc-800" />
+          <Dialog>
+            <DialogTrigger asChild></DialogTrigger>
 
-          <Button variant="ghost">
             <EnquiryBusiness mode="edit" business={rowData} />
-          </Button>
+          </Dialog>
 
           <Dialog open={openDialog} onOpenChange={setOpenDialog}>
             <DialogTrigger asChild>

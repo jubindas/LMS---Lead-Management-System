@@ -210,7 +210,7 @@ const router = createBrowserRouter([
         ),
       },
       {
-        path: "/edit-enquiry/:id",
+        path: "/enquiry-edit/:id",
         element: (
           <Suspense fallback={<Loading />}>
             <EnquiryDialog />

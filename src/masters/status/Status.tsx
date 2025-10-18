@@ -1,5 +1,6 @@
-import { DataTable } from "@/components/data-table";
+import { useState } from "react";
 
+import { DataTable } from "@/components/data-table";
 
 import { columns } from "./status-columns";
 
@@ -8,23 +9,30 @@ import type { StatusType } from "./status-types";
 import { useQuery } from "@tanstack/react-query";
 
 import { getStatus } from "@/services/apiStatus";
+
 import Loading from "@/components/Loading";
+
 import StatusForm from "@/components/EnquiryStatus";
 
 export default function Status() {
-  const {
-    data: statusTypes,
-    isLoading,
-  } = useQuery<StatusType[]>({
+  const [searchTerm, setSearchTerm] = useState("");
+
+  const { data: statusTypes, isLoading } = useQuery<StatusType[]>({
     queryKey: ["statusTypes"],
     queryFn: getStatus,
   });
+
+  if (isLoading) return <Loading />;
 
   const sortedStatusTypes = [...(statusTypes || [])].sort(
     (a, b) => Number(a.id) - Number(b.id)
   );
 
-  if (isLoading) return <Loading />;
+  const filteredStatusTypes = sortedStatusTypes.filter(
+    (status) =>
+      status.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      status.id.toString().includes(searchTerm)
+  );
 
   return (
     <div className="p-8 min-h-screen w-full">
@@ -58,14 +66,17 @@ export default function Status() {
             <input
               type="text"
               placeholder="Type to search..."
-              className="border border-zinc-400 rounded-lg px-2 py-1 bg-zinc-400 placeholder-zinc-900  focus:ring-2 focus:ring-purple-500 focus:outline-none text-sm transition-all"
+              className="border border-zinc-400 rounded-lg px-2 py-1 bg-zinc-400 placeholder-zinc-900 focus:ring-2 focus:ring-purple-500 focus:outline-none text-sm transition-all"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
             />
           </div>
         </div>
+
         {statusTypes && (
           <DataTable
             columns={columns}
-            data={sortedStatusTypes || []}
+            data={filteredStatusTypes || []}
             enablePagination={true}
           />
         )}
