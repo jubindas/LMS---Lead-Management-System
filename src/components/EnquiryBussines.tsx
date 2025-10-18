@@ -20,7 +20,10 @@ interface EnquiryBusinessProps {
   business?: BusinessType;
 }
 
-export default function EnquiryBusiness({ mode, business }: EnquiryBusinessProps) {
+export default function EnquiryBusiness({
+  mode,
+  business,
+}: EnquiryBusinessProps) {
   const queryClient = useQueryClient();
 
   const [formData, setFormData] = useState({
@@ -35,18 +38,15 @@ export default function EnquiryBusiness({ mode, business }: EnquiryBusinessProps
   // 🧠 Handle opening/closing dialog
   const handleDialogChange = (open: boolean) => {
     if (open && mode === "edit" && business) {
-      // Prefill data when dialog opens in edit mode
       setFormData({
         name: business.name || "",
         description: business.description || "",
       });
     } else if (!open) {
-      // Reset form when dialog closes
       resetForm();
     }
   };
 
-  // ✅ Create Business
   const createMutation = useMutation({
     mutationFn: (newBusiness: { name: string; description?: string | null }) =>
       createBusiness(newBusiness),
@@ -61,7 +61,6 @@ export default function EnquiryBusiness({ mode, business }: EnquiryBusinessProps
     },
   });
 
-  // ✅ Update Business
   const updateMutation = useMutation({
     mutationFn: (updatedBusiness: {
       id: string;
@@ -104,7 +103,6 @@ export default function EnquiryBusiness({ mode, business }: EnquiryBusinessProps
 
   return (
     <Dialog onOpenChange={handleDialogChange}>
-
       {mode === "create" && (
         <DialogTrigger asChild>
           <Button className="bg-zinc-500 hover:bg-zinc-600 text-white font-medium px-3 py-1.5 text-sm rounded-md shadow-md transition-transform transform hover:-translate-y-0.5 hover:shadow-lg">
@@ -114,19 +112,17 @@ export default function EnquiryBusiness({ mode, business }: EnquiryBusinessProps
       )}
 
       {mode === "edit" && (
-  <DialogTrigger asChild>
-    <Button
-      variant="ghost"
-      className="w-full justify-start text-sm text-zinc-200 flex items-center gap-2 text-left"
-    >
-      <Pencil className="h-4 w-4 text-blue-400" />
-      Edit
-    </Button>
-  </DialogTrigger>
-)}
+        <DialogTrigger asChild>
+          <Button
+            variant="ghost"
+            className="w-full justify-start items-center gap-2 text-sm text-zinc-200"
+          >
+            <Pencil className="h-4 w-4 text-blue-400" />
+            Edit
+          </Button>
+        </DialogTrigger>
+      )}
 
-
-      {/* DIALOG CONTENT */}
       <DialogContent className="w-[90%] max-w-md md:max-w-xl lg:max-w-3xl max-h-[80vh] overflow-y-auto bg-zinc-100 rounded-lg shadow-2xl border border-zinc-300 p-4 md:p-6">
         <DialogHeader className="pb-4 border-b border-zinc-300">
           <DialogTitle className="text-lg md:text-2xl font-bold text-zinc-800">
@@ -139,9 +135,7 @@ export default function EnquiryBusiness({ mode, business }: EnquiryBusinessProps
           </DialogDescription>
         </DialogHeader>
 
-        {/* FORM */}
         <form onSubmit={handleSubmit} className="mt-6 space-y-6">
-          {/* Business Name */}
           <div>
             <label className="block text-sm font-semibold text-zinc-700 mb-2">
               Business Name
@@ -157,7 +151,6 @@ export default function EnquiryBusiness({ mode, business }: EnquiryBusinessProps
             />
           </div>
 
-          {/* Description */}
           <div>
             <label className="block text-sm font-semibold text-zinc-700 mb-2">
               Description{" "}
@@ -173,7 +166,6 @@ export default function EnquiryBusiness({ mode, business }: EnquiryBusinessProps
             />
           </div>
 
-          {/* Submit Button */}
           <div className="flex flex-col md:flex-row justify-end gap-3 pt-4 border-t border-zinc-300">
             <Button
               type="submit"

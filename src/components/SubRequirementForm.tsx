@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
+
 import { Button } from "@/components/ui/button";
+
 import {
   Dialog,
   DialogContent,
@@ -8,13 +10,24 @@ import {
   DialogDescription,
   DialogTrigger,
 } from "@/components/ui/dialog";
+
 import { FaPlus } from "react-icons/fa";
+
 import { Pencil } from "lucide-react";
+
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+
 import { toast } from "sonner";
+
 import { getMainCategories } from "@/services/apiMainCategories";
-import { createSubCategory, updateSubCategory } from "@/services/apiSubCategories";
+
+import {
+  createSubCategory,
+  updateSubCategory,
+} from "@/services/apiSubCategories";
+
 import type { SubCategory } from "@/masters/subRequirements/sub-requirements-types";
+import type { MainCategory } from "@/masters/mainRequirements/main-requirements-types";
 
 interface SubRequirementFormProps {
   mode?: "create" | "edit";
@@ -33,17 +46,17 @@ export default function SubRequirementForm({
     description: "",
   });
 
-  // Fetch main categories
   const { data: mainCategories } = useQuery({
     queryKey: ["mainCategories"],
     queryFn: getMainCategories,
   });
 
-  // Prefill form when editing
   useEffect(() => {
     if (mode === "edit" && subCategory) {
+      console.log("Editing SubCategory:", subCategory);
+
       setFormData({
-        main_category_id: subCategory.name|| "",
+        main_category_id: subCategory.mainCategory || "",
         name: subCategory.name || "",
         description: subCategory.description || "",
       });
@@ -52,7 +65,6 @@ export default function SubRequirementForm({
     }
   }, [mode, subCategory]);
 
-  // Create mutation
   const createMutation = useMutation({
     mutationFn: (newSubCategory: {
       main_category_id: string;
@@ -70,7 +82,6 @@ export default function SubRequirementForm({
     },
   });
 
-  // Update mutation
   const updateMutation = useMutation({
     mutationFn: (updatedSubCategory: {
       id: string;
@@ -89,11 +100,16 @@ export default function SubRequirementForm({
     },
   });
 
-  const resetForm = () => setFormData({ main_category_id: "", name: "", description: "" });
+  const resetForm = () =>
+    setFormData({ main_category_id: "", name: "", description: "" });
 
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => setFormData({ ...formData, [e.target.name]: e.target.value });
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >
+  ) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -120,7 +136,6 @@ export default function SubRequirementForm({
 
   return (
     <Dialog>
-      {/* CREATE BUTTON */}
       {mode === "create" && (
         <DialogTrigger asChild>
           <Button className="bg-zinc-500 hover:bg-zinc-600 text-white font-medium px-3 py-1.5 text-sm rounded-md shadow-md transition-transform transform hover:-translate-y-0.5 hover:shadow-lg">
@@ -129,7 +144,6 @@ export default function SubRequirementForm({
         </DialogTrigger>
       )}
 
-      {/* EDIT BUTTON */}
       {mode === "edit" && (
         <DialogTrigger asChild>
           <Button
@@ -155,29 +169,29 @@ export default function SubRequirementForm({
         </DialogHeader>
 
         <form onSubmit={handleSubmit} className="mt-6 space-y-6">
-          <div>
-            <label className="block text-sm font-semibold text-zinc-700 mb-2">
-              Main Category <span className="text-zinc-500">(required)</span>
-            </label>
-            <select
-              name="main_category_id"
-              value={formData.main_category_id}
-              onChange={handleChange}
-              className="w-full border border-zinc-300 rounded-md px-3 py-2 bg-white text-zinc-800 shadow-sm focus:outline-none focus:ring-2 focus:ring-zinc-500 transition"
-              required
-            >
-              <option value="">Select Main Category</option>
-              {mainCategories?.map((main: any) => (
-                <option key={main.id} value={main.id}>
+          <select
+            name="main_category_id"
+            value={formData.main_category_id || ""}
+            onChange={handleChange}
+            className="w-full border border-zinc-300 rounded-md px-3 py-2 bg-white text-zinc-800 shadow-sm focus:outline-none focus:ring-2 focus:ring-zinc-500 transition"
+            required
+          >
+            <option value="">Select Main Category</option>
+            {mainCategories && mainCategories.length > 0 ? (
+              mainCategories.map((main: MainCategory) => (
+                <option key={main.id} value={main.name}>
                   {main.name}
                 </option>
-              ))}
-            </select>
-          </div>
+              ))
+            ) : (
+              <option disabled>Loading...</option>
+            )}
+          </select>
 
           <div>
             <label className="block text-sm font-semibold text-zinc-700 mb-2">
-              Sub Category Name <span className="text-zinc-500">(required)</span>
+              Sub Category Name{" "}
+              <span className="text-zinc-500">(required)</span>
             </label>
             <input
               type="text"
@@ -192,7 +206,8 @@ export default function SubRequirementForm({
 
           <div>
             <label className="block text-sm font-semibold text-zinc-700 mb-2">
-              Description <span className="text-xs text-zinc-500">(optional)</span>
+              Description{" "}
+              <span className="text-xs text-zinc-500">(optional)</span>
             </label>
             <textarea
               name="description"

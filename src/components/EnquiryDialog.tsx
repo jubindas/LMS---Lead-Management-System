@@ -162,7 +162,7 @@ export default function EnquiryForm() {
   const { data: businessTypes, isLoading: isBusinessLoading } = useQuery({
     queryKey: ["businessTypes"],
     queryFn: getBusiness,
-    staleTime: 5 * 60 * 1000, // 5 minutes
+    staleTime: 5 * 60 * 1000, 
   });
 
   const { data: statusTypes, isLoading: isStatusLoading } = useQuery({

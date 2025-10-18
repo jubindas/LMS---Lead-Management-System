@@ -1,5 +1,7 @@
 import { useState } from "react";
+
 import { MoreHorizontal, Trash2 } from "lucide-react";
+
 import { Button } from "@/components/ui/button";
 
 import {
@@ -20,14 +22,17 @@ import {
 } from "@/components/ui/dialog";
 
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+
 import { toast } from "sonner";
 
 import { deleteSubCategory } from "@/services/apiSubCategories";
+
 import SubRequirementForm from "@/components/SubRequirementForm";
+
 import type { SubCategory } from "./sub-requirements-types";
 
 interface SubCategoryActionDropdownProps {
-  rawData: SubCategory;  // the whole sub-category object
+  rawData: SubCategory;  
 }
 
 export default function SubCategoryActionDropdown({

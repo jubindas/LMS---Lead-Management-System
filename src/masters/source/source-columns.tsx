@@ -4,8 +4,6 @@ import type { ColumnDef } from "@tanstack/react-table";
 
 import SourcesActionDropdown from "./SourcesActionDropdown";
 
-
-
 export const columns: ColumnDef<Source>[] = [
   {
     accessorKey: "id",
@@ -25,14 +23,14 @@ export const columns: ColumnDef<Source>[] = [
     accessorKey: "description",
     header: "Description",
     cell: ({ row }) => (
-      <span className="text-black text-sm">{row.getValue("description") || "N/A"}</span>
+      <span className="text-black text-sm">
+        {row.getValue("description") || "N/A"}
+      </span>
     ),
   },
   {
     id: "actions",
     header: () => <span className="capitalize">Actions</span>,
-    cell: ({row}) => (
-      <SourcesActionDropdown id={row.original.id} />
-    ),
+    cell: ({ row }) => <SourcesActionDropdown rowData={row.original} />,
   },
 ];

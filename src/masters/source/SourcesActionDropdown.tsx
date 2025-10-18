@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState } from "react";
 
 import { MoreHorizontal, Trash2, Pencil } from "lucide-react";
@@ -18,7 +19,6 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
-  DialogFooter,
 } from "@/components/ui/dialog";
 
 import { useMutation, useQueryClient } from "@tanstack/react-query";
@@ -29,17 +29,17 @@ import { deleteSource } from "@/services/apiSource";
 
 import EnquirySource from "@/components/EnquirySource";
 
-
 interface SourcesActionDropdownProps {
-  id: string;
-  name?: string;
-  description?: string;
+  rowData: {
+    id: string;
+    name: string;
+    description?: string;
+    [key: string]: any;
+  };
 }
 
 export default function SourcesActionDropdown({
-  id,
-  name,
-  description,
+  rowData,
 }: SourcesActionDropdownProps) {
   const queryClient = useQueryClient();
   const [openDialog, setOpenDialog] = useState(false);
@@ -104,7 +104,7 @@ export default function SourcesActionDropdown({
               <p className="text-sm text-black my-2">
                 Are you sure you want to delete this source?
               </p>
-              <DialogFooter className="flex justify-end gap-2">
+              <div className="flex justify-end gap-2">
                 <Button
                   variant="outline"
                   className="bg-zinc-500 hover:bg-zinc-600 text-white"
@@ -114,11 +114,11 @@ export default function SourcesActionDropdown({
                 </Button>
                 <Button
                   variant="destructive"
-                  onClick={() => deleteMutation.mutate(id)}
+                  onClick={() => deleteMutation.mutate(rowData.id)}
                 >
                   {deleteMutation.isPending ? "Deleting..." : "Yes, Delete"}
                 </Button>
-              </DialogFooter>
+              </div>
             </DialogContent>
           </Dialog>
         </DropdownMenuContent>
@@ -129,7 +129,7 @@ export default function SourcesActionDropdown({
           open={openEditDialog}
           setOpen={setOpenEditDialog}
           mode="edit"
-          source={{ id, name: name || "", description: description || "" }}
+          source={rowData}
         />
       )}
     </>

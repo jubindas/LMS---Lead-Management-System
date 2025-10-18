@@ -37,7 +37,6 @@ export default function EnquiryLocation({
 
   const queryClient = useQueryClient();
 
-  // Prefill form when in edit mode
   useEffect(() => {
     if (mode === "edit" && location) {
       setFormData({
@@ -49,7 +48,6 @@ export default function EnquiryLocation({
     }
   }, [mode, location, open]);
 
-  // Mutation for creating a location
   const createMutation = useMutation({
     mutationFn: (newLocation: { name: string; description?: string | null }) =>
       createLocation(newLocation),
@@ -64,7 +62,6 @@ export default function EnquiryLocation({
     },
   });
 
-  // Mutation for updating a location
   const updateMutation = useMutation({
     mutationFn: (updatedLocation: {
       id: string;
@@ -133,7 +130,6 @@ export default function EnquiryLocation({
         </DialogHeader>
 
         <form onSubmit={handleSubmit} className="mt-6 space-y-6">
-          {/* Location Name */}
           <div>
             <label className="block text-sm font-semibold text-zinc-700 mb-2">
               Location Name
@@ -149,7 +145,6 @@ export default function EnquiryLocation({
             />
           </div>
 
-          {/* Description */}
           <div>
             <label className="block text-sm font-semibold text-zinc-700 mb-2">
               Description{" "}
@@ -165,7 +160,6 @@ export default function EnquiryLocation({
             />
           </div>
 
-          {/* Save Button */}
           <div className="flex flex-col md:flex-row justify-end gap-3 pt-4 border-t border-zinc-300">
             <Button
               type="submit"

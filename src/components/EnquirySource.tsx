@@ -31,6 +31,8 @@ export default function EnquirySource({
     description: "",
   });
 
+  console.log("the source data is", source)
+
   const [internalOpen, setInternalOpen] = useState(false);
   const open = externalOpen !== undefined ? externalOpen : internalOpen;
   const setOpen = externalSetOpen || setInternalOpen;
@@ -38,16 +40,18 @@ export default function EnquirySource({
   const queryClient = useQueryClient();
 
   
-  useEffect(() => {
-    if (mode === "edit" && source) {
-      setFormData({
-        name: source.name || "",
-        description: source.description || "",
-      });
-    } else {
-      setFormData({ name: "", description: "" });
-    }
-  }, [mode, source, open]);
+useEffect(() => {
+  if (mode === "edit" && source && open) {
+
+    console.log("the edited source data is", source)
+    setFormData({
+      name: source.name || "",
+      description: source.description || "",
+    });
+  }
+}, [mode, source, open]);
+
+
 
   
   const createMutation = useMutation({

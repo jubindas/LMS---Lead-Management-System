@@ -1,9 +1,7 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState } from "react";
-
 import { MoreHorizontal, Trash2, Pencil } from "lucide-react";
-
 import { Button } from "@/components/ui/button";
-
 import {
   DropdownMenu,
   DropdownMenuTrigger,
@@ -11,7 +9,6 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
-
 import {
   Dialog,
   DialogTrigger,
@@ -20,31 +17,26 @@ import {
   DialogTitle,
   DialogFooter,
 } from "@/components/ui/dialog";
-
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-
 import { toast } from "sonner";
-
 import { deleteLocation } from "@/services/apiLocation";
-
-import EnquiryLocation from "@/components/EnquiryLocation"; 
+import EnquiryLocation from "@/components/EnquiryLocation";
 
 interface LocationActionsDropdownProps {
-  id: string;
-  name?: string;
-  description?: string;
+  rowData: {
+    id: string;
+    name: string;
+    description?: string;
+    [key: string]: any; 
+  };
 }
 
-export default function LocationActionsDropdown({
-  id,
-  name,
-  description,
-}: LocationActionsDropdownProps) {
+export default function LocationActionsDropdown({ rowData }: LocationActionsDropdownProps) {
   const queryClient = useQueryClient();
   const [openDialog, setOpenDialog] = useState(false);
   const [openEditDialog, setOpenEditDialog] = useState(false);
 
-  const deleteLocationMutation = useMutation({
+  const deleteMutation = useMutation({
     mutationFn: (locationId: string) => deleteLocation(locationId),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["locations"] });
@@ -71,9 +63,7 @@ export default function LocationActionsDropdown({
           align="end"
           className="w-40 rounded-xl bg-zinc-900 border border-zinc-800 shadow-lg"
         >
-          <DropdownMenuLabel className="text-xs text-zinc-400">
-            Actions
-          </DropdownMenuLabel>
+          <DropdownMenuLabel className="text-xs text-zinc-400">Actions</DropdownMenuLabel>
           <DropdownMenuSeparator className="bg-zinc-800" />
 
           <Button
@@ -113,9 +103,9 @@ export default function LocationActionsDropdown({
                 </Button>
                 <Button
                   variant="destructive"
-                  onClick={() => deleteLocationMutation.mutate(id)}
+                  onClick={() => deleteMutation.mutate(rowData.id)}
                 >
-                  {deleteLocationMutation.isPending ? "Deleting..." : "Yes, Delete"}
+                  {deleteMutation.isPending ? "Deleting..." : "Yes, Delete"}
                 </Button>
               </DialogFooter>
             </DialogContent>
@@ -128,7 +118,7 @@ export default function LocationActionsDropdown({
           open={openEditDialog}
           setOpen={setOpenEditDialog}
           mode="edit"
-          location={{ id, name: name || "", description: description || "" }}
+          location={rowData} 
         />
       )}
     </>

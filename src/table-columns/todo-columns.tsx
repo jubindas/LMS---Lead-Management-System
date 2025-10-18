@@ -63,6 +63,7 @@ export const columns = ({
           id={String(todo.id)}
           name={todo.name}
           content={todo.content}
+          is_complete={row.original.is_complete}
           onEdit={() => onEdit(todo)}
         />
       );

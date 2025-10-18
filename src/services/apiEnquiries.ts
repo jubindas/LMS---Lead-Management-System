@@ -1,10 +1,7 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { API_BASE_URL } from "@/lib/url";
 
 import axios from "axios";
-
-
-
-
 
 export async function getEnquiries() {
   const response = await axios.get(`${API_BASE_URL}/enquiries`);
@@ -13,10 +10,6 @@ export async function getEnquiries() {
   }
   return response.data;
 }
-
-
-
-
 
 export async function createEnquiry(enquiryData: {
   company_name: string;
@@ -49,10 +42,6 @@ export async function createEnquiry(enquiryData: {
   }
 }
 
-
-
-
-
 export async function getEnquiryById(enquiryId: string | number) {
   try {
     const response = await axios.get(`${API_BASE_URL}/enquiries/${enquiryId}`);
@@ -68,12 +57,11 @@ export async function getEnquiryById(enquiryId: string | number) {
   }
 }
 
-
-
-
 export async function deleteEnquiry(enquiryId: string | number) {
   try {
-    const response = await axios.delete(`${API_BASE_URL}/enquiries/${enquiryId}`);
+    const response = await axios.delete(
+      `${API_BASE_URL}/enquiries/${enquiryId}`
+    );
     if (response.status !== 204) {
       throw new Error(`Failed to delete enquiry with ID ${enquiryId}`);
     }
@@ -84,9 +72,6 @@ export async function deleteEnquiry(enquiryId: string | number) {
     throw error;
   }
 }
-
-
-
 
 export async function updateEnquiry(
   enquiryId: string | number,
@@ -109,7 +94,10 @@ export async function updateEnquiry(
 ) {
   try {
     console.log(`Updating enquiry ID ${enquiryId} with data:`, enquiryData);
-    const response = await axios.put(`${API_BASE_URL}/enquiries/${enquiryId}`, enquiryData);
+    const response = await axios.put(
+      `${API_BASE_URL}/enquiries/${enquiryId}`,
+      enquiryData
+    );
     if (response.status !== 200) {
       throw new Error(`Failed to update enquiry with ID ${enquiryId}`);
     }

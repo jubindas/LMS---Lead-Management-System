@@ -68,3 +68,20 @@ export async function markAsDoneTodo(id: string) {
 
   return response.data;
 }
+
+
+
+export async function markAsIncompleteTodo(id: string) {
+  try {
+    const response = await axios.patch(`${API_BASE_URL}/todos/${id}/incomplete`);
+
+    if (response.status !== 200) {
+      throw new Error("Failed to mark todo as incomplete");
+    }
+
+    return response.data;
+  } catch (error) {
+    console.error("Error marking todo as incomplete:", error);
+    throw error;
+  }
+}
