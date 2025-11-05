@@ -9,6 +9,7 @@ import { useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 
 import { getFollowupsByPaymentId } from "@/services/apiPaymentsFollowup.ts";
+
 import Loading from "@/components/Loading.tsx";
 
 export default function PaymentFollowUp() {
@@ -27,6 +28,10 @@ export default function PaymentFollowUp() {
   if (error) return <div>Error loading follow-ups</div>;
 
   console.log("Follow-ups data:", followUps);
+
+  const sortedData = Array.isArray(followUps)
+    ? [...followUps].sort((a, b) => b.id - a.id)
+    : [];
 
   return (
     <div className="p-4 md:p-8 min-h-screen w-full">
@@ -66,10 +71,10 @@ export default function PaymentFollowUp() {
         </div>
 
         <div className="w-full overflow-x-auto">
-          {followUps && (
+          {sortedData && (
             <DataTable
               columns={columns}
-              data={followUps}
+              data={sortedData}
               enablePagination={true}
             />
           )}

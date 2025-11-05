@@ -15,4 +15,5 @@ export type Enquiry = {
   source?: string;
   budget?: string;
   remarks?: string;
+  pdf: null;
 };

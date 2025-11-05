@@ -9,25 +9,33 @@ export async function getMainCategories() {
     throw new Error("Failed to fetch main categories");
   }
 
-
   return response.data;
 }
 
-export async function createMainCategory(categoryData: { name: string; description?: string | null }) {
-  const response = await axios.post(`${API_BASE_URL}/main-categories`, categoryData);
+export async function createMainCategory(categoryData: {
+  name: string;
+  description?: string | null;
+}) {
+  const response = await axios.post(
+    `${API_BASE_URL}/main-categories`,
+    categoryData
+  );
 
   if (response.status !== 201) {
     throw new Error("Failed to create main category");
   }
 
   return response.data;
-}   
+}
 
-
-
-
-export async function updateMainCategory(id: string, categoryData: { name?: string; description?: string | null }) {
-  const response = await axios.put(`${API_BASE_URL}/main-categories/${id}`, categoryData);
+export async function updateMainCategory(
+  id: string,
+  categoryData: { name?: string; description?: string | null }
+) {
+  const response = await axios.put(
+    `${API_BASE_URL}/main-categories/${id}`,
+    categoryData
+  );
 
   if (response.status !== 200) {
     throw new Error("Failed to update main category");

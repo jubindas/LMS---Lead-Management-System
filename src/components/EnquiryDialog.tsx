@@ -70,6 +70,7 @@ const initialFormData = {
   source: "",
   budget: "",
   remarks: "",
+  pdf: undefined,
 };
 
 export default function EnquiryForm() {
@@ -138,6 +139,8 @@ export default function EnquiryForm() {
         budget: existingEnquiry.budget ? String(existingEnquiry.budget) : "",
 
         remarks: existingEnquiry.remarks || "",
+
+        pdf: undefined,
       };
       triggerUpdate();
     }
@@ -703,6 +706,41 @@ export default function EnquiryForm() {
                 className="w-full py-2 text-zinc-800 placeholder-zinc-400 bg-transparent focus:outline-none"
               />
             </div>
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-zinc-700 mb-1.5">
+              Upload PDF (Optional)
+            </label>
+
+            <div className="flex items-center border border-zinc-300 rounded-lg px-3 bg-zinc-100 h-12">
+              <BsFillFileEarmarkTextFill className="text-zinc-500 mr-2" />
+
+              <input
+                type="file"
+                accept="application/pdf"
+                name="pdf"
+                onChange={(e) => {
+                  const file = e.target.files?.[0];
+                  if (file && file.type !== "application/pdf") {
+                    alert("Only PDF files allowed!");
+                    return;
+                  }
+                  formDataRef.current = {
+                    ...formDataRef.current,
+                    pdf: undefined,
+                  };
+                  triggerUpdate();
+                }}
+                className="w-full text-zinc-800 bg-transparent focus:outline-none"
+              />
+            </div>
+
+            {formDataRef.current.pdf && (
+              <p className="text-sm text-green-600 mt-1">
+                ✅ Selected: {formDataRef.current.pdf}
+              </p>
+            )}
           </div>
         </div>
 

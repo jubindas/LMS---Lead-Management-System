@@ -1,12 +1,6 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import {
-  MoreHorizontal,
-  Trash2,
-  Pencil,
-  CheckCircle2,
-  XCircle,
-} from "lucide-react";
+import { MoreHorizontal, Trash2, Pencil } from "lucide-react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 
@@ -27,11 +21,7 @@ import {
   DialogFooter,
 } from "@/components/ui/dialog";
 
-import {
-  deleteTodo,
-  markAsDoneTodo,
-  markAsIncompleteTodo,
-} from "@/services/apiTodo";
+import { deleteTodo } from "@/services/apiTodo";
 
 type TodoActionDropdownProps = {
   id: string;
@@ -63,24 +53,6 @@ export default function TodoActionDropdown({
     onError: () => toast.error("Failed to delete todo"),
   });
 
-  const markDoneMutation = useMutation({
-    mutationFn: (todoId: string) => markAsDoneTodo(todoId),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["todos"] });
-      toast.success(`Todo "${name}" marked as done!`);
-    },
-    onError: () => toast.error("Failed to mark todo as done"),
-  });
-
-  const markIncompleteMutation = useMutation({
-    mutationFn: (todoId: string) => markAsIncompleteTodo(todoId),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["todos"] });
-      toast.success(`Todo "${name}" marked as incomplete!`);
-    },
-    onError: () => toast.error("Failed to mark todo as incomplete"),
-  });
-
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -107,30 +79,6 @@ export default function TodoActionDropdown({
           <Pencil className="h-4 w-4 text-blue-400" />
           Edit
         </Button>
-
-        {!is_complete ? (
-          <Button
-            variant="ghost"
-            className="flex items-center gap-2 w-full justify-start text-sm text-green-400"
-            disabled={markDoneMutation.isPending}
-            onClick={() => markDoneMutation.mutate(id)}
-          >
-            <CheckCircle2 className="h-4 w-4" />
-            {markDoneMutation.isPending ? "Marking..." : "Mark Complete"}
-          </Button>
-        ) : (
-          <Button
-            variant="ghost"
-            className="flex items-center gap-2 w-full justify-start text-sm text-yellow-400"
-            disabled={markIncompleteMutation.isPending}
-            onClick={() => markIncompleteMutation.mutate(id)}
-          >
-            <XCircle className="h-4 w-4" />
-            {markIncompleteMutation.isPending
-              ? "Marking..."
-              : "Mark Incomplete"}
-          </Button>
-        )}
 
         <Dialog open={openDialog} onOpenChange={setOpenDialog}>
           <DialogTrigger asChild>

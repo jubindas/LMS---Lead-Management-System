@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { DataTable } from "../../components/data-table";
 
 import { todoColumns } from "@/table-columns/todo-dashboard-today";
@@ -12,9 +13,8 @@ export default function TodayTodoWorksTable() {
     queryFn: getTodos,
   });
 
-
   const today = new Date();
-  const todayStr = today.toLocaleDateString("en-CA"); 
+  const todayStr = today.toLocaleDateString("en-CA");
 
   const todaysTodos = todoData
     ? todoData.filter((todo: any) => {
@@ -23,12 +23,14 @@ export default function TodayTodoWorksTable() {
       })
     : [];
 
-  const sortedTodos = todaysTodos.sort((a: any, b: any) => Number(a.id) - Number(b.id));
+  const sortedTodos = todaysTodos.sort(
+    (a: any, b: any) => Number(a.id) - Number(b.id)
+  );
 
   return (
     <DataTable
       columns={todoColumns}
-      data={sortedTodos}
+      data={sortedTodos.filter((t: any) => t.is_complete === false)}
       enablePagination={true}
     />
   );

@@ -2,10 +2,6 @@ import { API_BASE_URL } from "@/lib/url";
 
 import axios from "axios";
 
-
-
-
-
 export async function getTodos() {
   const response = await axios.get(`${API_BASE_URL}/todos`);
 
@@ -16,10 +12,10 @@ export async function getTodos() {
   return response.data.data;
 }
 
-
-
-
-export async function createTodo(todoData: { name: string; content?: string | null }) {
+export async function createTodo(todoData: {
+  name: string;
+  content?: string | null;
+}) {
   const response = await axios.post(`${API_BASE_URL}/todos`, todoData);
 
   if (response.status !== 201) {
@@ -29,10 +25,10 @@ export async function createTodo(todoData: { name: string; content?: string | nu
   return response.data;
 }
 
-
-
-
-export async function updateTodo(id: string, todoData: { name: string; content?: string | null }) {
+export async function updateTodo(
+  id: string,
+  todoData: { name: string; content?: string | null }
+) {
   const response = await axios.put(`${API_BASE_URL}/todos/${id}`, todoData);
 
   if (response.status !== 200) {
@@ -41,8 +37,6 @@ export async function updateTodo(id: string, todoData: { name: string; content?:
 
   return response.data;
 }
-
-
 
 export async function deleteTodo(id: string) {
   const response = await axios.delete(`${API_BASE_URL}/todos/${id}`);
@@ -53,9 +47,6 @@ export async function deleteTodo(id: string) {
 
   return response.data;
 }
-
-
-
 
 export async function markAsDoneTodo(id: string) {
   const response = await axios.patch(`${API_BASE_URL}/todos/${id}/toggle`, {
@@ -69,11 +60,11 @@ export async function markAsDoneTodo(id: string) {
   return response.data;
 }
 
-
-
 export async function markAsIncompleteTodo(id: string) {
   try {
-    const response = await axios.patch(`${API_BASE_URL}/todos/${id}/incomplete`);
+    const response = await axios.patch(
+      `${API_BASE_URL}/todos/${id}/incomplete`
+    );
 
     if (response.status !== 200) {
       throw new Error("Failed to mark todo as incomplete");

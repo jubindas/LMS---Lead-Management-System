@@ -226,7 +226,7 @@ export default function TodoList({
             {todoData && (
               <DataTable
                 columns={columns({ onEdit: handleEdit })}
-                data={sortedTodos}
+                data={sortedTodos.filter((todo) => todo.is_complete === false)}
                 enablePagination={true}
               />
             )}

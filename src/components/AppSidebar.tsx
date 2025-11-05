@@ -50,6 +50,7 @@ const items = [
   },
   { title: "Payment", url: "/payment", icon: IndianRupee },
   { title: "Todo List", url: "/todo-list", icon: ListTodo },
+  { title: "Completed Todo List", url: "/completed-todo-list", icon: ListTodo },
   { title: "Completed Enquiries", url: "/completed-enquiry", icon: CheckCircle  },
   { title: "Pending Enquiries", url: "/pending-enquiry", icon: CalendarClock},
   { title: "Trash Enquiries", url: "/trash-bin", icon: Trash2 },

@@ -9,12 +9,13 @@ export async function getSource() {
     throw new Error("Failed to fetch sources");
   }
 
-
   return response.data;
 }
 
-
-export async function createSources(source: { name: string; description?: string | null }) {
+export async function createSources(source: {
+  name: string;
+  description?: string | null;
+}) {
   const response = await axios.post(`${API_BASE_URL}/sources`, source);
 
   if (response.status !== 201) {
@@ -24,10 +25,10 @@ export async function createSources(source: { name: string; description?: string
   return response.data;
 }
 
-
-
-
-export async function updateSource(id: string, source: { name: string; description?: string | null }) {
+export async function updateSource(
+  id: string,
+  source: { name: string; description?: string | null }
+) {
   const response = await axios.put(`${API_BASE_URL}/sources/${id}`, source);
 
   if (response.status !== 200) {
@@ -36,10 +37,6 @@ export async function updateSource(id: string, source: { name: string; descripti
 
   return response.data;
 }
-
-
-
-
 
 export async function deleteSource(id: string) {
   const response = await axios.delete(`${API_BASE_URL}/sources/${id}`);
