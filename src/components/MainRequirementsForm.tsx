@@ -1,5 +1,7 @@
 import { useState, useEffect } from "react";
+
 import { Button } from "@/components/ui/button";
+
 import {
   Dialog,
   DialogContent,
@@ -8,14 +10,20 @@ import {
   DialogDescription,
   DialogTrigger,
 } from "@/components/ui/dialog";
+
 import { FaPlus } from "react-icons/fa";
+
 import { Pencil } from "lucide-react";
+
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+
 import {
   createMainCategory,
   updateMainCategory,
 } from "@/services/apiMainCategories";
+
 import { toast } from "sonner";
+
 import type {MainCategory} from "@/masters/mainRequirements/main-requirements-types"
 
 interface MainRequirementsFormProps {
@@ -37,7 +45,6 @@ export default function MainRequirementsForm({
 
   const resetForm = () => setFormData({ name: "", description: "" });
 
-  // Prefill form when editing
   useEffect(() => {
     if (mode === "edit" && mainCategory) {
       setFormData({
@@ -49,7 +56,6 @@ export default function MainRequirementsForm({
     }
   }, [mode, mainCategory]);
 
-  // Create mutation
   const createMutation = useMutation({
     mutationFn: (newCategory: { name: string; description?: string | null }) =>
       createMainCategory(newCategory),
@@ -64,7 +70,6 @@ export default function MainRequirementsForm({
     },
   });
 
-  // Update mutation
   const updateMutation = useMutation({
     mutationFn: (updatedCategory: {
       id: string;
@@ -106,7 +111,6 @@ export default function MainRequirementsForm({
 
   return (
     <Dialog>
-      {/* CREATE BUTTON */}
       {mode === "create" && (
         <DialogTrigger asChild>
           <Button className="bg-zinc-500 hover:bg-zinc-600 text-white font-medium px-3 py-1.5 text-sm rounded-md shadow-md transition-transform transform hover:-translate-y-0.5 hover:shadow-lg">
@@ -115,7 +119,6 @@ export default function MainRequirementsForm({
         </DialogTrigger>
       )}
 
-      {/* EDIT BUTTON */}
       {mode === "edit" && (
         <DialogTrigger asChild>
           <Button

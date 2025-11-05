@@ -27,6 +27,7 @@ import {
 } from "@/services/apiSubCategories";
 
 import type { SubCategory } from "@/masters/subRequirements/sub-requirements-types";
+
 import type { MainCategory } from "@/masters/mainRequirements/main-requirements-types";
 
 interface SubRequirementFormProps {

@@ -35,8 +35,6 @@ export default function StatusActionsDropdown({
   const queryClient = useQueryClient();
   const [openDialog, setOpenDialog] = useState(false);
 
-  console.log("the row datas are", rowData);
-
   const deleteMutation = useMutation({
     mutationFn: (statusId: string) => deleteStatus(statusId),
     onSuccess: () => {

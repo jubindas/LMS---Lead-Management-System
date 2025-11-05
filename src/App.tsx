@@ -66,7 +66,7 @@ const router = createBrowserRouter([
     element: <RootLayout />,
     children: [
       {
-        path: "/",
+        index: true,
         element: (
           <Suspense fallback={<Loading />}>
             <DashBoard />
@@ -74,7 +74,7 @@ const router = createBrowserRouter([
         ),
       },
       {
-        path: "/bussines",
+        path: "bussines",
         element: (
           <Suspense fallback={<Loading />}>
             <BusinessTypeTable />
@@ -82,7 +82,7 @@ const router = createBrowserRouter([
         ),
       },
       {
-        path: "/status",
+        path: "status",
         element: (
           <Suspense fallback={<Loading />}>
             <StatusTypeTable />
@@ -178,7 +178,7 @@ const router = createBrowserRouter([
         ),
       },
       {
-        path: "/enquiry-view-details/:id",
+        path: "enquiry-view-details/:id",
         element: (
           <Suspense fallback={<Loading />}>
             <EnquiryViewDetails />
@@ -186,7 +186,7 @@ const router = createBrowserRouter([
         ),
       },
       {
-        path: "/pending-enquiry",
+        path: "pending-enquiry",
         element: (
           <Suspense fallback={<Loading />}>
             <PendingEnquiries />
@@ -194,7 +194,7 @@ const router = createBrowserRouter([
         ),
       },
       {
-        path: "/payment-follow-up/:id",
+        path: "payment-follow-up/:id",
         element: (
           <Suspense fallback={<Loading />}>
             <PaymentFollowUp />
@@ -202,7 +202,7 @@ const router = createBrowserRouter([
         ),
       },
       {
-        path: "/add-enquiry",
+        path: "add-enquiry",
         element: (
           <Suspense fallback={<Loading />}>
             <EnquiryDialog />
@@ -210,7 +210,7 @@ const router = createBrowserRouter([
         ),
       },
       {
-        path: "/enquiry-edit/:id",
+        path: "enquiry-edit/:id",
         element: (
           <Suspense fallback={<Loading />}>
             <EnquiryDialog />
@@ -218,7 +218,7 @@ const router = createBrowserRouter([
         ),
       },
       {
-        path: "/report-enquiry",
+        path: "report-enquiry",
         element: (
           <Suspense fallback={<Loading />}>
             <ReportEnquiry />
@@ -226,7 +226,7 @@ const router = createBrowserRouter([
         ),
       },
       {
-        path: "/download",
+        path: "download",
         element: (
           <Suspense fallback={<Loading />}>
             <DownloadEnquiry />
@@ -236,11 +236,11 @@ const router = createBrowserRouter([
     ],
   },
   {
-    path: "/login",
+    path: "login",
     element: <LogIn />,
   },
   {
-    path: "/test",
+    path: "test",
     element: <Test />,
   },
 ]);

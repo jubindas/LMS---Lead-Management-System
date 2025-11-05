@@ -1,5 +1,7 @@
 import { useState } from "react";
+
 import { Button } from "@/components/ui/button";
+
 import {
   Dialog,
   DialogContent,
@@ -8,11 +10,17 @@ import {
   DialogDescription,
   DialogTrigger,
 } from "@/components/ui/dialog";
+
 import { FaPlus } from "react-icons/fa";
+
 import { Pencil } from "lucide-react";
+
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+
 import { createBusiness, updateBusiness } from "@/services/apiBusiness";
+
 import { toast } from "sonner";
+
 import type { BusinessType } from "@/masters/bussiness/business-types";
 
 interface EnquiryBusinessProps {
@@ -25,6 +33,8 @@ export default function EnquiryBusiness({
   business,
 }: EnquiryBusinessProps) {
   const queryClient = useQueryClient();
+
+  const [open, setOpen] = useState(false);
 
   const [formData, setFormData] = useState({
     name: "",
@@ -53,10 +63,11 @@ export default function EnquiryBusiness({
       queryClient.invalidateQueries({ queryKey: ["businessTypes"] });
       toast("Business created successfully!");
       resetForm();
+      setOpen(false);
     },
     onError: (error) => {
       console.error("Error creating business:", error);
-      toast("Failed to create business.");
+      toast("Failed to create business .");
     },
   });
 
@@ -68,12 +79,13 @@ export default function EnquiryBusiness({
     }) => updateBusiness(updatedBusiness.id, updatedBusiness),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["businessTypes"] });
-      toast("Business updated successfully!");
+      toast(`Business ${mode} successfully!`);
       resetForm();
+      setOpen(false);
     },
     onError: (error) => {
       console.error("Error updating business:", error);
-      toast("Failed to update business.");
+      toast(`Failed to ${mode} business ${error.message}.`);
     },
   });
 
@@ -101,7 +113,13 @@ export default function EnquiryBusiness({
   };
 
   return (
-    <Dialog onOpenChange={handleDialogChange}>
+    <Dialog
+      open={open}
+      onOpenChange={(o) => {
+        setOpen(o);
+        handleDialogChange(o);
+      }}
+    >
       {mode === "create" && (
         <DialogTrigger asChild>
           <Button className="bg-zinc-500 hover:bg-zinc-600 text-white font-medium px-3 py-1.5 text-sm rounded-md shadow-md transition-transform transform hover:-translate-y-0.5 hover:shadow-lg">
@@ -124,7 +142,7 @@ export default function EnquiryBusiness({
 
       <DialogContent className="w-[90%] max-w-md md:max-w-xl lg:max-w-3xl max-h-[80vh] overflow-y-auto bg-zinc-100 rounded-lg shadow-2xl border border-zinc-300 p-4 md:p-6">
         <DialogHeader className="pb-4 border-b border-zinc-300">
-          <DialogTitle className="text-lg md:text-2xl font-bold text-zinc-800">
+          <DialogTitle className="text-lg md:text-2xl font-bold text-stone-950">
             {mode === "edit" ? "EDIT BUSINESS" : "ADD NEW BUSINESS"}
           </DialogTitle>
           <DialogDescription className="text-sm md:text-base text-zinc-600">

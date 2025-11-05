@@ -20,15 +20,6 @@ export const columns: ColumnDef<StatusType>[] = [
     ),
   },
   {
-    accessorKey: "description",
-    header: "Description",
-    cell: ({ row }) => (
-      <span className="text-black text-sm">
-        {(row.getValue("description") as string) || "N/A"}
-      </span>
-    ),
-  },
-  {
     accessorKey: "created_at",
     header: "Created Date",
     cell: ({ row }) => {
@@ -43,10 +34,11 @@ export const columns: ColumnDef<StatusType>[] = [
       return <span className="text-black text-sm">{formattedDate}</span>;
     },
   },
-{
-  id: "actions",
-  header: () => <span className="capitalize">Actions</span>,
-  cell: ({ row }) => <StatusActionsDropdown id={row.original.id} rowData={row.original}/>,
-}
-
+  {
+    id: "actions",
+    header: () => <span className="capitalize">Actions</span>,
+    cell: ({ row }) => (
+      <StatusActionsDropdown id={row.original.id} rowData={row.original} />
+    ),
+  },
 ];

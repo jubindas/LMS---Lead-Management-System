@@ -13,6 +13,7 @@ import { getTodos, createTodo, updateTodo } from "@/services/apiTodo";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 
 import { toast } from "sonner";
+import Loading from "@/components/Loading";
 
 export default function TodoList({ editTodo }: { editTodo?: (todo: { id: string; name: string; content?: string | null }) => void }) {
   const queryClient = useQueryClient();
@@ -44,7 +45,7 @@ export default function TodoList({ editTodo }: { editTodo?: (todo: { id: string;
     onError: () => toast.error("Failed to update todo"),
   });
 
-  const { data: todoData } = useQuery({
+  const { data: todoData, isLoading } = useQuery({
     queryKey: ["todos"],
     queryFn: getTodos,
   });
@@ -88,6 +89,9 @@ export default function TodoList({ editTodo }: { editTodo?: (todo: { id: string;
     setIsEditing(true);
     setEditingTodoId(todo.id);
   }
+
+
+  if(isLoading) return <Loading />
 
   return (
     <div className="min-h-screen text-white font-['Poppins'] p-4">

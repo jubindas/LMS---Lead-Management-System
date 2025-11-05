@@ -9,6 +9,7 @@ import { getSource } from "@/services/apiSource";
 import { useQuery } from "@tanstack/react-query";
 
 import EnquirySource from "@/components/EnquirySource";
+import Loading from "@/components/Loading";
 
 export default function Source() {
   const [searchTerm, setSearchTerm] = useState("");
@@ -17,7 +18,7 @@ export default function Source() {
     queryFn: getSource,
   });
 
-  if (isLoading) return <div>Loading...</div>;
+  if (isLoading) return <Loading />;
 
   const sortedData = [...(data || [])].sort(
     (a, b) => Number(a.id) - Number(b.id)

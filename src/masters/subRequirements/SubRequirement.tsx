@@ -12,6 +12,8 @@ import { useQuery } from "@tanstack/react-query";
 
 import type { SubCategory } from "./sub-requirements-types.ts";
 
+import Loading from "@/components/Loading.tsx";
+
 export default function SubRequirement() {
   const [searchTerm, setSearchTerm] = useState("");
 
@@ -20,7 +22,7 @@ export default function SubRequirement() {
     queryFn: getMainCategories,
   });
 
-  if (isLoading) return <div>Loading...</div>;
+  if (isLoading) return <Loading />;
 
   const subCategoriesData = mainCategoriesData?.flatMap((mainCat: unknown) => {
     const cat = mainCat as {

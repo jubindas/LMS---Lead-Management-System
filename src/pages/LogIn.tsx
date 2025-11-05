@@ -17,7 +17,7 @@ export default function LogIn() {
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Logging in with:", { email, password});
+    console.log("Logging in with:", { email, password });
   };
 
   const handleGoogleLogin = () => {
@@ -73,8 +73,6 @@ export default function LogIn() {
               )}
             </button>
           </div>
-
-         
 
           <button
             type="submit"

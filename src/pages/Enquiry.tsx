@@ -12,6 +12,8 @@ import { useQuery } from "@tanstack/react-query";
 
 import { getEnquiries } from "@/services/apiEnquiries.ts";
 
+import Loading from "@/components/Loading.tsx";
+
 export default function Enquiries() {
   const [searchTerm, setSearchTerm] = useState("");
 
@@ -20,7 +22,7 @@ export default function Enquiries() {
     queryFn: getEnquiries,
   });
 
-  if (isLoading) return <div>Loading...</div>;
+  if (isLoading) return <Loading />;
 
   const sortedEnquiries = [...(enquiries || [])].sort(
     (a, b) => Number(a.id) - Number(b.id)

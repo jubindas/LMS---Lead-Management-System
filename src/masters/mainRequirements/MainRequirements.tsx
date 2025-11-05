@@ -9,6 +9,7 @@ import MainRequirementsForm from "@/components/MainRequirementsForm";
 import { useQuery } from "@tanstack/react-query";
 
 import { getMainCategories } from "@/services/apiMainCategories";
+import Loading from "@/components/Loading";
 
 export default function MainRequirements() {
   const [searchTerm, setSearchTerm] = useState("");
@@ -19,7 +20,7 @@ export default function MainRequirements() {
   });
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return <Loading />;
   }
 
   const sortedData = [...(data || [])].sort((a, b) => Number(a.id) - Number(b.id));

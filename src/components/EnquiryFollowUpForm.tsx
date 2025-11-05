@@ -1,6 +1,10 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState } from "react";
+
 import { useFloating, offset, flip, shift } from "@floating-ui/react";
+
 import { Calendar } from "@/components/ui/calendar";
+
 import {
   Dialog,
   DialogContent,
@@ -9,8 +13,11 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+
 import { toast } from "sonner";
+
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+
 import { createFollowUp } from "@/services/apiFollowUp";
 
 type EnquiryFollowUpFormProps = {
@@ -80,7 +87,6 @@ export default function EnquiryFollowUpForm({
         </DialogHeader>
 
         <div className="grid grid-cols-1 gap-4 md:gap-6">
-          {/* Remarks Field */}
           <div className="flex flex-col">
             <label className="text-sm md:text-base text-zinc-700 mb-2 font-medium">
               Remarks
@@ -97,7 +103,6 @@ export default function EnquiryFollowUpForm({
             />
           </div>
 
-          {/* Follow-Up Date Field */}
           <div className="flex flex-col relative">
             <label className="text-sm md:text-base text-zinc-700 mb-2 font-medium">
               Follow-Up Date
@@ -137,7 +142,6 @@ export default function EnquiryFollowUpForm({
             )}
           </div>
 
-          {/* Submit Button */}
           <div className="mt-4">
             <button
               onClick={handleAddEnquiryFollowUp}

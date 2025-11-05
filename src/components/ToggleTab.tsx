@@ -1,13 +1,15 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+
 import TodoDashboard from "../pages/TodoDashboard";
+
 import PaymentsDashboard from "../pages/PaymentsDashboard";
+
 import FollowUpDashboard from "../pages/FollowUpDashboard";
 
 export default function ToggleTab() {
   return (
     <div className="w-full max-w-7xl mx-auto px-4">
       <Tabs defaultValue="todo" className="w-full">
-       
         <div className="mt-5 sticky top-0 z-20 bg-zinc-100 border-b border-zinc-500">
           <div className="flex justify-start px-2 sm:px-6 lg:px-8">
             <TabsList className="flex space-x-6 h-12 bg-transparent border-b border-transparent">
@@ -45,7 +47,6 @@ export default function ToggleTab() {
           </div>
         </div>
 
-        {/* Tabs Content */}
         <div className="mt-6 space-y-6">
           <TabsContent value="todo">
             <FollowUpDashboard />

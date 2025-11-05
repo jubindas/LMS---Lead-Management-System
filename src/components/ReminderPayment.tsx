@@ -1,5 +1,7 @@
 import { useState, useRef, useEffect } from "react";
+
 import { Calendar } from "@/components/ui/calendar";
+
 import {
   Dialog,
   DialogContent,
@@ -8,19 +10,25 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+
 import TimePicker from "react-time-picker";
+
 import "react-time-picker/dist/TimePicker.css";
+
 import "react-clock/dist/Clock.css";
 
 export default function ReminderPayment() {
+
   const [open, setOpen] = useState(false);
+
   const [showCalendar, setShowCalendar] = useState(false);
+
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined);
+
   const [selectedTime] = useState("10:00");
 
   const calendarRef = useRef<HTMLDivElement>(null);
 
-  // Close calendar when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
@@ -47,14 +55,13 @@ export default function ReminderPayment() {
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      {/* Trigger Button */}
       <DialogTrigger asChild>
         <button >
           Set Reminder
         </button>
       </DialogTrigger>
 
-      {/* Modal Content */}
+
       <DialogContent className="w-full max-w-md p-6 rounded-2xl shadow-xl bg-white border border-zinc-200">
         <DialogHeader>
           <DialogTitle className="text-2xl font-bold text-center text-zinc-800">
@@ -65,9 +72,9 @@ export default function ReminderPayment() {
           </DialogDescription>
         </DialogHeader>
 
-        {/* Date and Time Side by Side */}
+
         <div className="flex items-start justify-between gap-4 mt-6 relative">
-          {/* Date Selector */}
+
           <div className="relative flex-1">
             <button
               type="button"
@@ -79,7 +86,6 @@ export default function ReminderPayment() {
                 : "Select Date"}
             </button>
 
-            {/* Calendar Pop-up */}
             {showCalendar && (
               <div
                 ref={calendarRef}
@@ -98,7 +104,7 @@ export default function ReminderPayment() {
             )}
           </div>
 
-          {/* Time Picker */}
+
           <div className="flex-1 flex items-center">
             <TimePicker
              
@@ -109,7 +115,6 @@ export default function ReminderPayment() {
           </div>
         </div>
 
-        {/* Save Button */}
         <button
           onClick={handleSaveDateTime}
           disabled={!selectedDate || !selectedTime}

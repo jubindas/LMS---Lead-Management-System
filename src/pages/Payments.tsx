@@ -5,13 +5,14 @@ import PaymentsEnquiry from "@/components/PaymentsEnquiry";
 import { getPayments } from "@/services/apiPayments";
 import { useQuery } from "@tanstack/react-query";
 import type { Payment } from "../table-types/payment-types";
+import Loading from "@/components/Loading";
 
 export default function PaymentsTable() {
   const [paymentToEdit, setPaymentToEdit] = useState<Payment | undefined>();
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
 
-  const { data } = useQuery({
+  const { data, isLoading } = useQuery({
     queryKey: ["payments"],
     queryFn: getPayments,
   });
@@ -34,6 +35,8 @@ export default function PaymentsTable() {
       payment.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
       payment.remarks?.toLowerCase().includes(searchTerm.toLowerCase())
   );
+
+  if(isLoading) return <Loading />
 
   return (
     <div className="p-8 min-h-screen w-full">

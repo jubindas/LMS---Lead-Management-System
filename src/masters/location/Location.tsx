@@ -9,6 +9,7 @@ import EnquiryLocation from "@/components/EnquiryLocation";
 import { getLocation } from "@/services/apiLocation";
 
 import { useQuery } from "@tanstack/react-query";
+import Loading from "@/components/Loading";
 
 export default function LocationTable() {
   const [searchTerm, setSearchTerm] = useState("");
@@ -22,7 +23,7 @@ export default function LocationTable() {
     queryFn: getLocation,
   });
 
-  if (isLoading) return <div>Loading...</div>;
+  if (isLoading) return <Loading />;
   if (error) return <div>Error fetching locations</div>;
 
   const sortedLocations = [...(locations || [])].sort((a, b) => a.id - b.id);

@@ -1,5 +1,7 @@
 import { useState, useRef, useEffect } from "react";
+
 import { Calendar } from "@/components/ui/calendar";
+
 import {
   Dialog,
   DialogContent,
@@ -8,8 +10,11 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+
 import TimePicker from "react-time-picker";
+
 import "react-time-picker/dist/TimePicker.css";
+
 import "react-clock/dist/Clock.css";
 
 export default function EnquiryReminder() {
@@ -20,7 +25,6 @@ export default function EnquiryReminder() {
 
   const calendarRef = useRef<HTMLDivElement>(null);
 
-  // Close calendar when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
@@ -47,14 +51,14 @@ export default function EnquiryReminder() {
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      {/* Trigger Button */}
+
       <DialogTrigger asChild>
         <button >
         Enquiry Reminder
         </button>
       </DialogTrigger>
 
-      {/* Modal */}
+ 
       <DialogContent className="w-full max-w-md p-6 rounded-2xl shadow-xl bg-white border border-zinc-200">
         <DialogHeader>
           <DialogTitle className="text-2xl font-bold text-center text-zinc-900">
@@ -65,9 +69,9 @@ export default function EnquiryReminder() {
           </DialogDescription>
         </DialogHeader>
 
-        {/* Date and Time Selectors */}
+      
         <div className="flex items-start justify-between gap-4 mt-6 relative">
-          {/* Date Selector */}
+  
           <div className="relative flex-1">
             <button
               type="button"
@@ -79,7 +83,6 @@ export default function EnquiryReminder() {
                 : "Select Date"}
             </button>
 
-            {/* Calendar Pop-up */}
             {showCalendar && (
               <div
                 ref={calendarRef}
@@ -98,7 +101,6 @@ export default function EnquiryReminder() {
             )}
           </div>
 
-          {/* Time Picker */}
           <div className="flex-1 flex items-center">
             <TimePicker
               value={selectedTime}
@@ -108,7 +110,6 @@ export default function EnquiryReminder() {
           </div>
         </div>
 
-        {/* Save Button */}
         <button
           onClick={handleSaveReminder}
           disabled={!selectedDate || !selectedTime}

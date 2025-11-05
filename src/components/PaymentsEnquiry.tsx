@@ -1,5 +1,7 @@
 import { useState, useEffect } from "react";
+
 import { Button } from "@/components/ui/button";
+
 import {
   Dialog,
   DialogContent,
@@ -8,8 +10,11 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+
 import { toast } from "sonner";
+
 import { createPayments, updatePayment } from "@/services/apiPayments";
 
 type PaymentsEnquiryProps = {
@@ -37,7 +42,7 @@ export default function PaymentsEnquiry({
     remarks: "",
   });
 
-  // Fill form if editing
+
   useEffect(() => {
     if (paymentToEdit) {
       setFormData({
@@ -48,7 +53,7 @@ export default function PaymentsEnquiry({
     }
   }, [paymentToEdit]);
 
-  // Handle edit mode
+
   useEffect(() => {
     setOpen(isEdit);
   }, [isEdit]);
@@ -96,10 +101,10 @@ export default function PaymentsEnquiry({
     };
 
     if (paymentToEdit) {
-      // Update existing payment
+
       updatePaymentMutation.mutate({ id: paymentToEdit.id, ...payload });
     } else {
-      // Create new payment
+
       createPaymentMutation.mutate(payload);
     }
   };

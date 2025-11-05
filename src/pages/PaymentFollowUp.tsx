@@ -9,6 +9,7 @@ import { useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 
 import { getFollowupsByPaymentId } from "@/services/apiPaymentsFollowup.ts";
+import Loading from "@/components/Loading.tsx";
 
 export default function PaymentFollowUp() {
   const { id } = useParams<{ id: string }>();
@@ -22,7 +23,7 @@ export default function PaymentFollowUp() {
     queryFn: () => getFollowupsByPaymentId(id as string),
   });
 
-  if (isLoading) return <div>Loading...</div>;
+  if (isLoading) return <Loading />;
   if (error) return <div>Error loading follow-ups</div>;
 
   console.log("Follow-ups data:", followUps);

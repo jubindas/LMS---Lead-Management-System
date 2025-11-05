@@ -18,6 +18,7 @@ import {
 } from "react-icons/fa";
 
 import {Link} from "react-router-dom"
+import Loading from "@/components/Loading";
 
 interface InfoCardProps {
   icon: ReactNode;
@@ -53,7 +54,7 @@ export default function EnquiryViewDetails() {
 
   if (isLoading) {
     return (
-      <div className="p-6 text-center text-lg">Loading enquiry details...</div>
+     <Loading />
     );
   }
 

@@ -30,7 +30,7 @@ export default function BusinessTypeTable() {
   if (error) return <div>Error fetching business types</div>;
 
   const sortedBusinessTypes = [...(businessTypes || [])].sort(
-    (a, b) => Number(a.id) - Number(b.id)
+    (a, b) => Number(b.id) - Number(a.id)
   );
 
 const filteredBusinessTypes = sortedBusinessTypes.filter((business) =>

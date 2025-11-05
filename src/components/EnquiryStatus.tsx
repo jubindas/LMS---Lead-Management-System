@@ -8,8 +8,10 @@ import {
   DialogDescription,
   DialogTrigger,
 } from "@/components/ui/dialog";
+
 import { FaPlus } from "react-icons/fa";
 import { Pencil } from "lucide-react";
+
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { createStatus, updateStatus } from "@/services/apiStatus";
 import { toast } from "sonner";
@@ -23,62 +25,41 @@ interface StatusFormProps {
 export default function StatusForm({ mode, initialData }: StatusFormProps) {
   const queryClient = useQueryClient();
 
-  const [formData, setFormData] = useState({
-    name: "",
-    description: "",
-  });
+  const [formData, setFormData] = useState({ name: "" });
+  const [open, setOpen] = useState(false);
 
-  const resetForm = () => {
-    setFormData({ name: "", description: "" });
-  };
+  const resetForm = () => setFormData({ name: "" });
 
   const handleDialogChange = (open: boolean) => {
     if (open && mode === "edit" && initialData) {
-      setFormData({
-        name: initialData.name || "",
-        description: initialData.description || "",
-      });
+      setFormData({ name: initialData.name || "" });
     } else if (!open) {
       resetForm();
     }
   };
 
   const createMutation = useMutation({
-    mutationFn: (newStatus: { name: string; description?: string | null }) =>
-      createStatus(newStatus),
+    mutationFn: (newStatus: { name: string }) => createStatus(newStatus),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["statusTypes"] });
-      toast("Status created successfully!");
+      toast.success("Status created successfully!");
       resetForm();
+      setOpen(false);
     },
-    onError: (error) => {
-      console.error("Error creating status:", error);
-      toast("Failed to create status.");
-    },
+    onError: () => toast.error("Failed to create status."),
   });
 
   const updateMutation = useMutation({
-    mutationFn: (updatedStatus: {
-      id: string;
-      name: string;
-      description?: string | null;
-    }) => updateStatus(updatedStatus.id, updatedStatus),
+    mutationFn: (updatedStatus: { id: string; name: string }) =>
+      updateStatus(updatedStatus.id, updatedStatus),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["statusTypes"] });
-      toast("Status updated successfully!");
+      toast.success("Status updated successfully!");
       resetForm();
+      setOpen(false);
     },
-    onError: (error) => {
-      console.error("Error updating status:", error);
-      toast("Failed to update status.");
-    },
+    onError: () => toast.error("Failed to update status."),
   });
-
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -87,22 +68,25 @@ export default function StatusForm({ mode, initialData }: StatusFormProps) {
       updateMutation.mutate({
         id: initialData.id,
         name: formData.name,
-        description: formData.description || null,
       });
     } else {
-      createMutation.mutate({
-        name: formData.name,
-        description: formData.description || null,
-      });
+      createMutation.mutate({ name: formData.name });
     }
   };
 
   return (
-    <Dialog onOpenChange={handleDialogChange}>
+    <Dialog
+      open={open}
+      onOpenChange={(o) => {
+        setOpen(o);
+        handleDialogChange(o);
+      }}
+    >
+      {/* Trigger Buttons */}
       {mode === "create" && (
         <DialogTrigger asChild>
-          <Button className="bg-zinc-500 hover:bg-zinc-600 text-white font-medium px-3 py-1.5 text-sm rounded-md shadow-md transition-transform transform hover:-translate-y-0.5 hover:shadow-lg">
-            <FaPlus />
+          <Button className="bg-zinc-700 hover:bg-zinc-800 text-white shadow-md px-3 py-2 rounded-md transition-all">
+            <FaPlus size={13} />
           </Button>
         </DialogTrigger>
       )}
@@ -111,7 +95,7 @@ export default function StatusForm({ mode, initialData }: StatusFormProps) {
         <DialogTrigger asChild>
           <Button
             variant="ghost"
-            className="w-full justify-start text-sm text-zinc-200 flex items-center gap-2 text-left"
+            className="w-full justify-start text-sm text-zinc-300 flex items-center gap-2 transition hover:bg-zinc-800/40"
           >
             <Pencil className="h-4 w-4 text-blue-400" />
             Edit
@@ -119,54 +103,42 @@ export default function StatusForm({ mode, initialData }: StatusFormProps) {
         </DialogTrigger>
       )}
 
-      <DialogContent className="w-[90%] max-w-md md:max-w-xl lg:max-w-3xl max-h-[80vh] overflow-y-auto bg-zinc-100 rounded-lg shadow-2xl border border-zinc-300 p-4 md:p-6">
-        <DialogHeader className="pb-4 border-b border-zinc-300">
-          <DialogTitle className="text-lg md:text-2xl font-bold text-zinc-800">
-            {mode === "edit" ? "EDIT STATUS" : "ADD NEW STATUS"}
+      {/* Dialog Content */}
+      <DialogContent className="w-[90%] max-w-lg bg-white rounded-xl border border-zinc-200 shadow-xl p-6">
+        <DialogHeader className="pb-4 border-b border-zinc-200">
+          <DialogTitle className="text-xl font-semibold text-zinc-900">
+            {mode === "edit" ? "Edit Status" : "Add New Status"}
           </DialogTitle>
-          <DialogDescription className="text-sm md:text-base text-zinc-600">
+          <DialogDescription className="text-sm text-zinc-600">
             {mode === "edit"
-              ? "Update the details for this status."
-              : "Fill in the details for the new status."}
+              ? "Modify the status name below."
+              : "Create a new status for categorizing items."}
           </DialogDescription>
         </DialogHeader>
 
-        <form onSubmit={handleSubmit} className="mt-6 space-y-6">
+        <form onSubmit={handleSubmit} className="mt-6 space-y-5">
           <div>
-            <label className="block text-sm font-semibold text-zinc-700 mb-2">
+            <label className="block text-sm font-medium text-zinc-700 mb-1.5">
               Status Name
             </label>
             <input
               type="text"
               name="name"
-              placeholder="Enter status name"
               value={formData.name}
-              onChange={handleChange}
+              placeholder="Enter status name"
               required
-              className="w-full border border-zinc-300 rounded-md px-3 py-2 bg-white text-zinc-800 shadow-sm focus:outline-none focus:ring-2 focus:ring-zinc-500 transition"
+              onChange={(e) =>
+                setFormData({ ...formData, [e.target.name]: e.target.value })
+              }
+              className="w-full border border-zinc-300 focus:border-zinc-500 rounded-md px-3 py-2 shadow-sm bg-white text-zinc-800 transition outline-none focus:ring-2 focus:ring-zinc-400"
             />
           </div>
 
-          <div>
-            <label className="block text-sm font-semibold text-zinc-700 mb-2">
-              Description{" "}
-              <span className="text-xs text-zinc-500">(optional)</span>
-            </label>
-            <textarea
-              name="description"
-              placeholder="Enter description"
-              value={formData.description}
-              onChange={handleChange}
-              rows={4}
-              className="w-full border border-zinc-300 rounded-md px-3 py-2 bg-white text-zinc-800 shadow-sm resize-none focus:outline-none focus:ring-2 focus:ring-zinc-500 transition"
-            />
-          </div>
-
-          <div className="flex flex-col md:flex-row justify-end gap-3 pt-4 border-t border-zinc-300">
+          <div className="flex justify-end pt-4 border-t border-zinc-200">
             <Button
               type="submit"
               disabled={createMutation.isPending || updateMutation.isPending}
-              className="w-full md:w-auto bg-zinc-500 hover:bg-zinc-600 text-white font-medium px-6 py-2 rounded-md shadow-lg transition-transform transform hover:-translate-y-1"
+              className="bg-zinc-700 hover:bg-zinc-800 text-white px-6 py-2 rounded-md shadow-md transition"
             >
               {createMutation.isPending || updateMutation.isPending
                 ? "Saving..."

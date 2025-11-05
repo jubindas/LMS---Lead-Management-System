@@ -12,6 +12,8 @@ import EnquiryFollowUpForm from "../components/EnquiryFollowUpForm";
 
 import { getFollowUpsByEnquiryId } from "@/services/apiFollowUp";
 
+import Loading from "@/components/Loading";
+
 export default function EnquiryFollowUp() {
   const { id } = useParams<{ id: string }>();
 
@@ -24,7 +26,7 @@ export default function EnquiryFollowUp() {
   const filteredData = data?.filter(item => item.enquiry_id === Number(id)) || [];
 
   if (isLoading) {
-    return <p className="text-center text-gray-500">Loading follow-ups...</p>;
+    return <Loading />;
   }
 
   if (isError) {

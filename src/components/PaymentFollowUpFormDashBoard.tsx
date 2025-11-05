@@ -27,23 +27,23 @@ export default function PaymentFollowUpForm() {
   });
   const calendarRef = useRef<HTMLDivElement>(null);
 
-  // Handle text input
+
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  // Handle time change
+
   const handleTimeChange = (time: string | null) => {
     setForm({ ...form, reminderTime: time || "10:00" });
   };
 
-  // Handle Add button
+
   const handleAddPayment = () => {
     console.log("Follow-up payment added:", form);
     setOpen(false);
   };
 
-  // Close calendar when clicking outside
+
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
@@ -78,7 +78,6 @@ export default function PaymentFollowUpForm() {
         </DialogHeader>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-          {/* Remark Field */}
           <div className="flex flex-col sm:col-span-2">
             <label className="text-zinc-600 mb-2 font-medium">Remark</label>
             <input
@@ -91,7 +90,6 @@ export default function PaymentFollowUpForm() {
             />
           </div>
 
-          {/* Calendar Picker */}
           <div className="flex flex-col sm:col-span-1 relative">
             <label className="text-zinc-600 mb-2 font-medium">
               Reminder Date
@@ -121,7 +119,6 @@ export default function PaymentFollowUpForm() {
             )}
           </div>
 
-          {/* Time Picker */}
           <div className="flex flex-col sm:col-span-1">
             <label className="text-zinc-600 mb-2 font-medium">
               Reminder Time (Optional)
@@ -134,7 +131,7 @@ export default function PaymentFollowUpForm() {
             />
           </div>
 
-          {/* Submit Button */}
+
           <button
             onClick={handleAddPayment}
             className="mt-8 w-full py-3 bg-zinc-500 text-white font-semibold rounded-xl shadow-lg hover:bg-zinc-600 transition transform hover:-translate-y-0.5"
