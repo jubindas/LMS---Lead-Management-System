@@ -13,15 +13,26 @@ import { getTodos, createTodo, updateTodo } from "@/services/apiTodo";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 
 import { toast } from "sonner";
+
 import Loading from "@/components/Loading";
 
-export default function TodoList({ editTodo }: { editTodo?: (todo: { id: string; name: string; content?: string | null }) => void }) {
+export default function TodoList({ editTodo }: 
+  { editTodo?: (todo: { 
+    id: string; 
+    name: string; 
+    content?: string | null 
+  }) => void }) {
+
   const queryClient = useQueryClient();
 
   const [newTaskName, setNewTaskName] = useState("");
+
   const [newTaskContent, setNewTaskContent] = useState("");
+
   const [isEditing, setIsEditing] = useState(false);
+
   const [editingTodoId, setEditingTodoId] = useState<string | null>(null);
+
 
   const createTodoMutation = useMutation({
     mutationFn: (todoData: { name: string; content?: string | null }) =>
@@ -55,10 +66,15 @@ export default function TodoList({ editTodo }: { editTodo?: (todo: { id: string;
   console.log("Sorted Todos:", sortedTodos);
 
   const resetForm = () => {
+
     setNewTaskName("");
+
     setNewTaskContent("");
+
     setIsEditing(false);
+
     setEditingTodoId(null);
+    
   };
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {

@@ -26,6 +26,8 @@ export default function BusinessTypeTable() {
     queryFn: getBusiness,
   });
 
+
+  console.log("the logs are", businessTypes)
   if (isLoading) return <Loading />;
   if (error) return <div>Error fetching business types</div>;
 

@@ -74,12 +74,29 @@ const initialFormData = {
 
 export default function EnquiryForm() {
   const navigate = useNavigate();
+
   const { id } = useParams();
+
   const isEditMode = !!id;
 
   const queryClient = useQueryClient();
+
   const formDataRef = useRef(initialFormData);
+
   const [, forceUpdate] = useState({});
+
+  const [openBusiness, setOpenBusiness] = useState(false);
+
+  const [openLocation, setOpenLocation] = useState(false);
+
+  const [openStatus, setOpenStatus] = useState(false);
+
+  const [openSource, setOpenSource] = useState(false);
+
+  const [openMainCategory, setOpenMainCategory] = useState(false);
+
+  const [openSubCategory, setOpenSubCategory] = useState(false);
+
   const triggerUpdate = useCallback(() => forceUpdate({}), []);
 
   const { data: existingEnquiry, isLoading: isLoadingEnquiry } = useQuery({
@@ -93,20 +110,33 @@ export default function EnquiryForm() {
     if (existingEnquiry && isEditMode) {
       formDataRef.current = {
         companyName: existingEnquiry.company_name || "",
+
         phone: existingEnquiry.primary_phone_number || "",
+
         whatsappPrimary:
           existingEnquiry.primary_phone_number_has_whatsapp || false,
+
         altNumber: existingEnquiry.alternative_phone_number || "",
+
         whatsappAlt:
           existingEnquiry.alternative_phone_number_has_whatsapp || false,
+
         email: existingEnquiry.email || "",
+
         businessType: existingEnquiry.business_type || "",
+
         status: existingEnquiry.status || "",
+
         mainCategory: existingEnquiry.main_category || "",
+
         subCategory: existingEnquiry.sub_category || "",
+
         location: existingEnquiry.location || "",
+
         source: existingEnquiry.source || "",
+
         budget: existingEnquiry.budget ? String(existingEnquiry.budget) : "",
+
         remarks: existingEnquiry.remarks || "",
       };
       triggerUpdate();
@@ -115,6 +145,7 @@ export default function EnquiryForm() {
 
   const createEnquiryMutation = useMutation({
     mutationFn: createEnquiry,
+
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["enquiries"] });
       toast.success("Enquiry created successfully!");
@@ -122,15 +153,17 @@ export default function EnquiryForm() {
       triggerUpdate();
       navigate("/enquiry");
     },
+
     onError: (error) => {
       console.error("Error creating enquiry:", error);
-      toast.error("Failed to create enquiry. Please try again.");
+      toast.error(`Failed to create enquiry ${error.message}. `);
     },
   });
 
   const updateEnquiryMutation = useMutation({
     mutationFn: ({ id, data }: { id: string; data: any }) =>
       updateEnquiry(id, data),
+
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["enquiries"] });
       queryClient.invalidateQueries({ queryKey: ["enquiry", id] });
@@ -139,7 +172,7 @@ export default function EnquiryForm() {
     },
     onError: (error) => {
       console.error("Error updating enquiry:", error);
-      toast.error("Failed to update enquiry. Please try again.");
+      toast.error(`Failed to update enquiry ${error.message}. `);
     },
   });
 
@@ -372,7 +405,7 @@ export default function EnquiryForm() {
               Business Type
             </label>
             <div className="flex items-center gap-2">
-              <Popover>
+              <Popover open={openBusiness} onOpenChange={setOpenBusiness}>
                 <PopoverTrigger asChild>
                   <div className="flex items-center justify-between border border-zinc-300 rounded-lg px-3 bg-zinc-100 flex-1 h-12 cursor-pointer">
                     <div className="flex items-center flex-1">
@@ -389,32 +422,25 @@ export default function EnquiryForm() {
 
                 <PopoverContent className="w-full p-0">
                   <div className="max-h-48 overflow-y-auto">
-                    {businessTypes?.map(
-                      (type: { id: number; name: string }) => (
-                        <div
-                          key={type.id}
-                          className={`flex items-center w-120 px-3 py-2 bg-zinc-100 cursor-pointer hover:bg-zinc-200 ${
-                            formData.businessType === type.name
-                              ? "bg-zinc-300"
-                              : ""
-                          }`}
-                          onClick={() =>
-                            handleDropdownChange("businessType", type.name)
-                          }
-                        >
-                          <span className="flex-1">{type.name}</span>
-                          {formData.businessType === type.name && (
-                            <Check className="w-4 h-4 text-green-500" />
-                          )}
-                        </div>
-                      )
-                    )}
-
-                    {!isBusinessLoading && businessTypes?.length === 0 && (
-                      <div className="px-3 py-2 text-sm text-zinc-500">
-                        No business types available
+                    {businessTypes?.map((type: any) => (
+                      <div
+                        key={type.id}
+                        className={`flex items-center w-120 px-3 py-2 cursor-pointer hover:bg-zinc-200 ${
+                          formData.businessType === type.name
+                            ? "bg-zinc-300"
+                            : ""
+                        }`}
+                        onClick={() => {
+                          handleDropdownChange("businessType", type.name);
+                          setOpenBusiness(false);
+                        }}
+                      >
+                        <span className="flex-1">{type.name}</span>
+                        {formData.businessType === type.name && (
+                          <Check className="w-4 h-4 text-green-500" />
+                        )}
                       </div>
-                    )}
+                    ))}
                   </div>
                 </PopoverContent>
               </Popover>
@@ -427,7 +453,7 @@ export default function EnquiryForm() {
               Location
             </label>
             <div className="flex items-center gap-2">
-              <Popover>
+              <Popover open={openLocation} onOpenChange={setOpenLocation}>
                 <PopoverTrigger asChild>
                   <div className="flex items-center justify-between border border-zinc-300 rounded-lg px-3 bg-zinc-100 flex-1 h-12 cursor-pointer">
                     <div className="flex items-center flex-1">
@@ -444,34 +470,28 @@ export default function EnquiryForm() {
 
                 <PopoverContent className="w-full p-0">
                   <div className="max-h-48 overflow-y-auto">
-                    {locationTypes?.map(
-                      (type: { id: number; name: string }) => (
-                        <div
-                          key={type.id}
-                          className={`flex items-center w-120 px-3 py-2 bg-zinc-100 cursor-pointer hover:bg-zinc-200 ${
-                            formData.location === type.name ? "bg-zinc-300" : ""
-                          }`}
-                          onClick={() =>
-                            handleDropdownChange("location", type.name)
-                          }
-                        >
-                          <span className="flex-1">{type.name}</span>
-                          {formData.location === type.name && (
-                            <Check className="w-4 h-4 text-green-500" />
-                          )}
-                        </div>
-                      )
-                    )}
-
-                    {!isLocationLoading && locationTypes?.length === 0 && (
-                      <div className="px-3 py-2 text-sm text-zinc-500">
-                        No locations available
+                    {locationTypes?.map((type: any) => (
+                      <div
+                        key={type.id}
+                        className={`flex items-center w-120  px-3 py-2 cursor-pointer hover:bg-zinc-200 ${
+                          formData.location === type.name ? "bg-zinc-300" : ""
+                        }`}
+                        onClick={() => {
+                          handleDropdownChange("location", type.name);
+                          setOpenLocation(false);
+                        }}
+                      >
+                        <span className="flex-1">{type.name}</span>
+                        {formData.location === type.name && (
+                          <Check className="w-4 h-4 text-green-500" />
+                        )}
                       </div>
-                    )}
+                    ))}
                   </div>
                 </PopoverContent>
               </Popover>
-              <EnquiryLocation />
+
+              <EnquiryLocation mode="create" />
             </div>
           </div>
 
@@ -480,7 +500,7 @@ export default function EnquiryForm() {
               Status
             </label>
             <div className="flex items-center gap-2">
-              <Popover>
+              <Popover open={openStatus} onOpenChange={setOpenStatus}>
                 <PopoverTrigger asChild>
                   <div className="flex items-center justify-between border border-zinc-300 rounded-lg px-3 bg-zinc-100 flex-1 h-12 cursor-pointer">
                     <div className="flex items-center flex-1">
@@ -497,15 +517,16 @@ export default function EnquiryForm() {
 
                 <PopoverContent className="w-full p-0">
                   <div className="max-h-48 overflow-y-auto">
-                    {statusTypes?.map((type: { id: number; name: string }) => (
+                    {statusTypes?.map((type: any) => (
                       <div
                         key={type.id}
-                        className={`flex items-center w-120 px-3 py-2 bg-zinc-100 cursor-pointer hover:bg-zinc-200 ${
+                        className={`flex items-center w-120  px-3 py-2 cursor-pointer hover:bg-zinc-200 ${
                           formData.status === type.name ? "bg-zinc-300" : ""
                         }`}
-                        onClick={() =>
-                          handleDropdownChange("status", type.name)
-                        }
+                        onClick={() => {
+                          handleDropdownChange("status", type.name);
+                          setOpenStatus(false);
+                        }}
                       >
                         <span className="flex-1">{type.name}</span>
                         {formData.status === type.name && (
@@ -513,12 +534,6 @@ export default function EnquiryForm() {
                         )}
                       </div>
                     ))}
-
-                    {!isStatusLoading && statusTypes?.length === 0 && (
-                      <div className="px-3 py-2 text-sm text-zinc-500">
-                        No statuses available
-                      </div>
-                    )}
                   </div>
                 </PopoverContent>
               </Popover>
@@ -532,7 +547,7 @@ export default function EnquiryForm() {
               Source
             </label>
             <div className="flex items-center gap-2">
-              <Popover>
+              <Popover open={openSource} onOpenChange={setOpenSource}>
                 <PopoverTrigger asChild>
                   <div className="flex items-center justify-between border border-zinc-300 rounded-lg px-3 bg-zinc-100 flex-1 h-12 cursor-pointer">
                     <div className="flex items-center flex-1">
@@ -549,15 +564,16 @@ export default function EnquiryForm() {
 
                 <PopoverContent className="w-full p-0">
                   <div className="max-h-48 overflow-y-auto">
-                    {sourcesType?.map((type: { id: number; name: string }) => (
+                    {sourcesType?.map((type: any) => (
                       <div
                         key={type.id}
-                        className={`flex items-center w-120 px-3 py-2 bg-zinc-100 cursor-pointer hover:bg-zinc-200 ${
+                        className={`flex items-center w-120 px-3 py-2 cursor-pointer hover:bg-zinc-200 ${
                           formData.source === type.name ? "bg-zinc-300" : ""
                         }`}
-                        onClick={() =>
-                          handleDropdownChange("source", type.name)
-                        }
+                        onClick={() => {
+                          handleDropdownChange("source", type.name);
+                          setOpenSource(false);
+                        }}
                       >
                         <span className="flex-1">{type.name}</span>
                         {formData.source === type.name && (
@@ -565,12 +581,6 @@ export default function EnquiryForm() {
                         )}
                       </div>
                     ))}
-
-                    {!isSourcesLoading && sourcesType?.length === 0 && (
-                      <div className="px-3 py-2 text-sm text-zinc-500">
-                        No sources available
-                      </div>
-                    )}
                   </div>
                 </PopoverContent>
               </Popover>
@@ -584,7 +594,10 @@ export default function EnquiryForm() {
               Main Category
             </label>
             <div className="flex items-center gap-2">
-              <Popover>
+              <Popover
+                open={openMainCategory}
+                onOpenChange={setOpenMainCategory}
+              >
                 <PopoverTrigger asChild>
                   <div className="flex items-center justify-between border border-zinc-300 rounded-lg px-3 bg-zinc-100 flex-1 h-12 cursor-pointer">
                     <div className="flex items-center flex-1">
@@ -601,33 +614,25 @@ export default function EnquiryForm() {
 
                 <PopoverContent className="w-full p-0">
                   <div className="max-h-48 overflow-y-auto">
-                    {mainCategories?.map(
-                      (type: { id: number; name: string }) => (
-                        <div
-                          key={type.id}
-                          className={`flex items-center w-120 px-3 py-2 bg-zinc-100 cursor-pointer hover:bg-zinc-200 ${
-                            formData.mainCategory === type.name
-                              ? "bg-zinc-300"
-                              : ""
-                          }`}
-                          onClick={() =>
-                            handleDropdownChange("mainCategory", type.name)
-                          }
-                        >
-                          <span className="flex-1">{type.name}</span>
-                          {formData.mainCategory === type.name && (
-                            <Check className="w-4 h-4 text-green-500" />
-                          )}
-                        </div>
-                      )
-                    )}
-
-                    {!isMainCategoriesLoading &&
-                      mainCategories?.length === 0 && (
-                        <div className="px-3 py-2 text-sm text-zinc-500">
-                          No categories available
-                        </div>
-                      )}
+                    {mainCategories?.map((type: any) => (
+                      <div
+                        key={type.id}
+                        className={`flex items-center w-120 px-3 py-2 cursor-pointer hover:bg-zinc-200 ${
+                          formData.mainCategory === type.name
+                            ? "bg-zinc-300"
+                            : ""
+                        }`}
+                        onClick={() => {
+                          handleDropdownChange("mainCategory", type.name);
+                          setOpenMainCategory(false);
+                        }}
+                      >
+                        <span className="flex-1">{type.name}</span>
+                        {formData.mainCategory === type.name && (
+                          <Check className="w-4 h-4 text-green-500" />
+                        )}
+                      </div>
+                    ))}
                   </div>
                 </PopoverContent>
               </Popover>
@@ -641,7 +646,7 @@ export default function EnquiryForm() {
               Sub Category
             </label>
             <div className="flex items-center gap-2">
-              <Popover>
+              <Popover open={openSubCategory} onOpenChange={setOpenSubCategory}>
                 <PopoverTrigger asChild>
                   <div className="flex items-center justify-between border border-zinc-300 rounded-lg px-3 bg-zinc-100 flex-1 h-12 cursor-pointer">
                     <div className="flex items-center flex-1">
@@ -658,34 +663,23 @@ export default function EnquiryForm() {
 
                 <PopoverContent className="w-full p-0">
                   <div className="max-h-48 overflow-y-auto">
-                    {allSubCategories && allSubCategories.length > 0 ? (
-                      allSubCategories.map(
-                        (sub: { id: number; name: string }) => (
-                          <div
-                            key={sub.id}
-                            className={`flex items-center w-120 px-3 py-2 bg-zinc-100 cursor-pointer hover:bg-zinc-200 ${
-                              formData.subCategory === sub.name
-                                ? "bg-zinc-300"
-                                : ""
-                            }`}
-                            onClick={() =>
-                              handleDropdownChange("subCategory", sub.name)
-                            }
-                          >
-                            <span className="flex-1">{sub.name}</span>
-                            {formData.subCategory === sub.name && (
-                              <Check className="w-4 h-4 text-green-500" />
-                            )}
-                          </div>
-                        )
-                      )
-                    ) : (
-                      <div className="px-3 py-2 text-sm text-zinc-500">
-                        {isMainCategoriesLoading
-                          ? "Loading..."
-                          : "No sub categories available"}
+                    {allSubCategories?.map((sub: any) => (
+                      <div
+                        key={sub.id}
+                        className={`flex items-center w-120 px-3 py-2 cursor-pointer hover:bg-zinc-200 ${
+                          formData.subCategory === sub.name ? "bg-zinc-300" : ""
+                        }`}
+                        onClick={() => {
+                          handleDropdownChange("subCategory", sub.name);
+                          setOpenSubCategory(false);
+                        }}
+                      >
+                        <span className="flex-1">{sub.name}</span>
+                        {formData.subCategory === sub.name && (
+                          <Check className="w-4 h-4 text-green-500" />
+                        )}
                       </div>
-                    )}
+                    ))}
                   </div>
                 </PopoverContent>
               </Popover>

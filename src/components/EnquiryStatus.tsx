@@ -46,7 +46,8 @@ export default function StatusForm({ mode, initialData }: StatusFormProps) {
       resetForm();
       setOpen(false);
     },
-    onError: () => toast.error("Failed to create status."),
+    onError: (error) =>
+      toast.error(`Failed to create status ${error.message}.`),
   });
 
   const updateMutation = useMutation({
@@ -61,8 +62,8 @@ export default function StatusForm({ mode, initialData }: StatusFormProps) {
     onError: () => toast.error("Failed to update status."),
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSubmit = (e?: React.FormEvent) => {
+    if (e) e.preventDefault();
 
     if (mode === "edit" && initialData) {
       updateMutation.mutate({
@@ -102,7 +103,6 @@ export default function StatusForm({ mode, initialData }: StatusFormProps) {
         </DialogTrigger>
       )}
 
-      {/* Dialog Content */}
       <DialogContent className="w-[90%] max-w-lg bg-white rounded-xl border border-zinc-200 shadow-xl p-6">
         <DialogHeader className="pb-4 border-b border-zinc-200">
           <DialogTitle className="text-xl font-semibold text-zinc-900">
@@ -115,7 +115,7 @@ export default function StatusForm({ mode, initialData }: StatusFormProps) {
           </DialogDescription>
         </DialogHeader>
 
-        <form onSubmit={handleSubmit} className="mt-6 space-y-5">
+        <form className="mt-6 space-y-5">
           <div>
             <label className="block text-sm font-medium text-zinc-700 mb-1.5">
               Status Name
@@ -135,7 +135,8 @@ export default function StatusForm({ mode, initialData }: StatusFormProps) {
 
           <div className="flex justify-end pt-4 border-t border-zinc-200">
             <Button
-              type="submit"
+              type="button"
+              onClick={handleSubmit}
               disabled={createMutation.isPending || updateMutation.isPending}
               className="bg-zinc-700 hover:bg-zinc-800 text-white px-6 py-2 rounded-md shadow-md transition"
             >

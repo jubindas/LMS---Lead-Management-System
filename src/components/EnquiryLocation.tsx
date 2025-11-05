@@ -37,7 +37,9 @@ export default function EnquiryLocation({
   });
 
   const [internalOpen, setInternalOpen] = useState(false);
+
   const open = externalOpen !== undefined ? externalOpen : internalOpen;
+
   const setOpen = externalSetOpen || setInternalOpen;
 
   const queryClient = useQueryClient();
@@ -62,7 +64,7 @@ export default function EnquiryLocation({
     },
     onError: (error) => {
       console.error("Error creating location:", error);
-      toast("Failed to create location.");
+      toast(`Failed to create location ${error.message}.`);
     },
   });
 
@@ -79,7 +81,7 @@ export default function EnquiryLocation({
     },
     onError: (error) => {
       console.error("Error updating location:", error);
-      toast("Failed to update location.");
+      toast(`Failed to update location ${error.message}.`);
     },
   });
 
@@ -94,8 +96,8 @@ export default function EnquiryLocation({
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSubmit = (e?: React.FormEvent) => {
+    if (e) e.preventDefault();
 
     if (mode === "edit" && location) {
       updateMutation.mutate({
@@ -131,8 +133,7 @@ export default function EnquiryLocation({
           </DialogDescription>
         </DialogHeader>
 
-        <form onSubmit={handleSubmit} className="mt-6 space-y-5">
-        
+        <form className="mt-6 space-y-5">
           <div className="space-y-1.5">
             <label className="block text-sm font-medium text-zinc-700">
               Location Name <span className="text-red-500">*</span>
@@ -145,17 +146,17 @@ export default function EnquiryLocation({
               onChange={handleChange}
               required
               className="
-          w-full 
-          border border-zinc-300 
-          rounded-md 
-          px-3 py-2 
-          bg-white 
-          text-zinc-800 
-          shadow-sm 
-          transition 
-          outline-none 
-          focus:ring-2 focus:ring-zinc-400 focus:border-zinc-500
-        "
+                w-full 
+                border border-zinc-300 
+                rounded-md 
+                px-3 py-2 
+                bg-white 
+                text-zinc-800 
+                shadow-sm 
+                transition 
+                outline-none 
+                focus:ring-2 focus:ring-zinc-400 focus:border-zinc-500
+              "
             />
           </div>
 
@@ -164,31 +165,33 @@ export default function EnquiryLocation({
               type="button"
               onClick={() => setOpen(false)}
               className="
-          bg-zinc-200 hover:bg-zinc-300 
-          text-zinc-700 
-          font-medium 
-          px-5 py-2 
-          rounded-md 
-          border 
-          transition-all
-        "
+                bg-zinc-200 hover:bg-zinc-300 
+                text-zinc-700 
+                font-medium 
+                px-5 py-2 
+                rounded-md 
+                border 
+                transition-all
+              "
             >
               Cancel
             </Button>
 
+            {/* ✅ FIXED: Prevent parent enquiry form submission */}
             <Button
-              type="submit"
+              type="button"
+              onClick={handleSubmit}
               disabled={createMutation.isPending || updateMutation.isPending}
               className="
-          bg-zinc-700 hover:bg-zinc-800 
-          text-white 
-          font-medium 
-          px-6 py-2 
-          rounded-md 
-          shadow-md 
-          transition-transform 
-          hover:-translate-y-0.5
-        "
+                bg-zinc-700 hover:bg-zinc-800 
+                text-white 
+                font-medium 
+                px-6 py-2 
+                rounded-md 
+                shadow-md 
+                transition-transform 
+                hover:-translate-y-0.5
+              "
             >
               {createMutation.isPending || updateMutation.isPending
                 ? "Saving..."

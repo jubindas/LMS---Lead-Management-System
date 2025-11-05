@@ -37,29 +37,21 @@ export default function EnquirySource({
     description: "",
   });
 
-  console.log("the source data is", source)
-
   const [internalOpen, setInternalOpen] = useState(false);
   const open = externalOpen !== undefined ? externalOpen : internalOpen;
   const setOpen = externalSetOpen || setInternalOpen;
 
   const queryClient = useQueryClient();
 
-  
-useEffect(() => {
-  if (mode === "edit" && source && open) {
+  useEffect(() => {
+    if (mode === "edit" && source && open) {
+      setFormData({
+        name: source.name || "",
+        description: source.description || "",
+      });
+    }
+  }, [mode, source, open]);
 
-    console.log("the edited source data is", source)
-    setFormData({
-      name: source.name || "",
-      description: source.description || "",
-    });
-  }
-}, [mode, source, open]);
-
-
-
-  
   const createMutation = useMutation({
     mutationFn: (newSource: { name: string; description?: string | null }) =>
       createSources(newSource),
@@ -70,11 +62,10 @@ useEffect(() => {
     },
     onError: (error) => {
       console.error("Error creating source:", error);
-      toast("Failed to create source.");
+      toast(`Failed to create source ${error.message}.`);
     },
   });
 
-  
   const updateMutation = useMutation({
     mutationFn: (updatedSource: {
       id: string;
@@ -88,7 +79,7 @@ useEffect(() => {
     },
     onError: (error) => {
       console.error("Error updating source:", error);
-      toast("Failed to update source.");
+      toast(`Failed to update source ${error.message}.`);
     },
   });
 
@@ -103,8 +94,9 @@ useEffect(() => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSubmit = (e?: React.FormEvent) => {
+    if (e) e.preventDefault();
+
     if (!formData.name.trim()) {
       toast("Source name is required.");
       return;
@@ -146,8 +138,7 @@ useEffect(() => {
           </DialogDescription>
         </DialogHeader>
 
-        <form onSubmit={handleSubmit} className="mt-6 space-y-6">
-      
+        <form className="mt-6 space-y-6">
           <div>
             <label className="block text-sm font-semibold text-zinc-700 mb-2">
               Source Name
@@ -180,7 +171,8 @@ useEffect(() => {
 
           <div className="flex flex-col md:flex-row justify-end gap-3 pt-4 border-t border-zinc-300">
             <Button
-              type="submit"
+              type="button"
+              onClick={handleSubmit}
               disabled={createMutation.isPending || updateMutation.isPending}
               className="w-full md:w-auto bg-zinc-500 hover:bg-zinc-600 text-white font-medium px-6 py-2 rounded-md shadow-lg transition-transform transform hover:-translate-y-1"
             >
