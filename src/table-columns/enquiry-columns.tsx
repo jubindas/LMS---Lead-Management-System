@@ -19,7 +19,7 @@ export const enquiryColumns: ColumnDef<Enquiry>[] = [
     header: "Name",
     cell: ({ row }) => (
       <span className="truncate block w-15 text-sm">
-        {row.getValue("company_name")}
+        {row.getValue("company_name") || "N/A"}
       </span>
     ),
   },
@@ -28,7 +28,7 @@ export const enquiryColumns: ColumnDef<Enquiry>[] = [
     header: "Phone",
     cell: ({ row }) => (
       <span className="truncate block w-15 text-sm">
-        {row.getValue("primary_phone_number")}
+        {row.getValue("primary_phone_number") || "N/A"}
       </span>
     ),
   },
@@ -37,7 +37,7 @@ export const enquiryColumns: ColumnDef<Enquiry>[] = [
     header: "Email",
     cell: ({ row }) => (
       <span className="truncate block w-15 text-sm">
-        {row.getValue("email")}
+        {row.getValue("email") || "N/A"}
       </span>
     ),
   },
@@ -46,7 +46,7 @@ export const enquiryColumns: ColumnDef<Enquiry>[] = [
     header: "Status",
     cell: ({ row }) => (
       <span className="truncate block w-13 text-sm">
-        {row.getValue("status")}
+        {row.getValue("status") || "N/A"}
       </span>
     ),
   },
@@ -55,7 +55,7 @@ export const enquiryColumns: ColumnDef<Enquiry>[] = [
     header: "Stage",
     cell: ({ row }) => (
       <span className="truncate block w-13 text-sm">
-        {row.getValue("stage")}
+        {row.getValue("stage") || "N/A"}
       </span>
     ),
   },
@@ -64,7 +64,7 @@ export const enquiryColumns: ColumnDef<Enquiry>[] = [
     header: "Business Type",
     cell: ({ row }) => (
       <span className="truncate block w-20 text-sm">
-        {row.getValue("business_type")}
+        {row.getValue("business_type") || "N/A"}
       </span>
     ),
   },
@@ -73,7 +73,7 @@ export const enquiryColumns: ColumnDef<Enquiry>[] = [
     header: "Source",
     cell: ({ row }) => (
       <span className="truncate block w-25 text-sm">
-        {row.getValue("source")}
+        {row.getValue("source") || "N/A"}
       </span>
     ),
   },
@@ -87,7 +87,7 @@ export const enquiryColumns: ColumnDef<Enquiry>[] = [
       const formatted = new Date(value).toLocaleDateString("en-GB");
       const finalDate = formatted.replaceAll("/", "-");
 
-      return <span className="truncate block w-20 text-sm">{finalDate}</span>;
+      return <span className="truncate block w-20 text-sm">{finalDate || "N/A"}</span>;
     },
   },
 

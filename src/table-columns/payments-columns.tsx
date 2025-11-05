@@ -32,7 +32,7 @@ export const createColumns = (onEdit: (payment: Payment) => void): ColumnDef<Pay
     accessorKey: "remarks",
     header: () => <span className="capitalize">Remarks</span>,
     cell: ({ row }) => (
-      <span className="text-black text-sm">{row.getValue("remarks")}</span>
+      <span className="text-black text-sm">{row.getValue("remarks") || "N/A"}</span>
     ),
   },
   {
