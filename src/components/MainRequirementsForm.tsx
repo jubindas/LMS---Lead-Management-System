@@ -24,7 +24,7 @@ import {
 
 import { toast } from "sonner";
 
-import type {MainCategory} from "@/masters/mainRequirements/main-requirements-types"
+import type { MainCategory } from "@/masters/mainRequirements/main-requirements-types";
 
 interface MainRequirementsFormProps {
   mode?: "create" | "edit";
@@ -37,6 +37,8 @@ export default function MainRequirementsForm({
 }: MainRequirementsFormProps) {
   console.log("the main category prefill is", mainCategory);
   const queryClient = useQueryClient();
+
+  const [open, setOpen] = useState(false);
 
   const [formData, setFormData] = useState({
     name: "",
@@ -63,6 +65,7 @@ export default function MainRequirementsForm({
       queryClient.invalidateQueries({ queryKey: ["mainCategories"] });
       toast("Main category created successfully!");
       resetForm();
+      setOpen(false);
     },
     onError: (error) => {
       console.error("Error creating main category:", error);
@@ -80,6 +83,7 @@ export default function MainRequirementsForm({
       queryClient.invalidateQueries({ queryKey: ["mainCategories"] });
       toast("Main category updated successfully!");
       resetForm();
+      setOpen(false);
     },
     onError: (error) => {
       console.error("Error updating main category:", error);
@@ -110,7 +114,13 @@ export default function MainRequirementsForm({
   };
 
   return (
-    <Dialog>
+    <Dialog
+      open={open}
+      onOpenChange={(o) => {
+        setOpen(o);
+        if (!o) resetForm();
+      }}
+    >
       {mode === "create" && (
         <DialogTrigger asChild>
           <Button className="bg-zinc-500 hover:bg-zinc-600 text-white font-medium px-3 py-1.5 text-sm rounded-md shadow-md transition-transform transform hover:-translate-y-0.5 hover:shadow-lg">

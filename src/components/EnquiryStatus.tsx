@@ -82,7 +82,6 @@ export default function StatusForm({ mode, initialData }: StatusFormProps) {
         handleDialogChange(o);
       }}
     >
-      {/* Trigger Buttons */}
       {mode === "create" && (
         <DialogTrigger asChild>
           <Button className="bg-zinc-700 hover:bg-zinc-800 text-white shadow-md px-3 py-2 rounded-md transition-all">
