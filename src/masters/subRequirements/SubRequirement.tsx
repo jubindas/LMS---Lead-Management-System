@@ -49,6 +49,10 @@ export default function SubRequirement() {
       sub.mainCategory.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
+  const sortedData = [...(filteredSubCategories || [])].sort(
+    (a, b) => Number(b.id) - Number(a.id)
+  );
+
   return (
     <div className="p-8 min-h-screen w-full">
       <div className="max-w-7xl mx-auto mt-10 p-8 shadow-md rounded-2xl bg-zinc-50">
@@ -56,7 +60,7 @@ export default function SubRequirement() {
           <h2 className="text-xl font-bold tracking-wide bg-gradient-to-r text-black">
             Sub Categories
           </h2>
-          <SubRequirementForm />
+          <SubRequirementForm mode="create" />
         </div>
 
         <div className="flex flex-wrap justify-between items-center mb-3 gap-3 text-sm">
@@ -91,7 +95,7 @@ export default function SubRequirement() {
         {filteredSubCategories && (
           <DataTable
             columns={columns}
-            data={filteredSubCategories || []}
+            data={sortedData || []}
             enablePagination={true}
           />
         )}

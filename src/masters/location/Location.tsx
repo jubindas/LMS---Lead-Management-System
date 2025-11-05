@@ -9,6 +9,7 @@ import EnquiryLocation from "@/components/EnquiryLocation";
 import { getLocation } from "@/services/apiLocation";
 
 import { useQuery } from "@tanstack/react-query";
+
 import Loading from "@/components/Loading";
 
 export default function LocationTable() {
@@ -26,7 +27,7 @@ export default function LocationTable() {
   if (isLoading) return <Loading />;
   if (error) return <div>Error fetching locations</div>;
 
-  const sortedLocations = [...(locations || [])].sort((a, b) => a.id - b.id);
+  const sortedLocations = [...(locations || [])].sort((a, b) => b.id - a.id);
 
   const filteredLocations = sortedLocations.filter(
     (loc) =>
@@ -41,7 +42,7 @@ export default function LocationTable() {
           <h2 className="text-xl font-bold tracking-wide bg-gradient-to-r text-black">
             Locations
           </h2>
-          <EnquiryLocation />
+          <EnquiryLocation mode="create" />
         </div>
 
         <div className="flex flex-wrap justify-between items-center mb-3 gap-3 text-sm">

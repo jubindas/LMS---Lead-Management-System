@@ -21,7 +21,7 @@ export default function Source() {
   if (isLoading) return <Loading />;
 
   const sortedData = [...(data || [])].sort(
-    (a, b) => Number(a.id) - Number(b.id)
+    (a, b) => Number(b.id) - Number(a.id)
   );
 
   const filteredData = sortedData.filter(

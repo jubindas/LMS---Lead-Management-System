@@ -20,15 +20,6 @@ export const columns: ColumnDef<Location>[] = [
     ),
   },
   {
-    accessorKey: "description",
-    header: "Description",
-    cell: ({ row }) => (
-      <span className="text-black text-sm">
-        {(row.getValue("description") as string) || "N/A"}
-      </span>
-    ),
-  },
-  {
     accessorKey: "created_at",
     header: "Created Date",
     cell: ({ row }) => {

@@ -73,7 +73,7 @@ export default function SubRequirementForm({
       description?: string | null;
     }) => createSubCategory(newSubCategory),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["subCategories"] });
+      queryClient.invalidateQueries({ queryKey: ["mainCategories"] });
       toast.success("Sub-category created successfully!");
       resetForm();
     },
@@ -91,7 +91,7 @@ export default function SubRequirementForm({
       description?: string | null;
     }) => updateSubCategory(updatedSubCategory.id, updatedSubCategory),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["subCategories"] });
+      queryClient.invalidateQueries({ queryKey: ["mainCategories"] });
       toast.success("Sub-category updated successfully!");
       resetForm();
     },
@@ -127,6 +127,8 @@ export default function SubRequirementForm({
         description: formData.description.trim() || null,
       });
     } else {
+      console.log("the create is", formData.main_category_id);
+
       createMutation.mutate({
         main_category_id: formData.main_category_id,
         name: formData.name.trim(),
@@ -180,7 +182,7 @@ export default function SubRequirementForm({
             <option value="">Select Main Category</option>
             {mainCategories && mainCategories.length > 0 ? (
               mainCategories.map((main: MainCategory) => (
-                <option key={main.id} value={main.name}>
+                <option key={main.id} value={main.id}>
                   {main.name}
                 </option>
               ))
