@@ -17,6 +17,7 @@ export const dummyEnquiries: Enquiry[] = [
     source: "Website",
     budget: "₹10,00,000",
     remarks: "Interested in premium sedan models",
+    pdf: null,
   },
   {
     id: "ENQ002",
@@ -35,6 +36,7 @@ export const dummyEnquiries: Enquiry[] = [
     source: "Trade Fair",
     budget: "₹3,00,000",
     remarks: "Looking for bulk eco-friendly packaging",
+    pdf: null,
   },
   {
     id: "ENQ003",
@@ -53,6 +55,7 @@ export const dummyEnquiries: Enquiry[] = [
     source: "Referral",
     budget: "₹15,00,000",
     remarks: "Signed annual contract for CRM software",
+    pdf: null,
   },
   {
     id: "ENQ004",
@@ -71,5 +74,6 @@ export const dummyEnquiries: Enquiry[] = [
     source: "Cold Call",
     budget: "₹5,00,000",
     remarks: "Moved to competitor due to pricing",
+    pdf: null,
   },
 ];
