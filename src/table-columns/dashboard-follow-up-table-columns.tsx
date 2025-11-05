@@ -1,5 +1,7 @@
 import type { ColumnDef } from "@tanstack/react-table";
+
 import type { FollowUp } from "../table-types/dashboard-follow-up-table-types";
+
 import DashboardFollowUpDropdown from "./DashboardFollowUpDropdown";
 
 export const columns: ColumnDef<FollowUp>[] = [

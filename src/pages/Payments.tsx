@@ -17,6 +17,8 @@ export default function PaymentsTable() {
     queryFn: getPayments,
   });
 
+  console.log("the data of payments are", data)
+
   const handleEdit = (payment: Payment) => {
     setPaymentToEdit(payment);
     setIsEditDialogOpen(true);

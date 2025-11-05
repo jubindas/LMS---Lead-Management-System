@@ -1,4 +1,3 @@
-
 import type { ColumnDef } from "@tanstack/react-table";
 
 import DashboardPendingPaymentDropdown from "./DashboardPendingPaymentDropdown";
@@ -19,8 +18,12 @@ export const paymentColumns: ColumnDef<Payment>[] = [
   {
     header: "Amount",
     accessorKey: "amount",
-    cell: ({ row }) => <span>₹{row.original.total_amount}</span>,
+    cell: ({ row }) => {
+      console.log("the row is", row.original);
+      return <span>₹{row.original?.amount}</span>;
+    },
   },
+
   {
     header: "Remarks",
     accessorKey: "remarks",
@@ -29,8 +32,8 @@ export const paymentColumns: ColumnDef<Payment>[] = [
   {
     id: "actions",
     header: "Actions",
-    cell: ({ row }) => (  <DashboardPendingPaymentDropdown payment={row.original} />
-
+    cell: ({ row }) => (
+      <DashboardPendingPaymentDropdown payment={row.original} />
     ),
   },
 ];

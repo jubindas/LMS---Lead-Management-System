@@ -11,6 +11,7 @@ import { useQuery } from "@tanstack/react-query";
 import { getFollowupsByPaymentId } from "@/services/apiPaymentsFollowup.ts";
 
 export default function PaymentFollowUpDashboard() {
+  
   const { id } = useParams<{ id: string }>();
 
   const {

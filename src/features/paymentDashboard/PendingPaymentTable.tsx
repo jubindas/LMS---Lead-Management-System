@@ -1,7 +1,9 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { DataTable } from "@/components/data-table";
 import { useQuery } from "@tanstack/react-query";
 import { getPayments } from "@/services/apiPayments";
 import { paymentColumns } from "@/table-columns/pending-payments-dashboard-table-columns";
+import Loading from "@/components/Loading";
 
 export default function PendingPaymentTable() {
   const { data, isLoading, error } = useQuery({
@@ -9,22 +11,32 @@ export default function PendingPaymentTable() {
     queryFn: getPayments,
   });
 
-  console.log("Payments data:", data);
+  if (isLoading) return <Loading />;
+  if (error) return <div>Error loading payments. Please try again.</div>;
 
-  if (isLoading) {
-    return <div>Loading payments...</div>;
-  }
+  const payments = Array.isArray(data) ? data : [];
 
-  if (error) {
-    return <div>Error loading payments. Please try again.</div>;
-  }
+  const today = new Date().toISOString().split("T")[0];
 
-  // Ensure data is an array before passing to DataTable
-  const tableData = Array.isArray(data) ? data : [];
+  const todaysPayments = payments.filter((payment: any) => {
+    if (!payment.created_at) return false;
+    const createdDate = payment.created_at.split("T")[0];
+    return createdDate === today;
+  });
 
-  return tableData.length > 0 ? (
-    <DataTable columns={paymentColumns} data={tableData} enablePagination={true} />
-  ) : (
-    <div>No payments found.</div>
+  console.log("the dahsboard", todaysPayments)
+
+  return (
+    <>
+      {todaysPayments.length > 0 ? (
+        <DataTable
+          columns={paymentColumns}
+          data={todaysPayments}
+          enablePagination={true}
+        />
+      ) : (
+        <div>No payments found for today.</div>
+      )}
+    </>
   );
 }

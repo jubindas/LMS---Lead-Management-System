@@ -69,7 +69,6 @@ export default function DashboardFollowUpDropdown({ task }: DashboardFollowUpDro
         </DropdownMenuLabel>
         <DropdownMenuSeparator className="bg-zinc-800" />
 
-        {/* Delete with confirmation dialog */}
         <Dialog open={openDialog} onOpenChange={setOpenDialog}>
           <DialogTrigger asChild>
             <Button
@@ -108,7 +107,6 @@ export default function DashboardFollowUpDropdown({ task }: DashboardFollowUpDro
           </DialogContent>
         </Dialog>
 
-        {/* Mark as Done */}
         <DropdownMenuItem
           onClick={() => toast.success(`${task.lead_name} marked as done`)}
           className="flex items-center gap-2 text-sm text-green-400 hover:bg-zinc-800 rounded-lg px-2 py-1.5"

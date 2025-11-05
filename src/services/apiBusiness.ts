@@ -12,25 +12,30 @@ export async function getBusiness() {
   return response.data.data.data;
 }
 
-
-
-
-export async function createBusiness(businessData: { name: string; description?: string | null }) {
-  const response = await axios.post(`${API_BASE_URL}/business-types`, businessData);
+export async function createBusiness(businessData: {
+  name: string;
+  description?: string | null;
+}) {
+  const response = await axios.post(
+    `${API_BASE_URL}/business-types`,
+    businessData
+  );
 
   if (response.status !== 201) {
     throw new Error("Failed to create business type");
   }
 
   return response.data;
-}  
+}
 
-
-
-
-
-export async function updateBusiness(id: string, businessData: { name: string; description?: string | null }) {
-  const response = await axios.put(`${API_BASE_URL}/business-types/${id}`, businessData);
+export async function updateBusiness(
+  id: string,
+  businessData: { name: string; description?: string | null }
+) {
+  const response = await axios.put(
+    `${API_BASE_URL}/business-types/${id}`,
+    businessData
+  );
 
   if (response.status !== 200) {
     throw new Error("Failed to update business type");
@@ -38,9 +43,6 @@ export async function updateBusiness(id: string, businessData: { name: string; d
 
   return response.data;
 }
-
-
-
 
 export async function deleteBusiness(id: string) {
   const response = await axios.delete(`${API_BASE_URL}/business-types/${id}`);

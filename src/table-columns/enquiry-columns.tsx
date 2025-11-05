@@ -1,5 +1,7 @@
 import type { Enquiry } from "../table-types/enquiry-types";
+
 import type { ColumnDef } from "@tanstack/react-table";
+
 import EnquiryActionDropdown from "./EnquiryActionDropdown";
 
 export const enquiryColumns: ColumnDef<Enquiry>[] = [

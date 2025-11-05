@@ -3,7 +3,7 @@ export type Payment = {
   name: string;
   remarks: string
   total_amount: number;
-  paid_amount: number;
+  amount: number;
   next_payment_date: string;
   payment: {
     name: string;
