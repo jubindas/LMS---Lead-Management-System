@@ -15,6 +15,7 @@ import { getEnquiries } from "@/services/apiEnquiries.ts";
 import Loading from "@/components/Loading.tsx";
 
 export default function Enquiries() {
+
   const [searchTerm, setSearchTerm] = useState("");
 
   const { data: enquiries, isLoading } = useQuery({
@@ -25,7 +26,7 @@ export default function Enquiries() {
   if (isLoading) return <Loading />;
 
   const sortedEnquiries = [...(enquiries || [])].sort(
-    (a, b) => Number(a.id) - Number(b.id)
+    (a, b) => Number(b.id) - Number(a.id)
   );
 
   const filteredEnquiries = sortedEnquiries.filter(
@@ -34,6 +35,9 @@ export default function Enquiries() {
       enquiry.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
       enquiry.email?.toLowerCase().includes(searchTerm.toLowerCase())
   );
+
+  console.log("logs",filteredEnquiries);
+  
 
   return (
     <div className="p-8 min-h-screen w-full">
