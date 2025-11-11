@@ -16,6 +16,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { createStatus, updateStatus } from "@/services/apiStatus";
 import { toast } from "sonner";
 import type { StatusType } from "@/masters/status/status-types";
+import { AxiosError } from "axios";
 
 interface StatusFormProps {
   mode?: "create" | "edit";
@@ -46,8 +47,15 @@ export default function StatusForm({ mode, initialData }: StatusFormProps) {
       resetForm();
       setOpen(false);
     },
-    onError: (error) =>
-      toast.error(`Failed to create status ${error.message}.`),
+    onError: (error) => {
+      if (error instanceof AxiosError) {
+        toast(
+          ` ${
+            error.response?.data.message || "Couldn't create a new Enquiry."
+          }.`
+        );
+      }
+    },
   });
 
   const updateMutation = useMutation({
@@ -59,7 +67,8 @@ export default function StatusForm({ mode, initialData }: StatusFormProps) {
       resetForm();
       setOpen(false);
     },
-    onError: () => toast.error("Failed to update status."),
+    onError: (error) =>
+      toast.error(`Failed to update status ${error.message}.`),
   });
 
   const handleSubmit = (e?: React.FormEvent) => {

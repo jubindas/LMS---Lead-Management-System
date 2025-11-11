@@ -3,9 +3,7 @@ import { API_BASE_URL } from "@/lib/url";
 import axios from "axios";
 
 export async function getBusiness() {
-  const response = await axios.get(
-    `${API_BASE_URL}/business-types`
-  );
+  const response = await axios.get(`${API_BASE_URL}/business-types`);
 
   if (response.status !== 200) {
     throw new Error("Failed to fetch business types");
@@ -24,9 +22,10 @@ export async function createBusiness(businessData: {
   );
 
   if (response.status !== 201) {
-    throw new Error("Failed to create business type");
+    throw new Error(
+      response.data?.data?.message || "Failed to fetch business types"
+    );
   }
-
   return response.data;
 }
 

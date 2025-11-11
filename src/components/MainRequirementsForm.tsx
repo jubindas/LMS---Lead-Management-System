@@ -25,6 +25,7 @@ import {
 import { toast } from "sonner";
 
 import type { MainCategory } from "@/masters/mainRequirements/main-requirements-types";
+import { AxiosError } from "axios";
 
 interface MainRequirementsFormProps {
   mode?: "create" | "edit";
@@ -68,8 +69,14 @@ export default function MainRequirementsForm({
       setOpen(false);
     },
     onError: (error) => {
+      if (error instanceof AxiosError) {
+        toast(
+          ` ${
+            error.response?.data.message || "Couldn't create a new Enquiry."
+          }.`
+        );
+      }
       console.error("Error creating main category:", error);
-      toast("Failed to create main category.");
     },
   });
 
@@ -86,8 +93,14 @@ export default function MainRequirementsForm({
       setOpen(false);
     },
     onError: (error) => {
+      if (error instanceof AxiosError) {
+        toast(
+          ` ${
+            error.response?.data.message || "Couldn't create a new Enquiry."
+          }.`
+        );
+      }
       console.error("Error updating main category:", error);
-      toast("Failed to update main category.");
     },
   });
 

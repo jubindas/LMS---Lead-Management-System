@@ -22,6 +22,7 @@ import { createBusiness, updateBusiness } from "@/services/apiBusiness";
 import { toast } from "sonner";
 
 import type { BusinessType } from "@/masters/bussiness/business-types";
+import { AxiosError } from "axios";
 
 interface EnquiryBusinessProps {
   mode?: "create" | "edit";
@@ -61,13 +62,20 @@ export default function EnquiryBusiness({
       createBusiness(newBusiness),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["businessTypes"] });
-      toast("Business created successfully!");
+      toast.success("Business created successfully!");
+      console.log("heppening");
       resetForm();
       setOpen(false);
     },
     onError: (error) => {
+      if (error instanceof AxiosError) {
+        toast(
+          ` ${
+            error.response?.data.message || "Couldn't create a new Enquiry."
+          }.`
+        );
+      }
       console.error("Error creating business:", error);
-      toast("Failed to create business .");
     },
   });
 
@@ -84,8 +92,14 @@ export default function EnquiryBusiness({
       setOpen(false);
     },
     onError: (error) => {
+      if (error instanceof AxiosError) {
+        toast(
+          ` ${
+            error.response?.data.message || "Couldn't create a new Enquiry."
+          }.`
+        );
+      }
       console.error("Error updating business:", error);
-      toast(`Failed to ${mode} business ${error.message}.`);
     },
   });
 
@@ -122,7 +136,10 @@ export default function EnquiryBusiness({
     >
       {mode === "create" && (
         <DialogTrigger asChild>
-          <Button className="bg-zinc-500 hover:bg-zinc-600 text-white font-medium px-3 py-1.5 text-sm rounded-md shadow-md transition-transform transform hover:-translate-y-0.5 hover:shadow-lg">
+          <Button
+            type="button"
+            className="bg-zinc-500 hover:bg-zinc-600 text-white font-medium px-3 py-1.5 text-sm rounded-md shadow-md"
+          >
             <FaPlus />
           </Button>
         </DialogTrigger>
@@ -131,6 +148,7 @@ export default function EnquiryBusiness({
       {mode === "edit" && (
         <DialogTrigger asChild>
           <Button
+            type="button"
             variant="ghost"
             className="w-full justify-start items-center gap-2 text-sm text-zinc-200"
           >

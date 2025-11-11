@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useState, useRef, useCallback, useEffect } from "react";
+import { useState, useEffect } from "react";
 
 import { Button } from "@/components/ui/button";
 
@@ -82,9 +82,7 @@ export default function EnquiryForm() {
 
   const queryClient = useQueryClient();
 
-  const formDataRef = useRef(initialFormData);
-
-  const [, forceUpdate] = useState({});
+  const [formData, setFormData] = useState(initialFormData);
 
   const [openBusiness, setOpenBusiness] = useState(false);
 
@@ -98,7 +96,12 @@ export default function EnquiryForm() {
 
   const [openSubCategory, setOpenSubCategory] = useState(false);
 
-  const triggerUpdate = useCallback(() => forceUpdate({}), []);
+  const isValidPhone = (phone: string) => /^[6-9]\d{9}$/.test(phone);
+
+  const isValidEmail = (email: string) => {
+    if (!email) return true;
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  };
 
   const { data: existingEnquiry, isLoading: isLoadingEnquiry } = useQuery({
     queryKey: ["enquiry", id],
@@ -109,42 +112,27 @@ export default function EnquiryForm() {
 
   useEffect(() => {
     if (existingEnquiry && isEditMode) {
-      formDataRef.current = {
+      setFormData({
         companyName: existingEnquiry.company_name || "",
-
         phone: existingEnquiry.primary_phone_number || "",
-
         whatsappPrimary:
           existingEnquiry.primary_phone_number_has_whatsapp || false,
-
         altNumber: existingEnquiry.alternative_phone_number || "",
-
         whatsappAlt:
           existingEnquiry.alternative_phone_number_has_whatsapp || false,
-
         email: existingEnquiry.email || "",
-
         businessType: existingEnquiry.business_type || "",
-
         status: existingEnquiry.status || "",
-
         mainCategory: existingEnquiry.main_category || "",
-
         subCategory: existingEnquiry.sub_category || "",
-
         location: existingEnquiry.location || "",
-
         source: existingEnquiry.source || "",
-
         budget: existingEnquiry.budget ? String(existingEnquiry.budget) : "",
-
         remarks: existingEnquiry.remarks || "",
-
         pdf: undefined,
-      };
-      triggerUpdate();
+      });
     }
-  }, [existingEnquiry, isEditMode, triggerUpdate]);
+  }, [existingEnquiry, isEditMode]);
 
   const createEnquiryMutation = useMutation({
     mutationFn: createEnquiry,
@@ -152,8 +140,7 @@ export default function EnquiryForm() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["enquiries"] });
       toast.success("Enquiry created successfully!");
-      formDataRef.current = { ...initialFormData };
-      triggerUpdate();
+      setFormData({ ...initialFormData });
       navigate("/enquiry");
     },
 
@@ -179,75 +166,87 @@ export default function EnquiryForm() {
     },
   });
 
-  const handleChange = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-      const target = e.target;
-      const value =
-        target instanceof HTMLInputElement && target.type === "checkbox"
-          ? target.checked
-          : target.value;
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    const target = e.target;
+    const value =
+      target instanceof HTMLInputElement && target.type === "checkbox"
+        ? target.checked
+        : target.value;
 
-      const name = target.name;
+    const name = target.name;
 
-      formDataRef.current = {
-        ...formDataRef.current,
-        [name]: value,
-      };
-      triggerUpdate();
-    },
-    [triggerUpdate]
-  );
+    setFormData({
+      ...formData,
+      [name]: value,
+    });
+  };
 
-  const handleDropdownChange = useCallback(
-    (field: string, value: string) => {
-      formDataRef.current = {
-        ...formDataRef.current,
-        [field]: value,
-      };
-      triggerUpdate();
-    },
-    [triggerUpdate]
-  );
+  const handleDropdownChange = (field: string, value: string) => {
+    setFormData({
+      ...formData,
+      [field]: value,
+    });
+  };
 
-  const handleSubmit = useCallback(
-    (e: React.FormEvent) => {
-      e.preventDefault();
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
 
-      if (
-        !formDataRef.current.companyName.trim() ||
-        !formDataRef.current.phone.trim()
-      ) {
-        toast.error("Company Name and Phone are required fields.");
-        return;
-      }
+    const { companyName, phone, altNumber, email } = formData;
 
-      const enquiryData = {
-        company_name: formDataRef.current.companyName.trim(),
-        primary_phone_number: formDataRef.current.phone.trim(),
-        primary_phone_number_has_whatsapp: formDataRef.current.whatsappPrimary,
-        alternative_phone_number: formDataRef.current.altNumber.trim() || null,
-        alternative_phone_number_has_whatsapp: formDataRef.current.whatsappAlt,
-        email: formDataRef.current.email.trim() || null,
-        budget: formDataRef.current.budget
-          ? parseFloat(formDataRef.current.budget)
-          : null,
-        remarks: formDataRef.current.remarks.trim() || null,
-        location: formDataRef.current.location || null,
-        status: formDataRef.current.status || null,
-        source: formDataRef.current.source || null,
-        main_category: formDataRef.current.mainCategory || null,
-        sub_category: formDataRef.current.subCategory || null,
-        business_type: formDataRef.current.businessType || null,
-      };
+    if (!companyName.trim()) {
+      toast.error("Company Name is required.");
+      return;
+    }
 
-      if (isEditMode) {
-        updateEnquiryMutation.mutate({ id: id!, data: enquiryData });
-      } else {
-        createEnquiryMutation.mutate(enquiryData);
-      }
-    },
-    [isEditMode, id, createEnquiryMutation, updateEnquiryMutation]
-  );
+    if (!phone.trim()) {
+      toast.error("Phone number is required.");
+      return;
+    }
+
+    if (!isValidPhone(phone.trim())) {
+      toast.error("Enter a valid 10-digit phone number starting with 6-9.");
+      return;
+    }
+
+    if (
+      altNumber &&
+      altNumber.trim() !== "" &&
+      !isValidPhone(altNumber.trim())
+    ) {
+      toast.error("Enter a valid 10-digit alternative phone number.");
+      return;
+    }
+
+    if (!isValidEmail(email.trim())) {
+      toast.error("Enter a valid email address.");
+      return;
+    }
+
+    const enquiryData = {
+      company_name: formData.companyName.trim(),
+      primary_phone_number: formData.phone.trim(),
+      primary_phone_number_has_whatsapp: formData.whatsappPrimary,
+      alternative_phone_number: formData.altNumber.trim() || null,
+      alternative_phone_number_has_whatsapp: formData.whatsappAlt,
+      email: formData.email.trim() || null,
+      budget: formData.budget ? parseFloat(formData.budget) : null,
+      remarks: formData.remarks.trim() || null,
+      location: formData.location || null,
+      status: formData.status || null,
+      source: formData.source || null,
+      main_category: formData.mainCategory || null,
+      sub_category: formData.subCategory || null,
+      business_type: formData.businessType || null,
+    };
+
+    if (isEditMode) {
+      updateEnquiryMutation.mutate({ id: id!, data: enquiryData });
+    } else {
+      createEnquiryMutation.mutate(enquiryData);
+    }
+  };
 
   const { data: businessTypes, isLoading: isBusinessLoading } = useQuery({
     queryKey: ["businessTypes"],
@@ -281,13 +280,10 @@ export default function EnquiryForm() {
     }
   );
 
-  const allSubCategories =
-    mainCategories &&
-    mainCategories.flatMap(
-      (mainCat: { sub_categories: unknown[] }) => mainCat.sub_categories
-    );
+  const filteredSubCategories =
+    mainCategories?.find((cat: any) => cat.name === formData.mainCategory)
+      ?.sub_categories || [];
 
-  const formData = formDataRef.current;
   const isSubmitting =
     createEnquiryMutation.isPending || updateEnquiryMutation.isPending;
 
@@ -339,7 +335,10 @@ export default function EnquiryForm() {
                   name="phone"
                   placeholder="Enter Phone no"
                   value={formData.phone}
-                  onChange={handleChange}
+                  onChange={(e) => {
+                    if (/^\d*$/.test(e.target.value)) handleChange(e);
+                  }}
+                  maxLength={10}
                   required
                   className="w-full py-2 text-zinc-800 placeholder-zinc-400 bg-transparent focus:outline-none"
                 />
@@ -369,7 +368,10 @@ export default function EnquiryForm() {
                   name="altNumber"
                   placeholder="Enter Alternative no"
                   value={formData.altNumber}
-                  onChange={handleChange}
+                  onChange={(e) => {
+                    if (/^\d*$/.test(e.target.value)) handleChange(e);
+                  }}
+                  maxLength={10}
                   className="w-full py-2 text-zinc-800 placeholder-zinc-400 bg-transparent focus:outline-none"
                 />
               </div>
@@ -410,7 +412,10 @@ export default function EnquiryForm() {
             <div className="flex items-center gap-2">
               <Popover open={openBusiness} onOpenChange={setOpenBusiness}>
                 <PopoverTrigger asChild>
-                  <div className="flex items-center justify-between border border-zinc-300 rounded-lg px-3 bg-zinc-100 flex-1 h-12 cursor-pointer">
+                  <button
+                    type="button"
+                    className="flex items-center justify-between border border-zinc-300 rounded-lg px-3 bg-zinc-100 flex-1 h-12 cursor-pointer"
+                  >
                     <div className="flex items-center flex-1">
                       <MdBusiness className="text-zinc-500 mr-2" />
                       <span className="truncate text-zinc-800">
@@ -420,7 +425,7 @@ export default function EnquiryForm() {
                       </span>
                     </div>
                     <ChevronDown className="w-4 h-4 text-zinc-500 ml-2" />
-                  </div>
+                  </button>
                 </PopoverTrigger>
 
                 <PopoverContent className="w-full p-0">
@@ -458,7 +463,10 @@ export default function EnquiryForm() {
             <div className="flex items-center gap-2">
               <Popover open={openLocation} onOpenChange={setOpenLocation}>
                 <PopoverTrigger asChild>
-                  <div className="flex items-center justify-between border border-zinc-300 rounded-lg px-3 bg-zinc-100 flex-1 h-12 cursor-pointer">
+                  <button
+                    type="button"
+                    className="flex items-center justify-between border border-zinc-300 rounded-lg px-3 bg-zinc-100 flex-1 h-12 cursor-pointer"
+                  >
                     <div className="flex items-center flex-1">
                       <MdLocationOn className="text-zinc-500 mr-2" />
                       <span className="truncate text-zinc-800">
@@ -468,7 +476,7 @@ export default function EnquiryForm() {
                       </span>
                     </div>
                     <ChevronDown className="w-4 h-4 text-zinc-500 ml-2" />
-                  </div>
+                  </button>
                 </PopoverTrigger>
 
                 <PopoverContent className="w-full p-0">
@@ -505,7 +513,10 @@ export default function EnquiryForm() {
             <div className="flex items-center gap-2">
               <Popover open={openStatus} onOpenChange={setOpenStatus}>
                 <PopoverTrigger asChild>
-                  <div className="flex items-center justify-between border border-zinc-300 rounded-lg px-3 bg-zinc-100 flex-1 h-12 cursor-pointer">
+                  <button
+                    type="button"
+                    className="flex items-center justify-between border border-zinc-300 rounded-lg px-3 bg-zinc-100 flex-1 h-12 cursor-pointer"
+                  >
                     <div className="flex items-center flex-1">
                       <AiOutlineCheckCircle className="text-zinc-500 mr-2" />
                       <span className="truncate text-zinc-800">
@@ -515,7 +526,7 @@ export default function EnquiryForm() {
                       </span>
                     </div>
                     <ChevronDown className="w-4 h-4 text-zinc-500 ml-2" />
-                  </div>
+                  </button>
                 </PopoverTrigger>
 
                 <PopoverContent className="w-full p-0">
@@ -552,7 +563,10 @@ export default function EnquiryForm() {
             <div className="flex items-center gap-2">
               <Popover open={openSource} onOpenChange={setOpenSource}>
                 <PopoverTrigger asChild>
-                  <div className="flex items-center justify-between border border-zinc-300 rounded-lg px-3 bg-zinc-100 flex-1 h-12 cursor-pointer">
+                  <button
+                    type="button"
+                    className="flex items-center justify-between border border-zinc-300 rounded-lg px-3 bg-zinc-100 flex-1 h-12 cursor-pointer"
+                  >
                     <div className="flex items-center flex-1">
                       <RiUserVoiceFill className="text-zinc-500 mr-2" />
                       <span className="truncate text-zinc-800">
@@ -562,7 +576,7 @@ export default function EnquiryForm() {
                       </span>
                     </div>
                     <ChevronDown className="w-4 h-4 text-zinc-500 ml-2" />
-                  </div>
+                  </button>
                 </PopoverTrigger>
 
                 <PopoverContent className="w-full p-0">
@@ -602,7 +616,10 @@ export default function EnquiryForm() {
                 onOpenChange={setOpenMainCategory}
               >
                 <PopoverTrigger asChild>
-                  <div className="flex items-center justify-between border border-zinc-300 rounded-lg px-3 bg-zinc-100 flex-1 h-12 cursor-pointer">
+                  <button
+                    type="button"
+                    className="flex items-center justify-between border border-zinc-300 rounded-lg px-3 bg-zinc-100 flex-1 h-12 cursor-pointer"
+                  >
                     <div className="flex items-center flex-1">
                       <BsFillFileEarmarkTextFill className="text-zinc-500 mr-2" />
                       <span className="truncate text-zinc-800">
@@ -612,7 +629,7 @@ export default function EnquiryForm() {
                       </span>
                     </div>
                     <ChevronDown className="w-4 h-4 text-zinc-500 ml-2" />
-                  </div>
+                  </button>
                 </PopoverTrigger>
 
                 <PopoverContent className="w-full p-0">
@@ -648,25 +665,28 @@ export default function EnquiryForm() {
             <label className="block text-sm font-medium text-zinc-700 mb-1.5">
               Sub Category
             </label>
+
             <div className="flex items-center gap-2">
               <Popover open={openSubCategory} onOpenChange={setOpenSubCategory}>
                 <PopoverTrigger asChild>
-                  <div className="flex items-center justify-between border border-zinc-300 rounded-lg px-3 bg-zinc-100 flex-1 h-12 cursor-pointer">
+                  <button
+                    type="button"
+                    className="flex items-center justify-between border border-zinc-300 
+          rounded-lg px-3 bg-zinc-100 flex-1 h-12 cursor-pointer"
+                  >
                     <div className="flex items-center flex-1">
                       <BsFillFileEarmarkTextFill className="text-zinc-500 mr-2" />
                       <span className="truncate text-zinc-800">
-                        {isMainCategoriesLoading
-                          ? "Loading..."
-                          : formData.subCategory || "Select Sub Category"}
+                        {formData.subCategory || "Select Sub Category"}
                       </span>
                     </div>
                     <ChevronDown className="w-4 h-4 text-zinc-500 ml-2" />
-                  </div>
+                  </button>
                 </PopoverTrigger>
 
                 <PopoverContent className="w-full p-0">
                   <div className="max-h-48 overflow-y-auto">
-                    {allSubCategories?.map((sub: any) => (
+                    {filteredSubCategories.map((sub: any) => (
                       <div
                         key={sub.id}
                         className={`flex items-center w-120 px-3 py-2 cursor-pointer hover:bg-zinc-200 ${
@@ -710,7 +730,7 @@ export default function EnquiryForm() {
 
           <div>
             <label className="block text-sm font-medium text-zinc-700 mb-1.5">
-              Upload PDF (Optional)
+              Quotation
             </label>
 
             <div className="flex items-center border border-zinc-300 rounded-lg px-3 bg-zinc-100 h-12">
@@ -726,19 +746,18 @@ export default function EnquiryForm() {
                     alert("Only PDF files allowed!");
                     return;
                   }
-                  formDataRef.current = {
-                    ...formDataRef.current,
+                  setFormData({
+                    ...formData,
                     pdf: undefined,
-                  };
-                  triggerUpdate();
+                  });
                 }}
                 className="w-full text-zinc-800 bg-transparent focus:outline-none"
               />
             </div>
 
-            {formDataRef.current.pdf && (
+            {formData.pdf && (
               <p className="text-sm text-green-600 mt-1">
-                ✅ Selected: {formDataRef.current.pdf}
+                Selected: {formData.pdf}
               </p>
             )}
           </div>

@@ -18,6 +18,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { createLocation, updateLocation } from "@/services/apiLocation";
 
 import { toast } from "sonner";
+import { AxiosError } from "axios";
 
 interface LocationFormProps {
   open?: boolean;
@@ -63,8 +64,12 @@ export default function EnquiryLocation({
       resetForm();
     },
     onError: (error) => {
+      if (error instanceof AxiosError) {
+        toast(
+          ` ${error.response?.data.message || "Couldn't create a new Master."}.`
+        );
+      }
       console.error("Error creating location:", error);
-      toast(`Failed to create location ${error.message}.`);
     },
   });
 
@@ -80,8 +85,12 @@ export default function EnquiryLocation({
       resetForm();
     },
     onError: (error) => {
+      if (error instanceof AxiosError) {
+        toast(
+          ` ${error.response?.data.message || "Couldn't create a new Master."}.`
+        );
+      }
       console.error("Error updating location:", error);
-      toast(`Failed to update location ${error.message}.`);
     },
   });
 

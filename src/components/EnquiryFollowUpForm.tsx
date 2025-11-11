@@ -1,9 +1,17 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState } from "react";
 
-import { useFloating, offset, flip, shift } from "@floating-ui/react";
-
+import { ChevronDownIcon } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
+import { Label } from "@/components/ui/label";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+
+import { Input } from "@/components/ui/input";
 
 import {
   Dialog,
@@ -28,25 +36,33 @@ export default function EnquiryFollowUpForm({
   enquiryId,
 }: EnquiryFollowUpFormProps) {
   const queryClient = useQueryClient();
-  const [open, setOpen] = useState(false);
-  const [showCalendar, setShowCalendar] = useState(false);
+
   const [form, setForm] = useState({
     enquiryDetails: "",
     followUpDate: "",
   });
 
-  const { refs, floatingStyles } = useFloating({
-    placement: "top",
-    middleware: [offset(8), flip(), shift()],
-  });
+  const [open, setOpen] = useState(false);
+  const [openDate, setOpenDate] = useState(false);
+
+  const [date, setDate] = useState<Date | undefined>(undefined);
+
+  console.log("the date is", date);
 
   const mutation = useMutation({
     mutationFn: createFollowUp,
     onSuccess: () => {
       toast.success("Follow-up created successfully!");
-      queryClient.invalidateQueries({ queryKey: ["follow-ups", enquiryId] });
+      queryClient.invalidateQueries({
+        queryKey: ["follow-ups", enquiryId],
+      });
+
       setOpen(false);
-      setForm({ enquiryDetails: "", followUpDate: "" });
+      setForm({
+        enquiryDetails: "",
+        followUpDate: "",
+      });
+      setDate(undefined);
     },
     onError: (error: any) => {
       toast.error(
@@ -56,15 +72,23 @@ export default function EnquiryFollowUpForm({
   });
 
   const handleAddEnquiryFollowUp = () => {
-    if (!form.followUpDate) {
+    if (!date) {
       toast.error("Please select a follow-up date");
       return;
     }
+
+    const formattedDate = `${date.getFullYear()}-${String(
+      date.getMonth() + 1
+    ).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
+
     const payload = {
       enquiry_id: Number(enquiryId),
-      follow_up_date: form.followUpDate.split("T")[0],
+      follow_up_date: formattedDate,
       remark: form.enquiryDetails || null,
+      time: null,
     };
+
+    console.log("the paylod is", payload);
     mutation.mutate(payload);
   };
 
@@ -103,45 +127,56 @@ export default function EnquiryFollowUpForm({
             />
           </div>
 
-          <div className="flex flex-col relative">
-            <label className="text-sm md:text-base text-zinc-700 mb-2 font-medium">
-              Follow-Up Date
-            </label>
-            <button
-              ref={refs.setReference}
-              type="button"
-              onClick={() => setShowCalendar((prev) => !prev)}
-              className="w-full px-4 py-2 md:px-5 md:py-3 rounded-xl bg-zinc-50 text-zinc-800 border border-zinc-300 shadow-sm focus:outline-none focus:ring-2 focus:ring-zinc-400 transition hover:bg-zinc-200"
-            >
-              {form.followUpDate
-                ? `Date: ${new Date(form.followUpDate).toDateString()}`
-                : "Set Follow-Up Date"}
-            </button>
+          <div className="flex gap-4">
+            <div className="flex flex-col gap-3">
+              <Label htmlFor="date-picker" className="px-1">
+                Date
+              </Label>
+              <Popover open={openDate} onOpenChange={setOpenDate}>
+                <PopoverTrigger asChild>
+                  <Button
+                    variant="outline"
+                    id="date-picker"
+                    className="w-32 justify-between font-normal"
+                  >
+                    {date ? date.toLocaleDateString() : "Select date"}
+                    <ChevronDownIcon />
+                  </Button>
+                </PopoverTrigger>
 
-            {showCalendar && (
-              <div
-                ref={refs.setFloating}
-                style={floatingStyles}
-                className="z-[9999] mt-20 bg-white rounded-lg shadow-lg border border-zinc-300 p-3"
-              >
-                <Calendar
-                  mode="single"
-                  selected={
-                    form.followUpDate ? new Date(form.followUpDate) : undefined
-                  }
-                  onSelect={(date) => {
-                    setForm({
-                      ...form,
-                      followUpDate: date ? date.toISOString() : "",
-                    });
-                    setShowCalendar(false);
-                  }}
-                  className="w-60 text-sm text-zinc-900"
-                />
-              </div>
-            )}
+                <PopoverContent
+                  className="w-auto overflow-hidden p-0"
+                  align="start"
+                >
+                  <Calendar
+                    mode="single"
+                    selected={date}
+                    captionLayout="dropdown"
+                    onSelect={(selected: Date | undefined) => {
+                      setDate(selected);
+                      setOpenDate(false);
+                    }}
+                  />
+                </PopoverContent>
+              </Popover>
+            </div>
+
+            <div className="flex flex-col gap-3">
+              <Label htmlFor="time-picker" className="px-1">
+                Time (Not Saved)
+              </Label>
+              <Input
+                type="time"
+                id="time-picker"
+                step="1"
+                className="bg-background"
+                defaultValue="" // ✅ always empty visually
+                onChange={() => {}} // ✅ ignore time input completely
+              />
+            </div>
           </div>
 
+          {/* Submit */}
           <div className="mt-4">
             <button
               onClick={handleAddEnquiryFollowUp}
