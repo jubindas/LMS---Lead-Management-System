@@ -11,6 +11,16 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 
+import * as React from "react";
+import { ChevronDownIcon } from "lucide-react";
+import { Calendar } from "@/components/ui/calendar";
+import { Label } from "@/components/ui/label";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import { toast } from "sonner";
@@ -35,6 +45,9 @@ export default function PaymentsEnquiry({
 }: PaymentsEnquiryProps) {
   const queryClient = useQueryClient();
   const [open, setOpen] = useState(isEdit);
+
+  const [openDate, setOpenDate] = useState(false);
+  const [date, setDate] = useState<Date | undefined>(undefined);
 
   const [formData, setFormData] = useState({
     name: "",
@@ -183,6 +196,38 @@ export default function PaymentsEnquiry({
               onChange={handleChange}
               className="w-full border border-zinc-300 rounded-md px-3 py-2 bg-white text-zinc-800 shadow-sm focus:outline-none focus:ring-2 focus:ring-zinc-500 transition resize-none"
             />
+          </div>
+
+          <div className="flex flex-col gap-3">
+            <Label htmlFor="date" className="px-1">
+              Date of birth
+            </Label>
+            <Popover open={openDate} onOpenChange={setOpenDate}>
+              <PopoverTrigger asChild>
+                <Button
+                  variant="outline"
+                  id="date"
+                  className="w-48 justify-between font-normal"
+                >
+                  {date ? date.toLocaleDateString() : "Select date"}
+                  <ChevronDownIcon />
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent
+                className="w-auto overflow-hidden p-0"
+                align="start"
+              >
+                <Calendar
+                  mode="single"
+                  selected={date}
+                  captionLayout="dropdown"
+                  onSelect={(date) => {
+                    setDate(date);
+                    setOpenDate(false);
+                  }}
+                />
+              </PopoverContent>
+            </Popover>
           </div>
 
           <div>

@@ -1,8 +1,13 @@
 import { DataTable } from "@/components/data-table";
+
 import { columns } from "@/table-columns/payment-follow-up-columns";
+
 import FollowUpPaymentReminder from "@/components/FollowUpPaymentReminder.tsx";
+
 import { useParams } from "react-router-dom";
+
 import { useQuery } from "@tanstack/react-query";
+
 import { getFollowupsByPaymentId } from "@/services/apiPaymentsFollowup.ts";
 
 export default function PaymentFollowUpDashboard() {
