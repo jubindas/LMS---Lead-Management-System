@@ -191,6 +191,9 @@ export default function EnquiryForm() {
   };
 
   const handleSubmit = (e: React.FormEvent) => {
+
+    console.log(e)
+
     e.preventDefault();
 
     const { companyName, phone, altNumber, email } = formData;

@@ -18,6 +18,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { createLocation, updateLocation } from "@/services/apiLocation";
 
 import { toast } from "sonner";
+
 import { AxiosError } from "axios";
 
 interface LocationFormProps {
@@ -56,7 +57,7 @@ export default function EnquiryLocation({
   }, [mode, location, open]);
 
   const createMutation = useMutation({
-    mutationFn: (newLocation: { name: string; description?: string | null }) =>
+    mutationFn: (newLocation: { name: string }) =>
       createLocation(newLocation),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["locations"] });
@@ -74,11 +75,8 @@ export default function EnquiryLocation({
   });
 
   const updateMutation = useMutation({
-    mutationFn: (updatedLocation: {
-      id: string;
-      name: string;
-      description?: string | null;
-    }) => updateLocation(updatedLocation.id, updatedLocation),
+    mutationFn: (updatedLocation: { id: string; name: string }) =>
+      updateLocation(updatedLocation.id, updatedLocation),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["locations"] });
       toast("Location updated successfully!");
@@ -87,7 +85,7 @@ export default function EnquiryLocation({
     onError: (error) => {
       if (error instanceof AxiosError) {
         toast(
-          ` ${error.response?.data.message || "Couldn't create a new Master."}.`
+          ` ${error.response?.data.message || "Couldn't update this Master."}.`
         );
       }
       console.error("Error updating location:", error);
@@ -100,14 +98,12 @@ export default function EnquiryLocation({
   };
 
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    e: React.ChangeEvent<HTMLInputElement>
   ) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e?: React.FormEvent) => {
-    if (e) e.preventDefault();
-
+  const handleSubmit = () => {
     if (mode === "edit" && location) {
       updateMutation.mutate({
         id: location.id,
@@ -130,7 +126,7 @@ export default function EnquiryLocation({
         </DialogTrigger>
       )}
 
-      <DialogContent className="  w-[90%] max-w-lg   bg-white rounded-xl shadow-2xl  border border-zinc-200  p-6  animate-in fade-in-0 zoom-in-95 ">
+      <DialogContent className="w-[90%] max-w-lg bg-white rounded-xl shadow-2xl border border-zinc-200 p-6">
         <DialogHeader className="pb-4 border-b border-zinc-200">
           <DialogTitle className="text-xl font-semibold text-zinc-900">
             {mode === "edit" ? "Edit Location" : "Add New Location"}
@@ -142,7 +138,7 @@ export default function EnquiryLocation({
           </DialogDescription>
         </DialogHeader>
 
-        <form className="mt-6 space-y-5">
+        <div className="mt-6 space-y-5">
           <div className="space-y-1.5">
             <label className="block text-sm font-medium text-zinc-700">
               Location Name <span className="text-red-500">*</span>
@@ -154,18 +150,7 @@ export default function EnquiryLocation({
               value={formData.locationName}
               onChange={handleChange}
               required
-              className="
-                w-full 
-                border border-zinc-300 
-                rounded-md 
-                px-3 py-2 
-                bg-white 
-                text-zinc-800 
-                shadow-sm 
-                transition 
-                outline-none 
-                focus:ring-2 focus:ring-zinc-400 focus:border-zinc-500
-              "
+              className="w-full border border-zinc-300 rounded-md px-3 py-2 bg-white text-zinc-800 shadow-sm focus:ring-2 focus:ring-zinc-400"
             />
           </div>
 
@@ -173,41 +158,23 @@ export default function EnquiryLocation({
             <Button
               type="button"
               onClick={() => setOpen(false)}
-              className="
-                bg-zinc-200 hover:bg-zinc-300 
-                text-zinc-700 
-                font-medium 
-                px-5 py-2 
-                rounded-md 
-                border 
-                transition-all
-              "
+              className="bg-zinc-200 hover:bg-zinc-300 text-zinc-700 font-medium px-5 py-2 rounded-md border"
             >
               Cancel
             </Button>
 
-            {/* ✅ FIXED: Prevent parent enquiry form submission */}
             <Button
-              type="button"
+              type="button" 
               onClick={handleSubmit}
               disabled={createMutation.isPending || updateMutation.isPending}
-              className="
-                bg-zinc-700 hover:bg-zinc-800 
-                text-white 
-                font-medium 
-                px-6 py-2 
-                rounded-md 
-                shadow-md 
-                transition-transform 
-                hover:-translate-y-0.5
-              "
+              className="bg-zinc-700 hover:bg-zinc-800 text-white font-medium px-6 py-2 rounded-md shadow-md"
             >
               {createMutation.isPending || updateMutation.isPending
                 ? "Saving..."
                 : "Save"}
             </Button>
           </div>
-        </form>
+        </div>
       </DialogContent>
     </Dialog>
   );

@@ -1,5 +1,7 @@
 import { useState } from "react";
+
 import { Button } from "@/components/ui/button";
+
 import {
   Dialog,
   DialogContent,
@@ -10,12 +12,17 @@ import {
 } from "@/components/ui/dialog";
 
 import { FaPlus } from "react-icons/fa";
+
 import { Pencil } from "lucide-react";
 
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+
 import { createStatus, updateStatus } from "@/services/apiStatus";
+
 import { toast } from "sonner";
+
 import type { StatusType } from "@/masters/status/status-types";
+
 import { AxiosError } from "axios";
 
 interface StatusFormProps {
@@ -51,7 +58,7 @@ export default function StatusForm({ mode, initialData }: StatusFormProps) {
       if (error instanceof AxiosError) {
         toast(
           ` ${
-            error.response?.data.message || "Couldn't create a new Enquiry."
+            error.response?.data.message || "Couldn't create a new status."
           }.`
         );
       }
@@ -71,9 +78,7 @@ export default function StatusForm({ mode, initialData }: StatusFormProps) {
       toast.error(`Failed to update status ${error.message}.`),
   });
 
-  const handleSubmit = (e?: React.FormEvent) => {
-    if (e) e.preventDefault();
-
+  const handleSubmit = () => {
     if (mode === "edit" && initialData) {
       updateMutation.mutate({
         id: initialData.id,
@@ -124,7 +129,8 @@ export default function StatusForm({ mode, initialData }: StatusFormProps) {
           </DialogDescription>
         </DialogHeader>
 
-        <form className="mt-6 space-y-5">
+       
+        <div className="mt-6 space-y-5">
           <div>
             <label className="block text-sm font-medium text-zinc-700 mb-1.5">
               Status Name
@@ -144,7 +150,7 @@ export default function StatusForm({ mode, initialData }: StatusFormProps) {
 
           <div className="flex justify-end pt-4 border-t border-zinc-200">
             <Button
-              type="button"
+              type="button"    
               onClick={handleSubmit}
               disabled={createMutation.isPending || updateMutation.isPending}
               className="bg-zinc-700 hover:bg-zinc-800 text-white px-6 py-2 rounded-md shadow-md transition"
@@ -154,7 +160,7 @@ export default function StatusForm({ mode, initialData }: StatusFormProps) {
                 : "Save"}
             </Button>
           </div>
-        </form>
+        </div>
       </DialogContent>
     </Dialog>
   );

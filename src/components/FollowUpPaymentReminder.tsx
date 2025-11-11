@@ -54,7 +54,6 @@ export default function FollowUpPaymentReminder({
   const remainingAmount = Number(totalAmount || 0) - Number(paidAmount || 0);
 
   const createFollowUpPaymentMutation = useMutation({
-    
     mutationFn: (followUpData: any) => createPaymentFollowUp(followUpData),
 
     onSuccess: () => {
@@ -192,6 +191,14 @@ export default function FollowUpPaymentReminder({
                 />
               </PopoverContent>
             </Popover>
+          </div>
+          <div className="flex flex-col gap-2">
+            <Label>Reminder Time (optional)</Label>
+            <input
+              type="time"
+              className="w-48 px-3 py-2 bg-white border border-zinc-300 rounded-md shadow-sm"
+              onChange={() => {}}
+            />
           </div>
         </div>
 

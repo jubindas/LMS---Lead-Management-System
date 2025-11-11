@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect, useState } from "react";
 
 import { Button } from "@/components/ui/button";
@@ -56,57 +57,47 @@ export default function SubRequirementForm({
 
   useEffect(() => {
     if (mode === "edit" && subCategory) {
-      console.log("Editing SubCategory:", subCategory);
-
       setFormData({
         main_category_id: subCategory.mainCategory || "",
         name: subCategory.name || "",
         description: subCategory.description || "",
       });
-    } else if (mode === "create") {
-      setFormData({ main_category_id: "", name: "", description: "" });
+    } else {
+      resetForm();
     }
   }, [mode, subCategory]);
 
   const createMutation = useMutation({
-    mutationFn: (newSubCategory: {
-      main_category_id: string;
-      name: string;
-      description?: string | null;
-    }) => createSubCategory(newSubCategory),
+    mutationFn: (newData: any) => createSubCategory(newData),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["mainCategories"] });
       toast.success("Sub-category created successfully!");
       resetForm();
       setOpen(false);
     },
-    onError: (error) => {
-      console.error("Error creating sub-category:", error);
-      toast.error(`Failed to create sub-category ${error.message}.`);
-    },
+    onError: (err: any) =>
+      toast.error(err?.message || "Failed to create sub-category"),
   });
 
   const updateMutation = useMutation({
-    mutationFn: (updatedSubCategory: {
-      id: string;
-      main_category_id: string;
-      name: string;
-      description?: string | null;
-    }) => updateSubCategory(updatedSubCategory.id, updatedSubCategory),
+    mutationFn: (updateData: any) =>
+      updateSubCategory(updateData.id, updateData),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["mainCategories"] });
       toast.success("Sub-category updated successfully!");
       resetForm();
       setOpen(false);
     },
-    onError: (error) => {
-      console.error("Error updating sub-category:", error);
-      toast.error(`Failed to update sub-category ${error.message}.`);
-    },
+    onError: (err: any) =>
+      toast.error(err?.message || "Failed to update sub-category"),
   });
 
   const resetForm = () =>
-    setFormData({ main_category_id: "", name: "", description: "" });
+    setFormData({
+      main_category_id: "",
+      name: "",
+      description: "",
+    });
 
   const handleChange = (
     e: React.ChangeEvent<
@@ -116,10 +107,8 @@ export default function SubRequirementForm({
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e?: React.FormEvent) => {
-    if (e) e.preventDefault();
-
-    if (!formData.main_category_id || !formData.name.trim()) {
+  const handleSubmit = () => {
+    if (!formData.main_category_id.trim() || !formData.name.trim()) {
       return toast.error("Please fill all required fields.");
     }
 
@@ -131,8 +120,6 @@ export default function SubRequirementForm({
         description: formData.description.trim() || null,
       });
     } else {
-      console.log("the create is", formData.main_category_id);
-
       createMutation.mutate({
         main_category_id: formData.main_category_id,
         name: formData.name.trim(),
@@ -142,15 +129,10 @@ export default function SubRequirementForm({
   };
 
   return (
-    <Dialog
-      open={open}
-      onOpenChange={(o) => {
-        setOpen(o);
-      }}
-    >
+    <Dialog open={open} onOpenChange={setOpen}>
       {mode === "create" && (
         <DialogTrigger asChild>
-          <Button className="bg-zinc-500 hover:bg-zinc-600 text-white font-medium px-3 py-1.5 text-sm rounded-md shadow-md transition-transform transform hover:-translate-y-0.5 hover:shadow-lg">
+          <Button className="bg-zinc-500 hover:bg-zinc-600 text-white px-3 py-1.5 rounded-md shadow-md">
             <FaPlus />
           </Button>
         </DialogTrigger>
@@ -160,7 +142,7 @@ export default function SubRequirementForm({
         <DialogTrigger asChild>
           <Button
             variant="ghost"
-            className="w-full justify-start text-sm text-zinc-200 flex items-center gap-2 text-left"
+            className="w-full justify-start text-sm text-zinc-200 flex items-center gap-2"
           >
             <Pencil className="h-4 w-4 text-blue-400" />
             Edit
@@ -168,35 +150,29 @@ export default function SubRequirementForm({
         </DialogTrigger>
       )}
 
-      <DialogContent className="w-[90%] max-w-md md:max-w-xl lg:max-w-3xl max-h-[80vh] overflow-y-auto bg-zinc-100 rounded-lg shadow-2xl border border-zinc-300 p-4 md:p-6">
+      <DialogContent className="w-[90%] max-w-md max-h-[80vh] overflow-y-auto bg-zinc-100 rounded-lg shadow-xl border border-zinc-300 p-6">
         <DialogHeader className="pb-4 border-b border-zinc-300">
-          <DialogTitle className="text-lg md:text-2xl font-bold text-zinc-800">
+          <DialogTitle className="text-xl font-bold text-zinc-800">
             {mode === "edit" ? "EDIT SUB CATEGORY" : "ADD NEW SUB CATEGORY"}
           </DialogTitle>
-          <DialogDescription className="text-sm md:text-base text-zinc-600">
-            {mode === "edit"
-              ? "Update the details for this sub-category."
-              : "Select a main category and provide sub-category details."}
+          <DialogDescription className="text-sm text-zinc-600">
+            Select a main category and fill details.
           </DialogDescription>
         </DialogHeader>
-        <form onSubmit={handleSubmit} className="mt-6 space-y-6">
+
+        <div className="mt-6 space-y-6">
           <select
             name="main_category_id"
-            value={formData.main_category_id || ""}
+            value={formData.main_category_id}
             onChange={handleChange}
-            className="w-full border border-zinc-300 rounded-md px-3 py-2 bg-white text-zinc-800 shadow-sm focus:outline-none focus:ring-2 focus:ring-zinc-500 transition"
-            required
+            className="w-full border border-zinc-300 rounded-md px-3 py-2 bg-white focus:ring-2 focus:ring-zinc-500"
           >
             <option value="">Select Main Category</option>
-            {mainCategories && mainCategories.length > 0 ? (
-              mainCategories.map((main: MainCategory) => (
-                <option key={main.id} value={main.id}>
-                  {main.name}
-                </option>
-              ))
-            ) : (
-              <option disabled>Loading...</option>
-            )}
+            {mainCategories?.map((main: MainCategory) => (
+              <option key={main.id} value={main.id}>
+                {main.name}
+              </option>
+            ))}
           </select>
 
           <div>
@@ -210,8 +186,7 @@ export default function SubRequirementForm({
               placeholder="Enter sub category name"
               value={formData.name}
               onChange={handleChange}
-              required
-              className="w-full border border-zinc-300 rounded-md px-3 py-2 bg-white text-zinc-800 shadow-sm focus:outline-none focus:ring-2 focus:ring-zinc-500 transition"
+              className="w-full border border-zinc-300 rounded-md px-3 py-2 bg-white"
             />
           </div>
 
@@ -226,22 +201,23 @@ export default function SubRequirementForm({
               value={formData.description}
               onChange={handleChange}
               rows={3}
-              className="w-full border border-zinc-300 rounded-md px-3 py-2 bg-white text-zinc-800 shadow-sm resize-none focus:outline-none focus:ring-2 focus:ring-zinc-500 transition"
+              className="w-full border border-zinc-300 rounded-md px-3 py-2 bg-white resize-none"
             />
           </div>
-          <div className="flex flex-col md:flex-row justify-end gap-3 pt-4 border-t border-zinc-300">
+
+          <div className="flex justify-end pt-4 border-t border-zinc-300">
             <Button
               type="button"
               onClick={handleSubmit}
               disabled={createMutation.isPending || updateMutation.isPending}
-              className="w-full md:w-auto bg-zinc-500 hover:bg-zinc-600 text-white font-medium px-6 py-2 rounded-md shadow-lg transition-transform transform hover:-translate-y-1"
+              className="bg-zinc-500 hover:bg-zinc-600 text-white px-6 py-2 rounded-md shadow-md"
             >
               {createMutation.isPending || updateMutation.isPending
                 ? "Saving..."
                 : "Save"}
             </Button>
           </div>
-        </form>
+        </div>
       </DialogContent>
     </Dialog>
   );

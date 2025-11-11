@@ -25,6 +25,7 @@ import {
 import { toast } from "sonner";
 
 import type { MainCategory } from "@/masters/mainRequirements/main-requirements-types";
+
 import { AxiosError } from "axios";
 
 interface MainRequirementsFormProps {
@@ -36,7 +37,6 @@ export default function MainRequirementsForm({
   mode = "create",
   mainCategory,
 }: MainRequirementsFormProps) {
-  console.log("the main category prefill is", mainCategory);
   const queryClient = useQueryClient();
 
   const [open, setOpen] = useState(false);
@@ -54,7 +54,7 @@ export default function MainRequirementsForm({
         name: mainCategory.name || "",
         description: mainCategory.description || "",
       });
-    } else if (mode === "create") {
+    } else {
       resetForm();
     }
   }, [mode, mainCategory]);
@@ -71,12 +71,9 @@ export default function MainRequirementsForm({
     onError: (error) => {
       if (error instanceof AxiosError) {
         toast(
-          ` ${
-            error.response?.data.message || "Couldn't create a new Enquiry."
-          }.`
+          ` ${error.response?.data.message || "Couldn't create a new Main Category"}.`
         );
       }
-      console.error("Error creating main category:", error);
     },
   });
 
@@ -95,12 +92,9 @@ export default function MainRequirementsForm({
     onError: (error) => {
       if (error instanceof AxiosError) {
         toast(
-          ` ${
-            error.response?.data.message || "Couldn't create a new Enquiry."
-          }.`
+          ` ${error.response?.data.message || "Couldn't update the Main Category"}.`
         );
       }
-      console.error("Error updating main category:", error);
     },
   });
 
@@ -110,8 +104,12 @@ export default function MainRequirementsForm({
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSubmit = () => {
+    if (!formData.name.trim()) {
+      toast("Main Category name is required.");
+      return;
+    }
+
     if (mode === "edit" && mainCategory) {
       updateMutation.mutate({
         id: mainCategory.id,
@@ -136,7 +134,7 @@ export default function MainRequirementsForm({
     >
       {mode === "create" && (
         <DialogTrigger asChild>
-          <Button className="bg-zinc-500 hover:bg-zinc-600 text-white font-medium px-3 py-1.5 text-sm rounded-md shadow-md transition-transform transform hover:-translate-y-0.5 hover:shadow-lg">
+          <Button className="bg-zinc-500 hover:bg-zinc-600 text-white px-3 py-1.5 rounded-md shadow-md">
             <FaPlus />
           </Button>
         </DialogTrigger>
@@ -146,7 +144,7 @@ export default function MainRequirementsForm({
         <DialogTrigger asChild>
           <Button
             variant="ghost"
-            className="w-full justify-start text-sm text-zinc-200 flex items-center gap-2 text-left"
+            className="w-full justify-start text-sm text-zinc-200 flex items-center gap-2"
           >
             <Pencil className="h-4 w-4 text-blue-400" />
             Edit
@@ -154,19 +152,19 @@ export default function MainRequirementsForm({
         </DialogTrigger>
       )}
 
-      <DialogContent className="w-[90%] max-w-md md:max-w-xl lg:max-w-3xl max-h-[80vh] overflow-y-auto bg-zinc-100 rounded-lg shadow-2xl border border-zinc-300 p-4 md:p-6">
+      <DialogContent className="w-[90%] max-w-md bg-zinc-100 rounded-lg shadow-2xl border border-zinc-300 p-6">
         <DialogHeader className="pb-4 border-b border-zinc-300">
-          <DialogTitle className="text-lg md:text-2xl font-bold text-zinc-800">
-            {mode === "edit" ? "EDIT MAIN CATEGORY" : "ADD NEW MAIN CATEGORY"}
+          <DialogTitle className="text-lg font-bold text-zinc-800">
+            {mode === "edit" ? "Edit Main Category" : "Add New Main Category"}
           </DialogTitle>
-          <DialogDescription className="text-sm md:text-base text-zinc-600">
+          <DialogDescription className="text-sm text-zinc-600">
             {mode === "edit"
-              ? "Update the details for this main category."
-              : "Fill in the details for the new main category."}
+              ? "Update the main category details."
+              : "Enter details for the new main category."}
           </DialogDescription>
         </DialogHeader>
 
-        <form onSubmit={handleSubmit} className="mt-6 space-y-6">
+        <div className="mt-6 space-y-6">
           <div>
             <label className="block text-sm font-semibold text-zinc-700 mb-2">
               Main Category Name
@@ -178,37 +176,36 @@ export default function MainRequirementsForm({
               value={formData.name}
               onChange={handleChange}
               required
-              className="w-full border border-zinc-300 rounded-md px-3 py-2 bg-white text-zinc-800 shadow-sm focus:outline-none focus:ring-2 focus:ring-zinc-500 transition"
+              className="w-full border border-zinc-300 rounded-md px-3 py-2 bg-white"
             />
           </div>
 
           <div>
             <label className="block text-sm font-semibold text-zinc-700 mb-2">
-              Description{" "}
-              <span className="text-xs text-zinc-500">(optional)</span>
+              Description <span className="text-xs text-zinc-500">(optional)</span>
             </label>
             <textarea
               name="description"
-              placeholder="Enter description"
               value={formData.description}
               onChange={handleChange}
               rows={4}
-              className="w-full border border-zinc-300 rounded-md px-3 py-2 bg-white text-zinc-800 shadow-sm resize-none focus:outline-none focus:ring-2 focus:ring-zinc-500 transition"
+              className="w-full border border-zinc-300 rounded-md px-3 py-2 bg-white resize-none"
             />
           </div>
 
-          <div className="flex flex-col md:flex-row justify-end gap-3 pt-4 border-t border-zinc-300">
+          <div className="flex justify-end gap-3 pt-4 border-t border-zinc-300">
             <Button
-              type="submit"
+              type="button"   
+              onClick={handleSubmit}
               disabled={createMutation.isPending || updateMutation.isPending}
-              className="w-full md:w-auto bg-zinc-500 hover:bg-zinc-600 text-white font-medium px-6 py-2 rounded-md shadow-lg transition-transform transform hover:-translate-y-1"
+              className="bg-zinc-500 hover:bg-zinc-600 text-white px-6 py-2 rounded-md shadow-lg"
             >
               {createMutation.isPending || updateMutation.isPending
                 ? "Saving..."
                 : "Save"}
             </Button>
           </div>
-        </form>
+        </div>
       </DialogContent>
     </Dialog>
   );

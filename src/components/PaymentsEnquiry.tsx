@@ -28,10 +28,10 @@ type PaymentsEnquiryProps = {
   onEditComplete?: () => void;
 };
 
-export default function PaymentsEnquiry({ 
-  paymentToEdit, 
+export default function PaymentsEnquiry({
+  paymentToEdit,
   isEdit = false,
-  onEditComplete 
+  onEditComplete,
 }: PaymentsEnquiryProps) {
   const queryClient = useQueryClient();
   const [open, setOpen] = useState(isEdit);
@@ -41,7 +41,6 @@ export default function PaymentsEnquiry({
     amount: "",
     remarks: "",
   });
-
 
   useEffect(() => {
     if (paymentToEdit) {
@@ -53,14 +52,16 @@ export default function PaymentsEnquiry({
     }
   }, [paymentToEdit]);
 
-
   useEffect(() => {
     setOpen(isEdit);
   }, [isEdit]);
 
   const createPaymentMutation = useMutation({
-    mutationFn: (newPayment: { name: string; amount: number; remarks: string }) =>
-      createPayments(newPayment),
+    mutationFn: (newPayment: {
+      name: string;
+      amount: number;
+      remarks: string;
+    }) => createPayments(newPayment),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["payments"] });
       toast.success("Payment enquiry added successfully");
@@ -70,7 +71,12 @@ export default function PaymentsEnquiry({
   });
 
   const updatePaymentMutation = useMutation({
-    mutationFn: (updatedPayment: { id: string; name: string; amount: number; remarks: string }) =>
+    mutationFn: (updatedPayment: {
+      id: string;
+      name: string;
+      amount: number;
+      remarks: string;
+    }) =>
       updatePayment(updatedPayment.id, {
         name: updatedPayment.name,
         amount: updatedPayment.amount,
@@ -87,7 +93,9 @@ export default function PaymentsEnquiry({
     },
   });
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
@@ -101,10 +109,8 @@ export default function PaymentsEnquiry({
     };
 
     if (paymentToEdit) {
-
       updatePaymentMutation.mutate({ id: paymentToEdit.id, ...payload });
     } else {
-
       createPaymentMutation.mutate(payload);
     }
   };
@@ -169,6 +175,18 @@ export default function PaymentsEnquiry({
 
           <div>
             <label className="block text-sm font-semibold text-zinc-700 mb-2">
+              Mobile Number
+            </label>
+            <input
+              name="mobile"
+              placeholder="Enter Mobile"
+              onChange={handleChange}
+              className="w-full border border-zinc-300 rounded-md px-3 py-2 bg-white text-zinc-800 shadow-sm focus:outline-none focus:ring-2 focus:ring-zinc-500 transition resize-none"
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-semibold text-zinc-700 mb-2">
               Remarks
             </label>
             <textarea
@@ -194,7 +212,13 @@ export default function PaymentsEnquiry({
               type="submit"
               className="w-full md:w-auto bg-zinc-500 hover:bg-zinc-600 text-white font-medium px-6 py-2 rounded-md shadow-md transition-transform transform hover:-translate-y-0.5 hover:shadow-lg"
             >
-              {paymentToEdit ? (updatePaymentMutation.isPending ? "Updating..." : "Update") : (createPaymentMutation.isPending ? "Saving..." : "Save")}
+              {paymentToEdit
+                ? updatePaymentMutation.isPending
+                  ? "Updating..."
+                  : "Update"
+                : createPaymentMutation.isPending
+                ? "Saving..."
+                : "Save"}
             </Button>
           </div>
         </form>

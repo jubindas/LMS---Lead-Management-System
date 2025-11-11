@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect, useState } from "react";
 
 import { Button } from "@/components/ui/button";
@@ -49,6 +50,8 @@ export default function EnquirySource({
         name: source.name || "",
         description: source.description || "",
       });
+    } else if (!open) {
+      setFormData({ name: "", description: "" });
     }
   }, [mode, source, open]);
 
@@ -60,7 +63,7 @@ export default function EnquirySource({
       toast("Source created successfully!");
       resetForm();
     },
-    onError: (error) => {
+    onError: (error: any) => {
       console.error("Error creating source:", error);
       toast(`Failed to create source ${error.message}.`);
     },
@@ -77,7 +80,7 @@ export default function EnquirySource({
       toast("Source updated successfully!");
       resetForm();
     },
-    onError: (error) => {
+    onError: (error: any) => {
       console.error("Error updating source:", error);
       toast(`Failed to update source ${error.message}.`);
     },
@@ -94,9 +97,7 @@ export default function EnquirySource({
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e?: React.FormEvent) => {
-    if (e) e.preventDefault();
-
+  const handleSubmit = () => {
     if (!formData.name.trim()) {
       toast("Source name is required.");
       return;
@@ -138,7 +139,7 @@ export default function EnquirySource({
           </DialogDescription>
         </DialogHeader>
 
-        <form className="mt-6 space-y-6">
+        <div className="mt-6 space-y-6">
           <div>
             <label className="block text-sm font-semibold text-zinc-700 mb-2">
               Source Name
@@ -169,9 +170,9 @@ export default function EnquirySource({
             />
           </div>
 
-          <div className="flex flex-col md:flex-row justify-end gap-3 pt-4 border-t border-zinc-300">
+          <div className="flex justify-end gap-3 pt-4 border-t border-zinc-300">
             <Button
-              type="button"
+              type="button"     
               onClick={handleSubmit}
               disabled={createMutation.isPending || updateMutation.isPending}
               className="w-full md:w-auto bg-zinc-500 hover:bg-zinc-600 text-white font-medium px-6 py-2 rounded-md shadow-lg transition-transform transform hover:-translate-y-1"
@@ -181,7 +182,7 @@ export default function EnquirySource({
                 : "Save"}
             </Button>
           </div>
-        </form>
+        </div>
       </DialogContent>
     </Dialog>
   );

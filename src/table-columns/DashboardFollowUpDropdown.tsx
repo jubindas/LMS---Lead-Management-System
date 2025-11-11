@@ -24,6 +24,7 @@ import {
 
 import { deleteEnquiry } from "@/services/apiEnquiries";
 import { Link } from "react-router-dom";
+import { Input } from "@/components/ui/input";
 
 type DashboardFollowUpDropdownProps = {
   task: {
@@ -37,6 +38,10 @@ export default function DashboardFollowUpDropdown({
 }: DashboardFollowUpDropdownProps) {
   const queryClient = useQueryClient();
   const [openDialog, setOpenDialog] = useState(false);
+
+  const [openDoneDialog, setOpenDoneDialog] = useState(false);
+
+  const [budget, setBudget] = useState("");
 
   const deleteMutation = useMutation({
     mutationFn: (enquiryId: string | number) => deleteEnquiry(enquiryId),
@@ -122,14 +127,50 @@ export default function DashboardFollowUpDropdown({
             Follow Up
           </Link>
         </DropdownMenuItem>
+        <Dialog open={openDoneDialog} onOpenChange={setOpenDoneDialog}>
+          <DialogTrigger asChild>
+            <DropdownMenuItem
+              onSelect={(e) => e.preventDefault()}
+              className="flex items-center gap-2 text-sm text-green-400 px-2 py-1.5 hover:bg-zinc-800 cursor-pointer"
+            >
+              <CheckCircle2 className="h-4 w-4" />
+              Mark as Done
+            </DropdownMenuItem>
+          </DialogTrigger>
 
-        <DropdownMenuItem
-          onClick={() => toast.success(`${task.lead_name} marked as done`)}
-          className="flex items-center gap-2 text-sm text-green-400 hover:bg-zinc-800 rounded-lg px-2 py-1.5"
-        >
-          <CheckCircle2 className="h-4 w-4" />
-          Mark as Done
-        </DropdownMenuItem>
+          <DialogContent className="bg-zinc-100 sm:max-w-[400px]">
+            <DialogHeader>
+              <DialogTitle>Mark as Done</DialogTitle>
+            </DialogHeader>
+
+            <div className="my-4">
+              <label className="text-sm text-zinc-700 mb-2 block">
+                Final Deal Amount (₹)
+              </label>
+              <Input
+                type="number"
+                placeholder="Enter amount"
+                value={budget}
+                onChange={(e) => setBudget(e.target.value)}
+                className="bg-white"
+              />
+            </div>
+
+            <DialogFooter>
+              <Button
+                variant="outline"
+                className="bg-zinc-500 text-white hover:bg-zinc-600"
+                onClick={() => setOpenDoneDialog(false)}
+              >
+                Cancel
+              </Button>
+
+              <Button className="bg-green-600 hover:bg-green-700">
+                Save Deal
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
       </DropdownMenuContent>
     </DropdownMenu>
   );

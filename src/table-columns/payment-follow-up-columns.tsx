@@ -42,6 +42,7 @@ export const columns: ColumnDef<Payment>[] = [
       );
     },
   },
+  { accessorKey: "N/A", header: "Time" },
   {
     id: "actions",
     header: () => <span className="capitalize">Actions</span>,
