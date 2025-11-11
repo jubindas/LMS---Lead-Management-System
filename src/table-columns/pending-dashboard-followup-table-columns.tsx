@@ -7,6 +7,7 @@ import DashboardPendingFollowUpDropdown from "./DashboardPendingFollowUpDropdown
 export const pendingColumns: ColumnDef<PendingFollowUp>[] = [
   { accessorKey: "id", header: "ID" },
   { accessorKey: "company_name", header: "Company Name" },
+  { accessorKey: "main_category", header: "Main Category" },
   { accessorKey: "primary_phone_number", header: "Contact" },
   {
     accessorKey: "stage",
@@ -25,7 +26,7 @@ export const pendingColumns: ColumnDef<PendingFollowUp>[] = [
     cell: ({ row }) => {
       const task = row.original;
 
-      return <DashboardPendingFollowUpDropdown task={task} />
+      return <DashboardPendingFollowUpDropdown task={task} />;
     },
   },
 ];

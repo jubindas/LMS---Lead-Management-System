@@ -52,7 +52,7 @@ const items = [
   { title: "Todo List", url: "/todo-list", icon: ListTodo },
   { title: "Completed Todo List", url: "/completed-todo-list", icon: ListTodo },
   { title: "Completed Enquiries", url: "/completed-enquiry", icon: CheckCircle  },
-  { title: "Pending Enquiries", url: "/pending-enquiry", icon: CalendarClock},
+  { title: "Pending FollowUp Enquiries", url: "/pending-enquiry", icon: CalendarClock},
   { title: "Trash Enquiries", url: "/trash-bin", icon: Trash2 },
   { title: "Report Enquiries", url: "/report-enquiry", icon: FileText },
   { title: "Download Enquiries", url: "/download", icon: Download },

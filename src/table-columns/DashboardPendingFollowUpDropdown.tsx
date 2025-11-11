@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { MoreHorizontal, CheckCircle2, Trash2 } from "lucide-react";
+import { MoreHorizontal, CheckCircle2, Trash2, Repeat } from "lucide-react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 
@@ -24,6 +24,7 @@ import {
 import { deleteEnquiry } from "@/services/apiEnquiries";
 
 import { useState } from "react";
+import { Link } from "react-router-dom";
 
 type DashboardFollowUpDropdownProps = {
   task: {
@@ -32,9 +33,10 @@ type DashboardFollowUpDropdownProps = {
   };
 };
 
-
-export default function DashboardPendingFollowUpDropdown({ task }: DashboardFollowUpDropdownProps) {
- const queryClient = useQueryClient();
+export default function DashboardPendingFollowUpDropdown({
+  task,
+}: DashboardFollowUpDropdownProps) {
+  const queryClient = useQueryClient();
   const [openDialog, setOpenDialog] = useState(false);
 
   const deleteMutation = useMutation({
@@ -71,7 +73,6 @@ export default function DashboardPendingFollowUpDropdown({ task }: DashboardFoll
         </DropdownMenuLabel>
         <DropdownMenuSeparator className="bg-zinc-800" />
 
-        
         <Dialog open={openDialog} onOpenChange={setOpenDialog}>
           <DialogTrigger asChild>
             <Button
@@ -110,7 +111,19 @@ export default function DashboardPendingFollowUpDropdown({ task }: DashboardFoll
           </DialogContent>
         </Dialog>
 
-        {/* Mark as Done */}
+        <DropdownMenuItem
+          asChild
+          className="flex items-center gap-2 text-sm text-zinc-100 rounded-lg px-2 py-1.5 hover:bg-zinc-800 hover:text-zinc-100 focus:bg-zinc-800"
+        >
+          <Link
+            to={`/follow-up/${task.id}`}
+            className="flex items-center gap-2"
+          >
+            <Repeat className="h-4 w-4" />
+            Follow Up
+          </Link>
+        </DropdownMenuItem>
+
         <DropdownMenuItem
           onClick={() => toast.success(`${task.lead_name} marked as done`)}
           className="flex items-center gap-2 text-sm text-green-400 hover:bg-zinc-800 rounded-lg px-2 py-1.5"

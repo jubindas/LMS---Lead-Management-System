@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { MoreHorizontal, CheckCircle2, Trash2 } from "lucide-react";
+import { MoreHorizontal, CheckCircle2, Trash2, Repeat } from "lucide-react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 
@@ -23,6 +23,7 @@ import {
 } from "@/components/ui/dialog";
 
 import { deleteEnquiry } from "@/services/apiEnquiries";
+import { Link } from "react-router-dom";
 
 type DashboardFollowUpDropdownProps = {
   task: {
@@ -31,7 +32,9 @@ type DashboardFollowUpDropdownProps = {
   };
 };
 
-export default function DashboardFollowUpDropdown({ task }: DashboardFollowUpDropdownProps) {
+export default function DashboardFollowUpDropdown({
+  task,
+}: DashboardFollowUpDropdownProps) {
   const queryClient = useQueryClient();
   const [openDialog, setOpenDialog] = useState(false);
 
@@ -106,6 +109,19 @@ export default function DashboardFollowUpDropdown({ task }: DashboardFollowUpDro
             </DialogFooter>
           </DialogContent>
         </Dialog>
+
+        <DropdownMenuItem
+          asChild
+          className="flex items-center gap-2 text-sm text-zinc-100 rounded-lg px-2 py-1.5 hover:bg-zinc-800 hover:text-zinc-100 focus:bg-zinc-800"
+        >
+          <Link
+            to={`/follow-up/${task.id}`}
+            className="flex items-center gap-2"
+          >
+            <Repeat className="h-4 w-4" />
+            Follow Up
+          </Link>
+        </DropdownMenuItem>
 
         <DropdownMenuItem
           onClick={() => toast.success(`${task.lead_name} marked as done`)}

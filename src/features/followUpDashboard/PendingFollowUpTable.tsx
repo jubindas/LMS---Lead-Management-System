@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { DataTable } from "@/components/data-table";
 
 import { pendingColumns } from "../../table-columns/pending-dashboard-followup-table-columns";
@@ -12,7 +13,7 @@ export default function PendingFollowUpTable() {
     queryFn: getEnquiries,
   });
 
-  console.log("Enquiries Data:", enquiries);
+  console.log("Enquiries Data: lalal ", enquiries);
 
   const formatDate = ( date : any) =>
     date.toLocaleDateString("en-CA", { timeZone: "Asia/Kolkata" }); 

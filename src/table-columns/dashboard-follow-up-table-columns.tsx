@@ -14,9 +14,15 @@ export const columns: ColumnDef<FollowUp>[] = [
     header: "Company Name",
   },
   {
+    accessorKey: "main_category",
+    header: "Main Cetagpry",
+  },
+
+  {
     accessorKey: "primary_phone_number",
     header: "Contact",
   },
+
   {
     accessorKey: "stage",
     header: "Stage",
